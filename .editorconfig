@@ -1,0 +1,26 @@
+# EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs
+# For more information about the EditorConfig project, please visit http://editorconfig.org/
+
+# Top-most EditorConfig file
+root = true
+
+# Indentation style
+[*]
+indent_style = space
+indent_size = 4
+
+# End of line character
+[*.{js,jsx,ts,tsx,html,css,scss,json,yml}]
+end_of_line = lf
+
+# Charset
+[*.{js,jsx,ts,tsx,html,css,scss,json,yml}]
+charset = utf-8
+
+# Trim trailing whitespace
+[*.{js,jsx,ts,tsx,html,css,scss,json,yml}]
+trim_trailing_whitespace = true
+
+# Insert final newline
+[*.{js,jsx,ts,tsx,html,css,scss,json,yml}]
+insert_final_newline = true

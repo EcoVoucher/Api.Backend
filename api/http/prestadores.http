@@ -1,0 +1,74 @@
+// Teste da API REST de Prestadores
+@baseURL = http://localhost:4000/api/prestadores
+
+// GET - Lista todos os prestadores
+GET {{baseURL}}/?limit=10&skip=0
+Content-Type: application/json
+
+###
+// GET - Lista o prestador pelo ID
+GET {{baseURL}}/id/65ef0fe9941ad65663f24e28
+Content-Type: application/json
+
+###
+// GET - Lista o prestador pela razão social ou fantasia
+GET {{baseURL}}/razao/boy
+Content-Type: application/json
+
+###
+// DELETE - Remove o prestador pelo id
+DELETE {{baseURL}}/65f8e26a59db6a3493300cd0
+Content-Type: application/json
+
+###
+// POST - Insere um novo prestador
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "cnpj": "12345345000169",
+    "razao_social": "MARIA ALCINA TRANSPORTES LTDA.",
+    "cep": "13310169",
+    "endereco": {"logradouro": "Av. Presidente Kennedy, 321",
+                "complemento": "",
+                "bairro": "Centro",
+                "localidade": "Votorantim",
+                "uf": "SP"},
+    "cnae_fiscal": 451510,
+    "nome_fantasia": "ALCINA",
+    "data_inicio_atividade": "2022-07-22",
+    "localizacao": {
+        "type": "Point",
+        "coordinates": [-23.2904, -47.2963]
+    }
+}
+
+###
+// PUT - Altera um prestador já existente
+
+PUT {{baseURL}}
+Content-Type: application/json
+
+{
+    "_id": "65ef0fe9941ad65663f24e28",
+    "cnpj": "45150718000143",
+    "razao_social": "SERVIÇOS MOTOBOY LTDA. Alterado Novamente",
+    "cep": "13310160",
+    "endereco": {
+      "logradouro": "Avenida Caetano Ruggieri",
+      "complemento": "de 2011/2012 a 3791/3792",
+      "bairro": "Parque Nossa Senhora da Candelária",
+      "localidade": "Itu",
+      "uf": "SP"
+    },
+    "cnae_fiscal": 451510,
+    "nome_fantasia": "ELI MOTOBOY",
+    "data_inicio_atividade": "2024-08-31",
+    "localizacao": {
+      "type": "Point",
+      "coordinates": [
+        -23.2904,
+        -47.2963
+      ]
+    }
+  }

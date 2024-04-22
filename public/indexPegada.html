@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylePegada.css">
+    <script src="scriptPegada.js"></script>
+    <title>EcoVoucher - Pegada ecolôgica</title>
+</head>
+<body>
+    <header>
+        <a href="indexhome.html" target="_self" rel="EXTERNAL" id="logomarca"><img src="images/eco-novo.jpeg" alt="logotipo" id="marca"></a>
+        <div class="sup">
+            <div class="superior">
+                <a href="indexSobre.html" target="_blank" rel="next" class="link">Sobre</a><!--href=# ---(#)substituir pelo no href=nome da pagina-->
+                <a href="indexLegislacao.html" target="_blank" rel="next" class="link">Legislação</a><!--href=# ---(#)substituir pelo no href=nome da pagina-->
+                <a href="indexContato.html" target="_blank" rel="next" class="link">Contato</a><!--href=# ---(#)substituir pelo no href=nome da pagina-->
+                <a routerLink="/login" class="link">Login</a>
+                <a routerLink="/cadastro" class="link">Cadastro</a>
+            </div>
+        </div>
+        <div class="redesocial" >
+            <a href="https://youtu.be/uur_Qz6eobs" target="_blank"><img src="images/logo-youtube.png" alt="YouTube" width="10%"></a>
+            <a href="https://www.linkedin.com/" target="_blank"><img src="images/logo-linkedin.png" alt="LinkedIn" width="10%"></a>
+            <a href="https://www.instagram.com/" target="_blank"><img src="images/logo-insta.png" alt="Instagram" width="10%"></a>
+            <a href="https://www.facebook.com/" target="_blank"><img src="images/logo-face.png" alt="Facebook" width="10%"></a>
+            <a href="https://www.whatsapp.com/" target="_blank"><img src="images/logo-zap.png" alt="WhatsApp" width="10%"></a>
+        </div>
+</header>
+    <h1>
+        Pegada Ecológica, o que é isso?
+    </h1>
+    <hr>
+    <br>
+
+    <div class="pegada">
+        <div class="imagem">
+            <img src="images/footprint.png" alt="" width="100%">
+        </div>
+            <div class="texto">
+                 <h2>Você já parou para pensar que a forma como vivemos deixa marcas no meio ambiente?</h2>
+                 É isso mesmo, nossa caminhada pela Terra deixa “rastros”, “pegadas”, que podem ser maiores ou menores, dependendo de como caminhamos.
+                 A Pegada Ecológica é uma metodologia de contabilidade ambiental que avalia a pressão do consumo das populações humanas sobre os recursos naturais.
+                 Expressada em hectares globais (gha), permite comparar diferentes padrões de consumo e verificar se estão dentro da capacidade ecológica do planeta.
+                 Um hectare global significa um hectare de produtividade média mundial para terras e águas produtivas em um ano.
+                 Já a biocapacidade, representa a capacidade dos ecossistemas em produzir recursos úteis e absorver os resíduos gerados pelo ser humano.
+                 Sendo assim, a Pegada Ecológica contabiliza os recursos naturais biológicos renováveis (grãos e vegetais, carne, peixes, madeira e fibras, energia renovável etc.),
+                 segmentados em Agricultura, Pastagens, Florestas, Pesca, Área Construída e Energia e Absorção de Dióxido de Carbono (CO2).
+            </div>
+    </div>
+        <br>
+    <div class="questionario">
+        <h2>Calcule a sua pegada ecolôgica respondendo o questionário abaixo:</h2>
+        <p>
+        01 - Quantas pessoas vivem na sua casa?
+        <select id="select1">
+            <option value="30">1</option>
+            <option value="25">2</option>
+            <option value="20">3</option>
+            <option value="15">4</option>
+            <option value="10">5 ou mais</option>
+        </select>
+        <br>
+
+        02 - Qual o sistema de aquecimento da casa?
+        <select id="select2">
+            <option value="30">Gas natural</option>
+            <option value="40">eletricidade</option>
+            <option value="50">gasoleo</option>
+            <option value="0">fontes renovaveis(solar, eolica)</option>
+        </select>
+        <br>
+
+        03 - Quantas torneiras tem na sua casa?
+        <select id="select3">
+            <option value="5">Menos de 3</option>
+            <option value="10">De 3 a 5</option>
+            <option value="15">De 6 a 8</option>
+            <option value="20">De 9 a 10</option>
+            <option value="25">mais de 10</option>
+        </select>
+        <br>
+
+        04 - Qual o tipo de casa você vive?
+        <select id="select4">
+            <option value="20">casa</option>
+            <option value="40">Apartamento</option>
+        </select>
+        <br>
+
+        05 - Quantas refeições de carne ou peixa come na semana?
+        <select id="select5">
+            <option value="0">Nenhuma</option>
+            <option value="10">1 a 3</option>
+            <option value="20">4 a 6</option>
+            <option value="35">7 a 10</option>
+            <option value="50">mais de 10</option>
+        </select>
+        <br>
+
+        06 - Quantas refeições feitas em casa come por semana?
+        <select id="select6">
+            <option value="25">menos de 10</option>
+            <option value="20">10 a 14</option>
+            <option value="15">15 a 18</option>
+            <option value="10">mais de 18</option>
+        </select>
+        <br>
+
+        07 - Procura comprar alimentos produzidos localmente?
+        <select id="select7">
+            <option value="25">sim</option>
+            <option value="125">não</option>
+            <option value="50">as vezes</option>
+            <option value="100">raramente</option>
+        </select>
+        <br>
+
+        08 - Que tipo de automovel tem? (se não tiver não responda)
+        <select id="select8">
+            <option value="0">não tenho</option>
+            <option value="35">motocicleta</option>
+            <option value="60">baixa cilindrada(menos de 1200cc)</option>
+            <option value="75">alta cilindrada(acima de 1200cc)</option>
+            <option value="100">carro</option>
+            <option value="130">veículo a diesel</option>
+        </select>
+        <br>
+
+        09 - Como vai para o trabalho?
+        <select id="select9">
+            <option value="60">de carro</option>
+            <option value="30">de carona</option>
+            <option value="15">de transporte publico</option>
+            <option value="0">a pé ou de bike</option>
+        </select>
+        <br>
+
+        10 - Quantos km de carro até o trabalho(se não vai de carro não responda)
+        <select id="select10">
+            <option value="0">não vou de carro</option>
+            <option value="10">menos de 10</option>
+            <option value="20">de 10 a 30</option>
+            <option value="30">de 30 a 50</option>
+            <option value="60">de 50 a 100</option>
+            <option value="80">mais de 100</option>
+        </select>
+        <br>
+
+        11 - Onde passou as ferias?
+        <select id="select11">
+            <option value="0">Não viajei</option>
+            <option value="10">Viajei dentro do estado</option>
+            <option value="20">viajei dentro do pais</option>
+            <option value="30">viajei dentro do continente</option>
+            <option value="50">viajei pra fora do continente</option>
+        </select>
+        <br>
+
+        12 - Quantos fins de semana viaja de carro no ano?(minimo 20 km)
+        <select id="select12">
+            <option value="0">0</option>
+            <option value="10">1 a 3</option>
+            <option value="20">4 a 6</option>
+            <option value="30">7 a 9</option>
+            <option value="40">mais de 9</option>
+        </select>
+        <br>
+
+        13 - Quantas compras significativas faz no ano? (Ex. Tv, Computador, moveis, etc...)
+        <select id="select13">
+            <option value="0">0</option>
+            <option value="15">1 a 3</option>
+            <option value="30">4 a 6</option>
+            <option value="45">mais de 6</option>
+        </select>
+        <br>
+
+        14 - Costuma comprar produtos de baixo consumo de energia?
+        <select id="select14">
+            <option value="0">Sim</option>
+            <option value="25">Não</option>
+        </select>
+        <br>
+
+        15 - Procura reduzir a produção de residuos?
+        <select id="select15">
+            <option value="0">sempre</option>
+            <option value="10">as vezes</option>
+            <option value="20">raramente</option>
+            <option value="30">nunca</option>
+        </select>
+        <br>
+
+        16 - Pratica compostagem de residuos organico?
+        <select id="select16">
+            <option value="0">sempre</option>
+            <option value="10">as vezes</option>
+            <option value="20">nunca</option>
+        </select>
+        <br>
+
+        17 - Costuma separar o lixo reciclavel?
+        <select id="select17">
+            <option value="0">sempre</option>
+            <option value="10">as vezes</option>
+            <option value="20">raramente</option>
+            <option value="25">nunca</option>
+        </select>
+        <br>
+
+        18 - Quantos sacos de lixo produz na semana?
+        <select id="select18">
+            <option value="10">1</option>
+            <option value="20">2</option>
+            <option value="30">3 ou mais</option>
+        </select>
+        <br>
+        </p>
+    </div>
+    <br>
+    <div class="botao">
+        <button onclick="calcularSoma()">Verificar minha pegada</button>
+    </div>
+    <br>
+        <div class="soma">
+            <p id="resultado"></p>
+        </div>
+    </div>
+    <br>
+<div class="tabelas">
+    <div class="tabela1">
+        <table>
+            <tr>
+                <th>Pontos</th>
+                <th>Pegada ecologica</th>
+            </tr>
+            <tr>
+                <td>Até 150</td>
+                <td>menor que 4 gha</td>
+            </tr>
+            <tr>
+                <td>De 150 a 400</td>
+                <td>Entre 4 e 6 gha</td>
+              </tr>
+              <tr>
+                <td>De 400 a 600</td>
+                <td>Entre 6 e 8 gha</td>
+              </tr>
+              <tr>
+                <td>De 600 a 800</td>
+                <td>Entre 8  e 10 gha</td>
+              </tr>
+              <tr>
+                <td>Mais que 800</td>
+                <td>Maior que 10 gha</td>
+              </tr>
+
+        </table>
+    </div>
+    <div class="tabela2">
+        <table>
+            <tr>
+                <th>Pegada ecologica em alguns Paises</th>
+            </tr>
+            <tr>
+                <td>Estados Unidos</td>
+                <td>12,5 gha</td>
+            </tr>
+            <tr>
+                <td>França</td>
+                <td>7,3 gha</td>
+              </tr>
+              <tr>
+                <td>suécia</td>
+                <td>8,2 gha</td>
+              </tr>
+              <tr>
+                <td>Brasil</td>
+                <td>2,2 gha</td>
+              </tr>
+              <tr>
+                <td>Média mundial</td>
+                <td>2,9 gha</td>
+              </tr>
+        </table>
+    </div>
+</div>
+<br>
+<button type="button" onclick="deletar()" class="btn btn-danger" >DELETAR CONTA</button>
+<footer>
+    <div class="rodape"></div>
+    &#169
+    2023 EcoVoucher Todos os direitos reservados
+</footer>
+</body>
+</html>
