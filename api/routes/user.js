@@ -300,7 +300,7 @@ router.post('/cadastro', validaCadastro, async (req, res) => {
             user = await db.collection(nomeCollection).insertOne({
                 nome: nome,
                 cpf: parseInt(cpf),
-                dataNascimento: dataNascimento,
+                dataNascimento:  new Date(dataNascimento),
                 email: email,
                 senha: senha,
                 telefone: parseInt(telefone),

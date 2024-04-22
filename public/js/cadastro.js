@@ -60,6 +60,9 @@ formCadastro.addEventListener('submit', function(e) {
             case "senha":
                 user.senha = input.value;
                 break;
+            case "dataNascimento":
+                user.dataNascimento = input.value;
+                break;
         }
     });
     fetch(`/api/usuario/cadastro`, {
