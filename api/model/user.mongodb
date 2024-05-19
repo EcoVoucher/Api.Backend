@@ -1,0 +1,56 @@
+use('FatecVotorantim')
+
+const usuarioFisico = [{
+        "cpf": "12345678901",
+        "nome": "João da Silva",
+        "data_nascimento": "1990-01-01",
+        "telefone": "15999999999",
+        "email": "joao@teste.com",
+        "quntidade_login": 0,
+        "senha": "123456",
+        "soma_pegada": 18
+    },{
+        "cpf": "12345678902",
+        "nome": "Maria da Silva",
+        "data_nascimento": "1990-01-01",
+        "telefone": "15999999999",
+        "email": "maria@teste.com",
+        "quntidade_login": 0,
+        "senha": "123456",
+        "soma_pegada": 20
+    },{
+        "cpf": "12345678903",
+        "nome": "José da Silva",
+        "data_nascimento": "1990-01-01",
+        "telefone": "15999999999",
+        "email": "jose@teste.com",
+        "quntidade_login": 0,
+        "senha": "123456",
+        "soma_pegada": 22
+    }
+]
+
+const usuarioJuridico = [{
+        "cnpj": "12345678901234",
+        "nomeEmpresa": "Empresa Teste",
+        "email": "joao@joao.com",
+        "senha": "123456",
+        "telefone": "15981212171",
+        "cep": "18050001",
+        "endereco": "Rua João da Silva",
+        "numero": 28,
+        "complemento": "apto"
+    }, {
+        "cnpj": "12345678901235",
+        "nomeEmpresa": "Empresa Teste 2",
+        "email": "",
+        "senha": "123456",
+        "telefone": "15981212171",
+        "cep": "18050001",
+        "endereco": "Rua João da Silva",
+        "numero": 28,
+        "complemento": "apto",
+    }
+]
+db.usuario.insertMany(usuarioFisico)
+db.usuario.insertMany(usuarioJuridico)
