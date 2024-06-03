@@ -5,7 +5,8 @@ config() // carrega as variáveis do .env
 const app = express()
 const {PORT} = process.env
 //Import das rotas da aplicação
-import RotasUsuario from './routes/user.js'
+import RotasUsuario from './routes/userRoute.js'
+import RotasPegada from './routes/pegadaRoute.js'
 
 app.use(express.json()) //Habilita o parse do JSON
 //Rota de conteúdo público
@@ -23,7 +24,8 @@ app.get('/api', (req, res)=> {
     })
 })
 //Rotas da API
-app.use('/api/usuario', RotasUsuario)
+app.use('/api/user', RotasUsuario)
+app.use('/api/pegada', RotasPegada)
 
 // Rota para a página HTML
 app.get('/home', (req, res) => {

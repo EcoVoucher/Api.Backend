@@ -1,5 +1,5 @@
 // Teste da API REST de Prestadores
-@baseURL = http://localhost:4000/api/prestadores
+@baseURL = http://localhost:4000/api/users
 
 // GET - Lista todos os prestadores
 GET {{baseURL}}/?limit=10&skip=0
