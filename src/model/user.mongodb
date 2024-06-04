@@ -1,4 +1,4 @@
-use('FatecVotorantim')
+use('EcoVoucher')
 
 const usuarioFisico = [{
         "cpf": "12345678901",

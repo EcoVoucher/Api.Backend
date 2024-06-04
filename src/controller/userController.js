@@ -1,11 +1,5 @@
-import express from 'express'
-import { connectToDatabase } from '../utils/mongodb.js'
-import { check, validationResult } from 'express-validator'
+import user from '../model/UserModel.js';
 import jwt from 'jsonwebtoken'
-
-const router = express.Router()
-const { db, ObjectId } = await connectToDatabase()
-const nomeCollection = 'user'
 
 function comparativo(soma) {
     let comparativo = "";
@@ -35,8 +29,9 @@ export async function getUser(req, res) {
 
     try {
         const results = []
-
-        await db.collection(nomeCollection)
+        const users = await user.find({});
+        console.log(users)
+        /* await db.collection(nomeCollection)
         .find()
         .limit(parseInt(limit) || 10)
         .skip(parseInt(skip) || 0)
@@ -44,7 +39,7 @@ export async function getUser(req, res) {
         .forEach((doc) => {
             doc.comparativo = comparativo(doc.soma_pegada);
             results.push(doc);
-        });
+        }); */
 
         res.status(200).json(results);
     } catch (err) {
@@ -82,7 +77,7 @@ export async function getUserById(req, res) {
 
 export async function loginUser(req, res) {
     let {identidade, senha} = req.body;
-    const errors = validationResult(req);
+    //const errors = validationResult(req);
 
     if (!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})

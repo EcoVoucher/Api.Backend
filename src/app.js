@@ -1,12 +1,20 @@
-import express from 'express'
-import {config} from 'dotenv'
-config() // carrega as variáveis do .env
+import express from 'express';
+import connectDatabase from "./config/dbConnect.js";
+import RotasUsuario from './routes/userRoute.js';
+import RotasPegada from './routes/pegadaRoute.js';
+import {config} from 'dotenv';
+config(); // carrega as variáveis do .env
+
+const conexao = await connectDatabase();
+
+conexao.on("error", (erro) => {
+    console.error("erro de conexão", erro);
+});
+conexao.once("open", () => {
+    console.log("Conexao com o banco feita com sucesso");
+});
 
 const app = express()
-const {PORT} = process.env
-//Import das rotas da aplicação
-import RotasUsuario from './routes/userRoute.js'
-import RotasPegada from './routes/pegadaRoute.js'
 
 app.use(express.json()) //Habilita o parse do JSON
 //Rota de conteúdo público
@@ -32,7 +40,4 @@ app.get('/home', (req, res) => {
     res.redirect('/');
 });
 
-//Listen
-app.listen(PORT, function(){
-    console.log(`💻Servidor rodando na porta ${PORT}`)
-})
+export default app;

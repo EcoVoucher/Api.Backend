@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    cpf: String,
+    cpf: { type: String },
     nome: String,
     dataNascimento: Date,
     email: String,
@@ -14,11 +14,8 @@ const userSchema = new Schema({
         numero: String,
         complemento: String
     },
-    comments: [{ body: String, date: Date }],
-    date: { type: Date, default: Date.now },
-    hidden: Boolean,
-    meta: {
-        votes: Number,
-        favs: Number
-    }
 });
+
+const user = mongoose.model('user', userSchema);
+
+export default user;

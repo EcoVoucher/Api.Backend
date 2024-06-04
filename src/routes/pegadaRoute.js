@@ -1,5 +1,5 @@
 import express from 'express'
-import { connectToDatabase } from '../utils/mongodb.js'
+import connectDatabase from '../config/dbConnect.js'
 import { check, validationResult } from 'express-validator'
 import {
     deletePegada,
@@ -9,10 +9,7 @@ import {
 } from '../controller/pegadaController.js';
 import auth from '../middleware/auth.js';
 
-const router = express.Router()
-const { db, ObjectId } = await connectToDatabase()
-const nomeCollection = 'pegadas'
-
+const router = express.Router();
 
 
 /**
