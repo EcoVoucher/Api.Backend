@@ -1,9 +1,9 @@
 import { validationResult } from 'express-validator';
-import { User, Company } from '../model/UserModel.js';
+import { User, Company } from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import { validaCpfOuCnpj } from '../validators/Documents.js';
 import { EnumDocuments } from '../enum/document.js';
-import errorLogin from '../model/errorLoginModel.js';
+import errorLogin from '../models/errorLoginModel.js';
 
 function comparativo(soma) {
     let comparativo = "";

@@ -1,0 +1,46 @@
+@urlcontato = http://localhost:3001
+
+### POST
+POST {{urlcontato}}/contato
+Content-Type: application/json
+
+{
+    "name": "Joao Camargo",
+    "email": "Joao@gmail.com",
+    "telefone": "15987654300",
+    "tipo": 2,
+    "mensagem": "Tenho uma dúvida sobre o serviço."
+}
+
+### GETALL
+GET {{urlcontato}}/contato
+
+### CONTATO/ID
+GET {{urlcontato}}/contato/665e294c864c746a3ec4a4e4
+
+### UPDATECONTATO
+PATCH  {{urlcontato}}/contato/665e294c864c746a3ec4a4e4
+Content-Type: application/json
+
+{
+    "name": "Julia Pinheiro",
+    "email": "julipinheiro@example.com",
+    "telefone": "119876526",
+    "tipo": 3,
+    "mensagem": "Dúvida sobre o serviço."
+}
+
+### DELETECONTATO
+DELETE {{urlcontato}}/contato/665e294c864c746a3ec4a4e4
+
+### COMPLEX_CONTATO
+GET {{urlcontato}}/contato/complex-query?tipos=1,2,3&dateStart=2024-01-01&dateEnd=2024-12-31
+
+### COMPLEX_CONTATO
+GET {{urlcontato}}/contato/complex-query?tipos=1&dateStart=2024-01-01&dateEnd=2024-12-31
+
+### COMPLEX_CONTATO
+GET {{urlcontato}}/contato/complex-query?tipos=2&dateStart=2024-01-01&dateEnd=2024-12-31
+
+### COMPLEX_CONTATO
+GET {{urlcontato}}/contato/complex-query?tipos=3&dateStart=2024-01-01&dateEnd=2024-12-31

@@ -7,7 +7,7 @@ import {
     getPegadaById,
     getPegada,
 } from '../controller/pegadaController.js';
-import auth from '../middleware/auth.js';
+import auth from '../middlewares/auth.js';
 
 const router = express.Router();
 

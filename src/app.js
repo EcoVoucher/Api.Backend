@@ -4,6 +4,7 @@ import swaggerFile from "../helpers/swagger-output.json" assert { type: "json" }
 import connectDatabase from "./config/dbConnect.js";
 import RotasUsuario from './routes/userRoute.js';
 import RotasPegada from './routes/pegadaRoute.js';
+import RotasContato from './routes/contatoRoute.js';
 import {config} from 'dotenv';
 config(); // carrega as variáveis do .env
 
@@ -29,13 +30,14 @@ app.use('/favicon.ico', express.static('public/images/favicon.ico'))
 //Rota default
 app.get('/api', (req, res)=> {
     res.status(200).json({
-        message: 'API FATEC 100% funcional🚀',
+        message: 'EcoVoucher API📲',
         version: '1.0.0'
     })
 })
 //Rotas da API
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
+app.use('/api/contato', RotasContato)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.set('trust proxy', true);
 // Rota para a página HTML
