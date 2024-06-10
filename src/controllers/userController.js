@@ -100,7 +100,7 @@ export async function loginUser(req, res) {
                 ip: ipClient,
                 identidade: identidade,
             }).save().then(() => {
-                return res.status(201).json({error: false, message: 'Usuário cadastrado com sucesso'});
+                console.log('Error Login');
             }).catch(error => {
                 console.error('Erro ao inserir usuário:', error);
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
@@ -116,7 +116,7 @@ export async function loginUser(req, res) {
                 ip: ipClient,
                 identidade: identidade,
             }).save().then(() => {
-                return res.status(201).json({error: false, message: 'Usuário cadastrado com sucesso'});
+                console.log('Error Login');
             }).catch(error => {
                 console.error('Erro ao inserir usuário:', error);
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
@@ -129,7 +129,6 @@ export async function loginUser(req, res) {
             process.env.secretKey,
             { expiresIn: process.env.EXPIRES_IN },
             (err, token) => {
-                console.log(err)
                 if (err) throw err
 
                 res.status(200).json({
@@ -250,7 +249,7 @@ export async function updateUser(req, res) {
     let {token, soma_pegada} = req.body;
 
     try {
-        let user = await db.collection(nomeCollection).findOne({_id: new ObjectId(token)});
+        let user = await User.findOne({_id: new ObjectId(token)});
         if (!user) {
             return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
         }

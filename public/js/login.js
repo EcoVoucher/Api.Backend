@@ -40,8 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Se a senha for inválida, mostrar a mensagem de erro
             passwordInput.classList.remove("is-valid");
             passwordInput.classList.add("is-invalid");
-            passwordMessage.textContent =
-                "A senha deve ter pelo menos 8 caracteres, incluindo letras, números e pelo menos um caractere especial.";
+            passwordMessage.textContent = "A senha deve ter pelo menos 8 caracteres, incluindo letras, números e pelo menos um caractere especial.";
         }
     });
 
@@ -68,12 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch("http:/localhost:3000/login", {
+            const response = await fetch("/api/user/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cpfOuCnpj, senha }),
+                body: JSON.stringify({ identidade: cpfOuCnpj, senha: senha }),
                 credentials: "include", // Inclui cookies nas requisições, necessário para HttpOnly cookies
             });
 
@@ -82,11 +81,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const data = await response.json();
-            window.alert("Usuário autenticado com sucesso.");
-            window.location.href = "/home";
+            if (data.auth && !data.error) {
+                window.alert("Usuário autenticado com sucesso.");
+                localStorage.setItem('authToken', data.access_token);
+                window.location.href = "/home";
+            }
+
         } catch (error) {
             console.error("Erro:", error);
-            window.alert("Falha ao autenticar. Verifique suas credenciais.");
+            window.alert(error.message);
         }
     });
 
