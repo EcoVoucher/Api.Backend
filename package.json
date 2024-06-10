@@ -1,7 +1,7 @@
 {
-    "name": "backendmongo",
+    "name": "ecovoucher",
     "version": "1.0.0",
-    "description": "Backend MongoDB",
+    "description": "Backend EcoVoucher",
     "main": "api/index.js",
     "type": "module",
     "scripts": {
