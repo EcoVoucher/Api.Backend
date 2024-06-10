@@ -1,5 +1,8 @@
-import user from '../model/UserModel.js';
-import jwt from 'jsonwebtoken'
+import { validationResult } from 'express-validator';
+import { User, Company } from '../model/UserModel.js';
+import jwt from 'jsonwebtoken';
+import { validaCpfOuCnpj } from '../validators/Documents.js';
+import { EnumDocuments } from '../enum/document.js';
 
 function comparativo(soma) {
     let comparativo = "";
@@ -19,8 +22,8 @@ function comparativo(soma) {
 }
 
 /**
- * GET /api/prestadores
- * Lista todos os prestadores de serviço
+ * GET /api/user/
+ * Lista os usuarios
  * Parâmetros: limit, skip e order
  */
 export async function getUser(req, res) {
@@ -29,22 +32,26 @@ export async function getUser(req, res) {
 
     try {
         const results = []
-        const users = await user.find({});
-        console.log(users)
-        /* await db.collection(nomeCollection)
+
+        const users = await User
         .find()
         .limit(parseInt(limit) || 10)
         .skip(parseInt(skip) || 0)
         .sort({ order: 1 })
-        .forEach((doc) => {
-            doc.comparativo = comparativo(doc.soma_pegada);
-            results.push(doc);
-        }); */
+
+        if (users) {
+            for (let i = 0; i < users.length; i++) {
+                users.forEach((doc) => {
+                    doc.comparativo = comparativo(doc.soma_pegada);
+                    results.push(doc);
+                });
+            }
+        }
 
         res.status(200).json(results);
     } catch (err) {
         res.status(500).json({
-            message: 'Erro ao obter a listagem dos prestadores',
+            message: 'Erro ao obter a listagem dos usuários!',
             error: `${err.message}`
         });
     }
@@ -77,7 +84,7 @@ export async function getUserById(req, res) {
 
 export async function loginUser(req, res) {
     let {identidade, senha} = req.body;
-    //const errors = validationResult(req);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})
@@ -85,11 +92,18 @@ export async function loginUser(req, res) {
     identidade = identidade.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
 
     try {
-        let user = await db.collection(nomeCollection).findOne({cpf: identidade, senha: senha});
-        if (!user) {
-            return res.status(401).send(false);
+        let isValid = validaCpfOuCnpj(identidade);
+        if (!isValid) {
+            return res.status(404).json({error: true, message: 'Usuário ou senha Inválida'});
         }
-        console.log(process.env.secretKey);
+
+        let user = null;
+        validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade) , senha: senha}) : user = await Company.findOne({cnpj: parseInt(identidade) , senha: senha});
+
+        if (!user) {
+            return res.status(404).json({error: true, message: 'Usuário ou senha Inválida'});
+        }
+
         jwt.sign(
             { user: {id: user._id} },
             process.env.secretKey,
@@ -101,11 +115,9 @@ export async function loginUser(req, res) {
                 res.status(200).json({
                     access_token: token,
                     auth: true
-                })
+                });
             }
-        )
-
-        ;
+        );
     } catch (err) {
         res.status(500).json({
             errors: [{
@@ -118,9 +130,26 @@ export async function loginUser(req, res) {
 }
 
 export async function createUser(req, res) {
-    let {nome, cpf, cnpj, nomeEmpresa, dataNascimento, email, senha, telefone, cep, endereco, numero, complemento} = req.body;
+    let {
+        nome,
+        cpf,
+        cnpj,
+        nomeEmpresa,
+        dataNascimento,
+        email,
+        senha,
+        telefone,
+        cep,
+        endereco,
+        numero,
+        complemento,
+        bairro,
+        cidade,
+        estado
+    } = req.body;
 
-    cpf = cpf.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
+    if(cpf) cpf = cpf.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
+    if(cnpj) cnpj = cnpj.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
     const errors = validationResult(req);
 
     if (!errors.isEmpty()){
@@ -129,40 +158,64 @@ export async function createUser(req, res) {
     try {
         let user = null;
         if (cpf) {
-            user = await db.collection(nomeCollection).findOne({cpf: parseInt(cpf)});
+            user = await User.findOne({cpf: parseInt(cpf)});
             if (user) {
                 return res.status(409).json({error: true, message: 'CPF já cadastrado'});
             }
-            user = await db.collection(nomeCollection).insertOne({
+
+            const newUser = new User({
                 nome: nome,
                 cpf: parseInt(cpf),
                 dataNascimento:  new Date(dataNascimento),
                 email: email,
                 senha: senha,
                 telefone: parseInt(telefone),
-                cep: parseInt(cep),
-                endereco: endereco,
-                numero: parseInt(numero),
-                complemento: complemento
+                endereco: {
+                    cep: parseInt(cep),
+                    endereco: endereco,
+                    numero: parseInt(numero),
+                    complemento: complemento,
+                    bairro: bairro,
+                    cidade: cidade,
+                    estado: estado
+                }
+            });
+
+            newUser.save().then(() => {
+                return res.status(201).json({error: false, message: 'Usuário cadastrado com sucesso'});
+            }).catch(error => {
+                console.error('Erro ao inserir usuário:', error);
+                return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
             });
         } else {
-            user = await db.collection(nomeCollection).insertOne({
-                cnpj: cnpj,
+            let company = await Company.findOne({cnpj: parseInt(cnpj)});
+            if (company) return res.status(409).json({error: true, message: 'CNPJ já cadastrado'});
+
+            const newCompany = new Company({
                 nomeEmpresa: nomeEmpresa,
+                cnpj: parseInt(cnpj),
+                dataNascimento:  new Date(dataNascimento),
                 email: email,
                 senha: senha,
-                telefone: telefone,
-                cep: cep,
-                endereco: endereco,
-                numero: numero,
-                complemento: complemento
+                telefone: parseInt(telefone),
+                endereco: {
+                    cep: parseInt(cep),
+                    endereco: endereco,
+                    numero: parseInt(numero),
+                    complemento: complemento,
+                    bairro: bairro,
+                    cidade: cidade,
+                    estado: estado
+                }
+            });
+
+            newCompany.save().then(() => {
+                return res.status(201).json({error: false, message: 'Empresa cadastrada com sucesso'});
+            }).catch(error => {
+                console.error('Erro ao inserir empresa:', error);
+                return res.status(500).json({error: true, message: 'Erro ao efetuar ao cadastrar empresa'});
             });
         }
-        if (!user.insertedId) {
-            return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
-        }
-
-        return res.status(201).json({error: false, message: 'Usuário cadastrado com sucesso', _id: user.insertedId});
     } catch (err) {
         res.status(500).json({
             errors: [{
@@ -172,7 +225,6 @@ export async function createUser(req, res) {
         })
     }
 }
-
 
 export async function updateUser(req, res) {
     let {token, soma_pegada} = req.body;
@@ -214,3 +266,5 @@ export async function deleteUser(req, res) {
         res.status(200).send(result)
     }
 }
+
+

@@ -25,6 +25,8 @@
     "devDependencies": {
         "express-validator": "^7.0.1",
         "nodemon": "^3.1.0",
+        "swagger-autogen": "^2.23.7",
+        "swagger-ui-express": "^5.0.1",
         "var_dump": "^1.0.6"
     }
 }
