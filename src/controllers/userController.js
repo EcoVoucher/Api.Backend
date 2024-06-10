@@ -2,7 +2,7 @@ import { validationResult } from 'express-validator';
 import { User, Company } from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import { validaCpfOuCnpj } from '../validators/Documents.js';
-import { EnumDocuments } from '../enum/document.js';
+import { EnumDocuments } from '../enums/document.js';
 import errorLogin from '../models/errorLoginModel.js';
 
 function comparativo(soma) {

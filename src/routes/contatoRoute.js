@@ -1,5 +1,5 @@
 import express from "express";
-import { contatoCreate, findAll,updateContato,deleteContato,getComplexContato, findContatoById} from '../controller/contatoController.js'
+import { contatoCreate, findAll,updateContato,deleteContato,getComplexContato, findContatoById} from '../controllers/contatoController.js'
 import {validateContato} from '../middlewares/global.middlewares.js';
 import {errorHandler} from '../middlewares/global.middlewares.js';
 import {formatDateMiddleware} from '../middlewares/global.middlewares.js';

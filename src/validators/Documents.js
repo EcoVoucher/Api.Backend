@@ -1,4 +1,4 @@
-import { EnumDocuments } from "../enum/document.js";
+import { EnumDocuments } from "../enums/document.js";
 
 export function isValidCPF(cpf) {
     cpf = removeNonDigits(cpf);

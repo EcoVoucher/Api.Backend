@@ -9,7 +9,7 @@ import {
     loginUser,
     updateUser,
     deleteUser,
-} from '../controller/userController.js';
+} from '../controllers/userController.js';
 
 router.get('/', auth, getUser);
 router.get('/:id', auth,  getUserById);
