@@ -1,5 +1,5 @@
 import { validationResult } from 'express-validator';
-import { User, Company } from '../models/UserModel.js';
+import { User, Company } from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import { validaCpfOuCnpj } from '../validators/Documents.js';
 import { EnumDocuments } from '../enums/document.js';
