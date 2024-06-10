@@ -124,18 +124,18 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
+            <!-- Nav Item - User -->
+            <li class="nav-item active">
+                <a class="nav-link" href="usuario.html">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Usuário</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item active">
-                <a class="nav-link" href="tables.html">
+            <li class="nav-item">
+                <a class="nav-link" href="contato.html">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
+                    <span>Contato</span></a>
             </li>
 
             <!-- Divider -->
@@ -361,13 +361,13 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Contatos</h1>
-                    <p class="mb-4">Envio de contatos detalhados</p>
+                    <h1 class="h3 mb-2 text-gray-800">Usuários</h1>
+                    <p class="mb-4">Lista de usuários completa</p>
 
                     <!-- DataTales -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Contatos</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Usuários</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -375,32 +375,26 @@
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
+                                            <th>CPF</th>
                                             <th>Email</th>
-                                            <th>
-                                                Tipo
-                                                <select id="tipo-select" class="form-control">
-                                                    <option value="1">Colaborar/Empresa</option>
-                                                    <option value="2">Pessoa Física</option>
-                                                    <option value="3">Outros</option>
-                                                    <option value="all">Todos</option>
-                                                </select>
-                                            </th>
-                                            <th>Mensagem</th>
-                                            <th>Data de criação</th>
+                                            <th>Data de nascimento</th>
+                                            <th>Telefone</th>
+                                            <th>Cep</th>
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Nome</th>
+                                            <th>CPF</th>
                                             <th>Email</th>
-                                            <th>Tipo</th>
-                                            <th>Mensagem</th>
-                                            <th>Data de criação</th>
+                                            <th>Data de nascimento</th>
+                                            <th>Telefone</th>
+                                            <th>Cep</th>
                                             <th>Ações</th>
                                         </tr>
                                     </tfoot>
-                                    <tbody id="tabela-contato-adm">
+                                    <tbody id="tabela-user-adm">
 
                                     </tbody>
                                 </table>
@@ -461,7 +455,7 @@
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
-    <script src="js/administrador.js"></script>
+    <script src="js/User.js"></script>
 </body>
 
 </html>

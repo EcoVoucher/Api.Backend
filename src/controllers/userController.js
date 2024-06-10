@@ -28,14 +28,20 @@ function comparativo(soma) {
  * Parâmetros: limit, skip e order
  */
 export async function getUser(req, res) {
-    const { limit, skip, order } = req.query //Obter da URL
+    const { limit, skip, order, cpf, cnpj } = req.query //Obter da URL
     const somaPegada = req.body.soma;
 
     try {
         const results = []
-
+        let query = null;
+        if (cpf) {
+            query = { 'cpf': { $exists: true }, 'cnpj': { $exists: false } };
+        }
+        if (cnpj) {
+            query = { 'cpf': { $exists: false }, 'cnpj': { $exists: true } };
+        }
         const users = await User
-        .find()
+        .find(query)
         .limit(parseInt(limit) || 10)
         .skip(parseInt(skip) || 0)
         .sort({ order: 1 })
@@ -270,9 +276,8 @@ export async function updateUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-    const result = await db.collection(nomeCollection).deleteOne({
-        "_id": { $eq: new ObjectId(req.params.id)}
-    })
+    const result = await User.deleteOne({ "_id": {$eq: req.params.id} });
+
     if (result.deletedCount === 0){
         res.status(404).json({
             errors: [{
@@ -282,7 +287,7 @@ export async function deleteUser(req, res) {
             }]
         })
     } else {
-        res.status(200).send(result)
+        res.status(200).send(result);
     }
 }
 
