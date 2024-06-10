@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="contato.css">
+    <title>EcoVoucher - Contato</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+    <header>
+        <a href="index.html" target="_self" rel="EXTERNAL" id="logomarca"><img src="images/eco-novo.jpeg"
+                alt="logotipo"></a>
+        <div class="sup">
+            <div class="superior">
+                <a href="indexSobre.html" target="_self" rel="next" class="link">Sobre</a>
+                <a href="indexLegislacao.html" target="_self" rel="next" class="link">Legislação</a>
+                <a href="Contato.html" target="_self" rel="next" class="link">Contato</a>
+                <a href="../administrador/index.html" target="_self" rel="next" class="link">Adm</a>
+            </div>
+        </div>
+        <div class="redesocial">
+            <a href="https://youtu.be/uur_Qz6eobs" target="_blank"><img src="IMAGENS/img/logo-youtube.png" alt="YouTube"
+                    width="10%"></a>
+            <a href="https://www.linkedin.com/" target="_blank"><img src="IMAGENS/img/logo-linkedin.png" alt="LinkedIn"
+                    width="10%"></a>
+            <a href="https://www.instagram.com/" target="_blank"><img src="IMAGENS/img/logo-insta.png" alt="Instagram"
+                    width="10%"></a>
+            <a href="https://www.facebook.com/" target="_blank"><img src="IMAGENS/img/logo-face.png" alt="Facebook"
+                    width="10%"></a>
+            <a href="https://www.whatsapp.com/" target="_blank"><img src="IMAGENS/img/logo-zap.png" alt="WhatsApp"
+                    width="10%"></a>
+        </div>
+    </header>
+    <main id="main-content">
+        <div class="superior">
+            <div class="titulo">
+                <h1>
+                    Dúvidas, reclamações, informações ou sugestões
+                </h1>
+            </div>
+        </div>
+        <hr class="text-muted">
+        <div class="conteudo">
+            <div class="form">
+                <h2>Contato</h2>
+
+                <form id="formulario-contato" action="#" method="post">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" class="form-control" required placeholder="Nome Completo"
+                        maxlength="50">
+                    <span id="nome-erro" class="erro"></span>
+                    <br>
+
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" class="form-control" required
+                        placeholder="exemplo@e-mail.com" maxlength="50">
+                    <span id="email-erro" class="erro"></span>
+                    <br>
+
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" name="telefone" class="form-control" placeholder="(DD) XXXX-XXXX"
+                        maxlength="15">
+                    <span id="telefone-erro" class="erro"></span>
+                    <br>
+
+                    <label for="tipo">Tipo:</label>
+                    <select id="tipo" name="tipo" class="form-control">
+                        <option value="1">Colaborar/Empresa</option>
+                        <option value="2">Pessoa Física</option>
+                        <option value="3">Outros</option>
+                    </select>
+                    <br>
+
+                    <label for="mensagem">Mensagem (até 300 caracteres):</label>
+                    <textarea id="mensagem" name="mensagem" class="card" maxlength="300" required
+                        placeholder="Deixe sua mensagem."></textarea>
+                    <span id="mensagem-erro" class="erro"></span>
+                    <br>
+
+                    <input type="submit" class="btn btn-secondary" value="Enviar">
+                </form>
+                <br>
+                <br>
+            </div>
+        </div>
+        <div class="container">
+            <table class="table table-striped" id="table-contato">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Mensagem</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="content-table" class="table-striped">
+                    <!-- conteudo vindo do backEnd -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer>
+        <div class="rodape"></div>
+        &#169; 2023 EcoVoucher Todos os direitos reservados
+    </footer>
+    <div class="modal fade" id="modalEditarContato" tabindex="-1" aria-labelledby="modalEditarContatoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarContatoLabel">Alterar contato</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="modal-nome" class="col-form-label">Nome:</label>
+                            <input type="text" class="form-control" id="modal-nome">
+                            <div id="modal-nome-erro" class="text-danger" style="display: none;">Nome é obrigatório e
+                                deve conter apenas letras.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal-email" class="col-form-label">Email:</label>
+                            <input type="text" class="form-control" id="modal-email">
+                            <div id="modal-email-erro" class="text-danger" style="display: none;">E-mail inválido.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal-telefone" class="col-form-label">Telefone:</label>
+                            <input type="text" class="form-control" id="modal-telefone">
+                            <div id="modal-telefone-erro" class="text-danger" style="display: none;"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal-mensagem" class="col-form-label">Mensagem:</label>
+                            <textarea class="form-control" id="modal-mensagem"></textarea>
+                            <div id="modal-mensagem-erro" class="text-danger" style="display: none;">Mensagem é
+                                obrigatória.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="editar-contato">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="contato.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.mi"></script> 
+</body>
+</html>
+    

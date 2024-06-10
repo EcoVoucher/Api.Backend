@@ -97,12 +97,16 @@ document.getElementById('pessoa-juridica').addEventListener('click', () => {
     document.getElementById('nome').required = false;
     document.getElementById('cpf').disabled = true;
     document.getElementById('cpf').required = false;
+    document.getElementById('dataNascimento').disabled = true;
+    document.getElementById('dataNascimento').required = false;
 });
 
 document.getElementById('pessoa-fisica').addEventListener('click', () => {
     limparFormulario();
     document.getElementById('nomeEmpresa').disabled = true;
     document.getElementById('nomeEmpresa').required = false;
+    document.getElementById('dataNascimento').disabled = false;
+    document.getElementById('dataNascimento').required = true;
     document.getElementById('cnpj').disabled = true;
     document.getElementById('cnpj').required = false;
     document.getElementById('nome').disabled = false;
