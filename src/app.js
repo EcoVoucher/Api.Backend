@@ -1,4 +1,6 @@
 import express from 'express';
+import swaggerUi from'swagger-ui-express';
+import swaggerFile from "../helpers/swagger-output.json" assert { type: "json" };
 import connectDatabase from "./config/dbConnect.js";
 import RotasUsuario from './routes/userRoute.js';
 import RotasPegada from './routes/pegadaRoute.js';
@@ -34,6 +36,7 @@ app.get('/api', (req, res)=> {
 //Rotas da API
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Rota para a página HTML
 app.get('/home', (req, res) => {
