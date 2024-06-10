@@ -8,6 +8,7 @@ import * as fs  from 'fs';
 import { exec } from 'child_process';
 import path from 'path';
 import {config} from 'dotenv';
+import auth from './middlewares/auth.js';
 config(); // carrega as variáveis do .env
 
 const conexao = await connectDatabase();
@@ -40,6 +41,9 @@ app.get('/api', (req, res)=> {
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
 app.use('/api/contato', RotasContato)
+app.post('/api/auth', auth, async (req, res) => {
+    res.status(200).json({'teste': "teste"})
+});
 app.use('/docs', swaggerUi.serve, async (req, res) => {
     try {
         // Verifica se o arquivo swagger-output.json existe
