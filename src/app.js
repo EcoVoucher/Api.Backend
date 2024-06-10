@@ -37,7 +37,7 @@ app.get('/api', (req, res)=> {
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
+app.set('trust proxy', true);
 // Rota para a página HTML
 app.get('/home', (req, res) => {
     res.redirect('/');

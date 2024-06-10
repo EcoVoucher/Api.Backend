@@ -11,7 +11,7 @@ import {
     deleteUser,
 } from '../controller/userController.js';
 
-router.get('/', /* auth, */ getUser);
+router.get('/', auth, getUser);
 router.get('/:id', auth,  getUserById);
 router.post('/cadastro', createUser);
 router.post('/login', loginUser);

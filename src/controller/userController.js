@@ -3,6 +3,7 @@ import { User, Company } from '../model/UserModel.js';
 import jwt from 'jsonwebtoken';
 import { validaCpfOuCnpj } from '../validators/Documents.js';
 import { EnumDocuments } from '../enum/document.js';
+import errorLogin from '../model/errorLoginModel.js';
 
 function comparativo(soma) {
     let comparativo = "";
@@ -93,7 +94,17 @@ export async function loginUser(req, res) {
 
     try {
         let isValid = validaCpfOuCnpj(identidade);
+        const ipClient = req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
         if (!isValid) {
+            new errorLogin({
+                ip: ipClient,
+                identidade: identidade,
+            }).save().then(() => {
+                return res.status(201).json({error: false, message: 'Usuário cadastrado com sucesso'});
+            }).catch(error => {
+                console.error('Erro ao inserir usuário:', error);
+                return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
+            });
             return res.status(404).json({error: true, message: 'Usuário ou senha Inválida'});
         }
 
@@ -101,6 +112,15 @@ export async function loginUser(req, res) {
         validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade) , senha: senha}) : user = await Company.findOne({cnpj: parseInt(identidade) , senha: senha});
 
         if (!user) {
+            new errorLogin({
+                ip: ipClient,
+                identidade: identidade,
+            }).save().then(() => {
+                return res.status(201).json({error: false, message: 'Usuário cadastrado com sucesso'});
+            }).catch(error => {
+                console.error('Erro ao inserir usuário:', error);
+                return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
+            });
             return res.status(404).json({error: true, message: 'Usuário ou senha Inválida'});
         }
 
