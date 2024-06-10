@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (!response.ok) {
-                throw new Error("Login falhou");
+                throw new Error("Verifique suas credenciais! Usuário ou senha inválida!");
             }
 
             const data = await response.json();

@@ -41,9 +41,7 @@ app.get('/api', (req, res)=> {
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
 app.use('/api/contato', RotasContato)
-app.post('/api/auth', auth, async (req, res) => {
-    res.status(200).json({'teste': "teste"})
-});
+app.post('/api/auth', auth, ((req, res) => {  console.log('tes');res.status(200) }));
 app.use('/docs', swaggerUi.serve, async (req, res) => {
     try {
         // Verifica se o arquivo swagger-output.json existe

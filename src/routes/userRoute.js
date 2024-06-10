@@ -15,7 +15,7 @@ router.get('/', auth, getUser);
 router.get('/:id', auth,  getUserById);
 router.post('/cadastro', createUser);
 router.post('/login', loginUser);
-router.put('/alterar_pegada', auth, updateUser);
+router.patch('/alterar_pegada', auth, updateUser);
 router.delete('/:id', auth, deleteUser);
 
 export default router;

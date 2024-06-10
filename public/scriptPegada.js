@@ -1,3 +1,11 @@
+const token = localStorage.getItem('authToken');
+
+const [header, payload, signature] = token.split('.');
+
+// Decodificar o payload
+const decodedPayload = JSON.parse(atob(payload));
+
+
 function calcularSoma() {
   var soma = 0;
   for (var i = 1; i <= 18; i++) {
@@ -22,15 +30,21 @@ function calcularSoma() {
     comparativo = "É maior que 10 gha, dentro da média mundial";
   }
 
+
+
+// Exibir o conteúdo do payload
+console.log(JSON.stringify(decodedPayload.user.id, null, 2));
+
   alert("Seu total de pontos é: " + soma + "\nPegada ecológica: " + comparativo);
-    fetch('/api/usuario/alterar_pegada', {
-        method: 'PUT',
+    fetch('/api/user/alterar_pegada', {
+        method: 'PATCH',
         headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'access-token': token,
         },
         body: JSON.stringify({
-        token: token,
-        soma_pegada: soma
+            token: decodedPayload.user.id,
+            soma_pegada: soma
         })
     }).then((response) => response.json()).then((data) => {
         alert("Pegada ecológica atualizada com sucesso!");
@@ -41,19 +55,22 @@ function calcularSoma() {
 }
 
 const queryString = window.location.search;
-const token = new URLSearchParams(queryString).get('token');
 
 
 function deletar() {
     if(confirm("Deseja realmente deletar sua conta?")){
-        fetch(`/api/usuario/${token}`, {
-            method: 'DELETE'
+        fetch(`/api/user/${decodedPayload.user.id}`, {
+            method: 'DELETE',
+            headers: {  'access-token': token }
         }).then((response) => {
+            localStorage.removeItem('authToken');
             alert("Conta deletada com sucesso!");
             window.location.href = `/login.html`;
         }).catch((error) => {
             alert("Erro ao deletar conta!");
             console.error('Erro ao deletar conta:', error);
         });
+    } else {
+        console.log(decodedPayload.user.id)
     }
 }

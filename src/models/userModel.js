@@ -17,6 +17,7 @@ const userSchema = new Schema({
         cidade: { type: String },
         estado: { type: String }
     },
+    soma_pegada: { type: Number }
     // comments: [{ body: String, date: Date }],
     // date: { type: Date, default: Date.now },
     // hidden: Boolean,

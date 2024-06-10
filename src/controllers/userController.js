@@ -253,19 +253,20 @@ export async function createUser(req, res) {
 
 export async function updateUser(req, res) {
     let {token, soma_pegada} = req.body;
-
+    console.log(token)
     try {
-        let user = await User.findOne({_id: new ObjectId(token)});
+        let user = await User.findOne({_id: {$eq: token}});
         if (!user) {
             return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
         }
-        user = await db.collection(nomeCollection).updateOne({_id: new ObjectId(token)}, {$set: {soma_pegada: soma_pegada}});
+        user = await User.updateOne({_id: {$eq: token}}, {$set: {soma_pegada: soma_pegada}});
         if (!user) {
             return res.status(500).json({error: true, message: 'Erro ao alterar a pegada ecológica'});
         }
 
         return res.status(200).json({error: false, message: 'Pegada ecológica alterada com sucesso'});
     } catch (err) {
+        console.error(err)
         res.status(500).json({
             errors: [{
                 value: `${err.message}`,

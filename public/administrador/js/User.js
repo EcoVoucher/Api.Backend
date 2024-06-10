@@ -1,3 +1,10 @@
+const token = localStorage.getItem('authToken');
+
+const [header, payload, signature] = token.split('.');
+
+// Decodificar o payload
+const decodedPayload = JSON.parse(atob(payload));
+
 async function carregarDados() {
     try {
         const response = await fetch('http://localhost:4000/api/user?cpf=true', {
@@ -28,7 +35,7 @@ async function carregarDados() {
             }
         } else {
             const error = await response.json();
-            alert(`Erro: ${error.message}`);
+            alert(`Erro: ${error.error}`);
         }
     } catch (error) {
         console.error('Erro ao buscar dados:', error);
@@ -41,7 +48,7 @@ async function deletarUsuario(id_usuario) {
         const response = await fetch(`http://localhost:4000/api/user/${id_usuario}`, {
             method: 'DELETE',
             headers: {
-                'access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY2NjVkNDFiZGU2NTg2ZDY2OGNlMGRmIn0sImlhdCI6MTcxODAzODI3MiwiZXhwIjoxNzE4MDQ4MjcyfQ.LvpfjO8gTOE_eFVvvN99tiv3SQ3KPclZGrkP6e5_wQk'
+                'access-token': decodedPayload.user.id
             }
         });
 
