@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data.auth && !data.error) {
                 window.alert("Usuário autenticado com sucesso.");
                 localStorage.setItem('authToken', data.access_token);
-                window.location.href = "/home";
+                window.location.href = "/indexPegada.html";
             }
 
         } catch (error) {

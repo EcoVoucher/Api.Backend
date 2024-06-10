@@ -9,7 +9,6 @@ async function carregarDados() {
 
         if (response.ok) {
             const result = await response.json();
-            console.log(result)
 
             const tbody = document.getElementById('tabela-user-adm');
             tbody.innerHTML = "";
@@ -22,10 +21,10 @@ async function carregarDados() {
                         <td>${result[i].email}</td>
                         <td>${result[i].dataNascimento}</td>
                         <td>${result[i].telefone}</td>
+                        <td>${result[i].endereco.cep}</td>
                         <td><button type="button" class="btn btn-danger" onclick="deletarUsuario('${result[i]._id}')">Deletar</button></td>
                     </tr>
                 `;
-                //<td>${result[i].endereco.cep}</td>
             }
         } else {
             const error = await response.json();
@@ -49,7 +48,7 @@ async function deletarUsuario(id_usuario) {
         if (response.ok) {
             const result = await response.json();
             console.log(result);
-            alert('Mensagem de contato deletada com sucesso!');
+            alert('Usuário deletado com sucesso!');
             carregarDados(); // Recarrega todos os dados após deletar
         } else {
             const error = await response.json();
