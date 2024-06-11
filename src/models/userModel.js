@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt'
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -17,6 +18,7 @@ const userSchema = new Schema({
         cidade: { type: String },
         estado: { type: String }
     },
+    soma_pegada: { type: Number }
     // comments: [{ body: String, date: Date }],
     // date: { type: Date, default: Date.now },
     // hidden: Boolean,
@@ -24,6 +26,11 @@ const userSchema = new Schema({
     //     votes: Number,
     //     favs: Number
     // }
+});
+
+userSchema.pre('save', async function(next){// antes de salvar faça isso**
+    this.senha = await bcrypt.hash(this.senha, 10)// cria uma string alfa numerica - dez rodadas de criptografia é o minimo aceitavel
+    next();
 });
 
 const companySchema = new Schema({
@@ -36,14 +43,18 @@ const companySchema = new Schema({
         cep: { type: String, required: true },
         endereco: { type: String, required: true },
         numero: { type: String, required: true },
-        complemento: { type: String, required: true },
-        bairro: { type: String, required: true },
-        cidade: { type: String, required: true },
-        estado: { type: String, required: true }
+        complemento: { type: String },
+        bairro: { type: String },
+        cidade: { type: String },
+        estado: { type: String }
     },
 });
 
+companySchema.pre('save', async function(next){// antes de salvar faça isso**
+    this.senha = await bcrypt.hash(this.senha, 10)// cria uma string alfa numerica - dez rodadas de criptografia é o minimo aceitavel
+    next();
 
+});
 
 export const User = mongoose.model('user', userSchema, 'user');
 export const Company = mongoose.model('company', companySchema, 'user');

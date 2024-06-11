@@ -77,14 +77,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (!response.ok) {
-                throw new Error("Login falhou");
+                throw new Error("Verifique suas credenciais! Usuário ou senha inválida!");
             }
 
             const data = await response.json();
             if (data.auth && !data.error) {
                 window.alert("Usuário autenticado com sucesso.");
                 localStorage.setItem('authToken', data.access_token);
-                window.location.href = "/home";
+                window.location.href = "/indexPegada.html";
             }
 
         } catch (error) {
@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (value.length === 11) {
             // Validar CPF
             return validateCPF(value);
+            
         } else if (value.length === 14) {
             // Validar CNPJ
             return validateCNPJ(value);

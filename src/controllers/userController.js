@@ -1,5 +1,6 @@
 import { validationResult } from 'express-validator';
-import { User, Company } from '../models/UserModel.js';
+import bcrypt from "bcrypt";
+import { User, Company } from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import { validaCpfOuCnpj } from '../validators/Documents.js';
 import { EnumDocuments } from '../enums/document.js';
@@ -28,14 +29,20 @@ function comparativo(soma) {
  * Parâmetros: limit, skip e order
  */
 export async function getUser(req, res) {
-    const { limit, skip, order } = req.query //Obter da URL
+    const { limit, skip, order, cpf, cnpj } = req.query //Obter da URL
     const somaPegada = req.body.soma;
 
     try {
         const results = []
-
+        let query = null;
+        if (cpf) {
+            query = { 'cpf': { $exists: true }, 'cnpj': { $exists: false } };
+        }
+        if (cnpj) {
+            query = { 'cpf': { $exists: false }, 'cnpj': { $exists: true } };
+        }
         const users = await User
-        .find()
+        .find(query)
         .limit(parseInt(limit) || 10)
         .skip(parseInt(skip) || 0)
         .sort({ order: 1 })
@@ -109,9 +116,10 @@ export async function loginUser(req, res) {
         }
 
         let user = null;
-        validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade) , senha: senha}) : user = await Company.findOne({cnpj: parseInt(identidade) , senha: senha});
-
-        if (!user) {
+        validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade)}) : user = await Company.findOne({cnpj: parseInt(identidade)});
+        const correspondencia = await bcrypt.compare(senha, user.senha);
+        
+        if (!user || !correspondencia) {
             new errorLogin({
                 ip: ipClient,
                 identidade: identidade,
@@ -247,19 +255,20 @@ export async function createUser(req, res) {
 
 export async function updateUser(req, res) {
     let {token, soma_pegada} = req.body;
-
+    console.log(token)
     try {
-        let user = await User.findOne({_id: new ObjectId(token)});
+        let user = await User.findOne({_id: {$eq: token}});
         if (!user) {
             return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
         }
-        user = await db.collection(nomeCollection).updateOne({_id: new ObjectId(token)}, {$set: {soma_pegada: soma_pegada}});
+        user = await User.updateOne({_id: {$eq: token}}, {$set: {soma_pegada: soma_pegada}});
         if (!user) {
             return res.status(500).json({error: true, message: 'Erro ao alterar a pegada ecológica'});
         }
 
         return res.status(200).json({error: false, message: 'Pegada ecológica alterada com sucesso'});
     } catch (err) {
+        console.error(err)
         res.status(500).json({
             errors: [{
                 value: `${err.message}`,
