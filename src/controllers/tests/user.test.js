@@ -24,7 +24,7 @@ describe('API REST de Prestadores com o token', ()=> {
         token = response.body.access_token
         expect(token).toBeDefined() // Recebemos o token?
     })
-
+    let usuarios = null;
     it('GET - Listar os usuários com autenticação', async() => {
         const response = await request(baseURL)
         .get('/user')
@@ -32,13 +32,13 @@ describe('API REST de Prestadores com o token', ()=> {
         .set('access-token', token) //Inclui o token na chamada
         .expect(200)
 
-        const usuarios = response.body
+        usuarios = response.body
         expect(usuarios).toBeInstanceOf(Array)
     })
 
     dadosEmpresa = {
         "nomeEmpresa": "João Pedro",
-        "cnpj": "234567",
+        "cnpj": "545646",
         "email": "joao@joao.com",
         "senha": "123456",
         "telefone": 15981212171,
@@ -70,7 +70,13 @@ describe('API REST de Prestadores com o token', ()=> {
         .delete(`/user/${usuarios[0]._id}`)
         .set('Content-Type','application/json')
         .set('access-token', token) //Inclui o token na chamada
-        
+        .expect(200) //Created
+
+        expect(response.body).toHaveProperty('acknowledged')
+        expect(response.body.acknowledged).toBe(true)
+
+        expect(response.body).toHaveProperty('deletedCount')
+        expect(response.body.deletedCount).toBeGreaterThan(0)
     })
 
 

@@ -270,9 +270,8 @@ export async function updateUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-    const result = await db.collection(nomeCollection).deleteOne({
-        "_id": { $eq: new ObjectId(req.params.id)}
-    })
+    const result = await User.deleteOne({ "_id": {$eq: req.params.id} });
+
     if (result.deletedCount === 0){
         res.status(404).json({
             errors: [{
@@ -282,8 +281,6 @@ export async function deleteUser(req, res) {
             }]
         })
     } else {
-        res.status(200).send(result)
+        res.status(200).send(result);
     }
 }
-
-
