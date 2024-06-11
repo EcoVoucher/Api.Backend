@@ -5,7 +5,7 @@ document.getElementById('tipo-select').addEventListener('change', function() {
 
 async function carregarDados() {
     try {
-        const response = await fetch('http://localhost:4000/api/contato', {
+        const response = await fetch('http://localhost:3000/api/contato', {
             method: 'GET',
         });
 
@@ -40,9 +40,9 @@ async function carregarDados() {
 async function carregarDadosComplex(tipos) {
     let url;
     if (tipos === 'all') {
-        url = `http://localhost:4000/api/contato/complex-query?dateStart=2024-01-01&dateEnd=2024-12-31&tipos=1,2,3`;
+        url = `http://localhost:3000/api/contato/complex-query?dateStart=2024-01-01&dateEnd=2024-12-31&tipos=1,2,3`;
     } else {
-        url = `http://localhost:4000/api/contato/complex-query?dateStart=2024-01-01&dateEnd=2024-12-31&tipos=${tipos}`;
+        url = `http://localhost:3000/api/contato/complex-query?dateStart=2024-01-01&dateEnd=2024-12-31&tipos=${tipos}`;
     }
 
     try {
@@ -93,7 +93,7 @@ async function carregarDadosComplex(tipos) {
 
 async function deletarContato(id_contato) {
     try {
-        const response = await fetch(`http://localhost:4000/api/contato/${id_contato}`, {
+        const response = await fetch(`http://localhost:3000/api/contato/${id_contato}`, {
             method: 'DELETE'
         });
 

@@ -1,6 +1,6 @@
 async function validaToken() {
     let token = localStorage.getItem('authToken');
-    const response = await fetch('http://localhost:4000/api/auth', {
+    const response = await fetch('http://localhost:3000/api/auth', {
         method: 'POST',
         headers: {
             'access-token': token

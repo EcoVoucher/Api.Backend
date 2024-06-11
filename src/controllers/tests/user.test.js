@@ -11,7 +11,7 @@ describe('API REST de Usuarios sem o Token', () => {
     });
 });
 
-describe('API REST de Prestadores com o token', ()=> {
+describe('API REST de Usuarios com o token', ()=> {
     let token //Armazenaremos o access_token JWT
     it('POST - Autenticar usuário para retornar token JWT', async() => {
         const senha = process.env.SENHA_USUARIO
@@ -38,7 +38,7 @@ describe('API REST de Prestadores com o token', ()=> {
 
     dadosEmpresa = {
         "nomeEmpresa": "João Pedro",
-        "cnpj": "545646",
+        "cnpj": "234567890",
         "email": "joao@joao.com",
         "senha": "123456",
         "telefone": 15981212171,

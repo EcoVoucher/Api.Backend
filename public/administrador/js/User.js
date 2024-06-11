@@ -7,10 +7,10 @@ const decodedPayload = JSON.parse(atob(payload));
 
 async function carregarDados() {
     try {
-        const response = await fetch('http://localhost:4000/api/user?cpf=true', {
+        const response = await fetch('http://localhost:3000/api/user?cpf=true', {
             method: 'GET',
             headers: {
-                'access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY2NjVkNDFiZGU2NTg2ZDY2OGNlMGRmIn0sImlhdCI6MTcxODAzODI3MiwiZXhwIjoxNzE4MDQ4MjcyfQ.LvpfjO8gTOE_eFVvvN99tiv3SQ3KPclZGrkP6e5_wQk'
+                'access-token': decodedPayload.user.id
             }
         });
 
@@ -45,7 +45,7 @@ async function carregarDados() {
 
 async function deletarUsuario(id_usuario) {
     try {
-        const response = await fetch(`http://localhost:4000/api/user/${id_usuario}`, {
+        const response = await fetch(`http://localhost:3000/api/user/${id_usuario}`, {
             method: 'DELETE',
             headers: {
                 'access-token': decodedPayload.user.id
