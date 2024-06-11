@@ -1,4 +1,5 @@
 import { validationResult } from 'express-validator';
+import bcrypt from "bcrypt";
 import { User, Company } from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import { validaCpfOuCnpj } from '../validators/Documents.js';
@@ -115,9 +116,10 @@ export async function loginUser(req, res) {
         }
 
         let user = null;
-        validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade) , senha: senha}) : user = await Company.findOne({cnpj: parseInt(identidade) , senha: senha});
-
-        if (!user) {
+        validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade)}) : user = await Company.findOne({cnpj: parseInt(identidade)});
+        const correspondencia = await bcrypt.compare(senha, user.senha);
+        
+        if (!user || !correspondencia) {
             new errorLogin({
                 ip: ipClient,
                 identidade: identidade,

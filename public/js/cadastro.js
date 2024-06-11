@@ -1,14 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const formCadastro = document.getElementById('form-cadastro');
 
-    document.getElementById('pessoa-fisica').addEventListener('click', () => {
-        configurarFormularioParaPessoaFisica();
-    });
+    // Configurações de formulário para Pessoa Física e Jurídica
+    document.getElementById('pessoa-fisica').addEventListener('click', configurarFormularioParaPessoaFisica);
+    document.getElementById('pessoa-juridica').addEventListener('click', configurarFormularioParaPessoaJuridica);
 
-    document.getElementById('pessoa-juridica').addEventListener('click', () => {
-        configurarFormularioParaPessoaJuridica();
-    });
-
+    // Inicialização com base no tipo selecionado
     const tipoInicial = document.querySelector('input[name="tipoCliente"]:checked').id;
     if (tipoInicial === 'pessoa-fisica') {
         configurarFormularioParaPessoaFisica();
@@ -16,27 +13,33 @@ document.addEventListener('DOMContentLoaded', () => {
         configurarFormularioParaPessoaJuridica();
     }
 
-    const inputsValidacao = ['nome', 'cpf', 'telefone', 'cep', 'nomeEmpresa', 'cnpj'];
+    // Adiciona eventos de validação aos campos
+    const inputsValidacao = ['nome', 'cpf', 'telefone', 'cep', 'nomeEmpresa', 'cnpj', 'senha', 'confirmarSenha'];
     inputsValidacao.forEach((id) => {
         const input = document.getElementById(id);
-        input.addEventListener('input', () => validarCampo(input));
-        input.addEventListener('blur', () => validarCampo(input));
+        if (input) {
+            input.addEventListener('input', () => validarCampo(input));
+            input.addEventListener('blur', () => validarCampo(input));
+        }
     });
 
+    // Adiciona evento de submissão do formulário
     formCadastro.addEventListener('submit', function (e) {
         e.preventDefault();
         processarFormulario(formCadastro);
     });
+
+    // Configura visibilidade da senha
+    document.getElementById('toggle-senha').addEventListener('click', () => {
+        togglePasswordVisibility('senha', 'toggle-senha');
+    });
+
+    document.getElementById('toggle-confirmarSenha').addEventListener('click', () => {
+        togglePasswordVisibility('confirmarSenha', 'toggle-confirmarSenha');
+    });
 });
 
-document.getElementById('toggle-senha').addEventListener('click', () => {
-    togglePasswordVisibility('senha', 'toggle-senha');
-});
-
-document.getElementById('toggle-confirmarSenha').addEventListener('click', () => {
-    togglePasswordVisibility('confirmarSenha', 'toggle-confirmarSenha');
-});
-
+// Alternar visibilidade da senha
 function togglePasswordVisibility(fieldId, toggleId) {
     const passwordField = document.getElementById(fieldId);
     const toggleIcon = document.querySelector(`#${toggleId} i`);
@@ -47,11 +50,12 @@ function togglePasswordVisibility(fieldId, toggleId) {
         toggleIcon.classList.add('fa-eye');
     } else {
         passwordField.type = 'password';
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye');
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
     }
 }
 
+// Função para validar campos
 function validarCampo(input) {
     let mensagemErro = "";
     switch (input.id) {
@@ -92,21 +96,16 @@ function validarCampo(input) {
             break;
         case "confirmarSenha":
             const senha = document.getElementById('senha').value;
-            if (input.value !== senha) {
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+            if (confirmarSenha !== senha) {
                 mensagemErro = "As senhas não coincidem!";
             }
             break;
     }
-
-mostrarErro(input, mensagemErro);
+    mostrarErro(input, mensagemErro);
 }
 
-
-function validarSenha(senha) {
-    const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-    return regexSenha.test(senha);
-}
-
+// Função para mostrar erros nos campos
 function mostrarErro(input, mensagemErro) {
     const errorDiv = document.getElementById(`error-${input.id}`);
     if (errorDiv) {
@@ -196,6 +195,18 @@ function processarFormulario(formCadastro) {
             case "dataNascimento":
                 user.dataNascimento = input.value;
                 break;
+            case "senha":
+                if (!validarSenha(input.value)) {
+                    erro = true;
+                }
+                break;
+            case "confirmarSenha":
+                const senha = document.getElementById('senha').value;
+                const confirmarSenha = document.getElementById('confirmarSenha').value;
+                if (confirmarSenha !== senha) {
+                    erro = true;
+                }
+                break;
         }
         mostrarErro(input, mensagemErro);
     });
@@ -276,8 +287,17 @@ function esconderMensagem() {
 }
 
 function validarCPF(cpf) {
-    const regexCPF = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-    return regexCPF.test(cpf);
+    // Remove qualquer caracter não numérico
+    const apenasNumeros = cpf.replace(/\D/g, '');
+
+    // Verifica se o CPF tem exatamente 11 dígitos
+    if (apenasNumeros.length !== 11) {
+        return false;
+    }
+
+    // Verifica se todos os caracteres são números
+    const regexCPF = /^\d{11}$/;
+    return regexCPF.test(apenasNumeros);
 }
 
 function validarCNPJ(cnpj) {
@@ -298,6 +318,21 @@ function validarNome(nome) {
 function validarTelefone(telefone) {
     const regexTelefone = /^[0-9]{10,11}$/;
     return regexTelefone.test(telefone);
+}
+
+function validarSenha(password) {
+    // A senha deve ter pelo menos 8 caracteres, incluindo letras, números e pelo menos um caractere especial
+    const minLength = 8;
+    const hasLetters = /[A-Za-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecial = /[@$!%*?&]/.test(password);
+
+    return (
+        password.length >= minLength &&
+        hasLetters &&
+        hasNumbers &&
+        hasSpecial
+    );
 }
 
 function buscarEnderecoPorCEP() {
