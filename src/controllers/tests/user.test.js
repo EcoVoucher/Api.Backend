@@ -38,7 +38,7 @@ describe('API REST de Usuarios com o token', ()=> {
 
     dadosEmpresa = {
         "nomeEmpresa": "João Pedro",
-        "cnpj": "234567890",
+        "cnpj": "3456789",
         "email": "joao@joao.com",
         "senha": "123456",
         "telefone": 15981212171,

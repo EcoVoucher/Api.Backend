@@ -1,4 +1,4 @@
-const urlBase = 'http://localhost:4000/api'
+const urlBase = 'http://localhost:3000/api'
 const resultadoModal = new bootstrap.Modal(document.getElementById('modalMensagem'))
 
 async function carregaPrestadores(){

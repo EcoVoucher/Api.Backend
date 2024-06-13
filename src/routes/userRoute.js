@@ -11,6 +11,13 @@ import {
     deleteUser,
 } from '../controllers/userController.js';
 
+/**
+   * @swagger
+   * tags:
+   *   name: User
+   *   description: Endpoints de Usuários
+   */
+// #swagger.tags = ['Users']
 router.get('/', auth, getUser);
 router.get('/:id', auth,  getUserById);
 router.post('/cadastro', createUser);

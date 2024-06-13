@@ -10,7 +10,7 @@ async function carregarDados() {
         const response = await fetch('http://localhost:3000/api/user?cpf=true', {
             method: 'GET',
             headers: {
-                'access-token': decodedPayload.user.id
+                'access-token': token
             }
         });
 

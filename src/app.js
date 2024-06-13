@@ -24,7 +24,7 @@ const app = express()
 
 app.use(express.json()) //Habilita o parse do JSON
 //Rota de conteúdo público
-app.use('/', express.static('public'))
+app.use('/', express.static('public'), /* #swagger.ignore = true */)
 //Removendo o x-powered-by por segurança
 app.disable('x-powered-by')
 //Configurando o favicon
@@ -51,13 +51,12 @@ app.use('/docs', swaggerUi.serve, async (req, res) => {
         fs.readFile('./helpers/swagger-output.json', 'utf-8', (readFileErr, snapshot) => {
             if (readFileErr) {
                 console.error('Erro ao ler o arquivo existente:', readFileErr);
-                res.status(500).send('Erro ao ler o arquivo existente');
-                return;
+                return res.status(500).json({ error: 'Erro ao ler o arquivo existente' });
             }
 
             const swaggerFile = JSON.parse(snapshot);
             swaggerUi.setup(swaggerFile);
-            res.status(200).send(swaggerUi.generateHTML(swaggerFile));
+            return res.status(200).send(swaggerUi.generateHTML(swaggerFile));
         });
     } catch (err) {
         if (err.code === 'ENOENT') {
@@ -65,11 +64,11 @@ app.use('/docs', swaggerUi.serve, async (req, res) => {
             exec("npm run swagger", (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Erro: ${error.message}`);
-                    return;
+                    return res.status(500).send('Erro ao executar geração do Swagger');
                 }
                 if (stderr) {
                     console.error(`Stderr: ${stderr}`);
-                    return;
+                    return res.status(500).send('Erro ao executar geração do Swagger');
                 }
                 console.log(`Stdout: ${stdout}`);
 
@@ -77,20 +76,17 @@ app.use('/docs', swaggerUi.serve, async (req, res) => {
                 fs.readFile('./helpers/swagger-output.json', 'utf-8', (readFileErr, snapshot) => {
                     if (readFileErr) {
                         console.error('Erro ao ler o arquivo gerado:', readFileErr);
-                        res.status(500).send('Erro ao ler o arquivo gerado');
-                        return;
+                        return res.status(500).send('Erro ao ler o arquivo gerado');
                     }
 
                     const swaggerFile = JSON.parse(snapshot);
                     swaggerUi.setup(swaggerFile);
-                    res.status(200).send(swaggerUi.generateHTML(swaggerFile));
+                    return res.status(200).send(swaggerUi.generateHTML(swaggerFile));
                 });
             });
-            return;
         }
         console.error('Erro ao verificar a existência do arquivo:', err);
-        res.status(500).send('Erro ao verificar a existência do arquivo');
-        return;
+        return res.status(500).send('Erro ao verificar a existência do arquivo');
     }
 
 
@@ -98,6 +94,7 @@ app.use('/docs', swaggerUi.serve, async (req, res) => {
 
 // Rota para a página HTML
 app.get('/home', (req, res) => {
+    // #swagger.ignore = true
     res.redirect('/');
 });
 

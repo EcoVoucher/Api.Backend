@@ -29,6 +29,10 @@ function comparativo(soma) {
  * Parâmetros: limit, skip e order
  */
 export async function getUser(req, res) {
+    /*
+        #swagger.tags = ['Users']
+        #swagger.description = 'Endpoint para obter a listagem de usuários'
+    */
     const { limit, skip, order, cpf, cnpj } = req.query //Obter da URL
     const somaPegada = req.body.soma;
 
@@ -118,7 +122,7 @@ export async function loginUser(req, res) {
         let user = null;
         validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade)}) : user = await Company.findOne({cnpj: parseInt(identidade)});
         const correspondencia = await bcrypt.compare(senha, user.senha);
-        
+
         if (!user || !correspondencia) {
             new errorLogin({
                 ip: ipClient,

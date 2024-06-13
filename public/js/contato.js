@@ -83,7 +83,7 @@ document.getElementById('formulario-contato').addEventListener('submit', async f
 
     // Enviar dados para o servidor
     try {
-        const response = await fetch('http://localhost:4000/api/contato', {
+        const response = await fetch('http://localhost:3000/api/contato', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -229,9 +229,9 @@ document.getElementById('editar-contato').addEventListener('click', async functi
         didOpen: (toast) => {
             toast.onmouseenter = Swal.stopTimer;
             toast.onmouseleave = Swal.resumeTimer;
-        } 
+        }
     });
-    
+
     let error = null;
 
     if (!dados.name) {
@@ -239,7 +239,7 @@ document.getElementById('editar-contato').addEventListener('click', async functi
             icon: "error",
             title: "Nome é obrigatório."
         });
-        
+
         error = true;
     } else if (!regex.test(dados.name)) {
         Toast.fire({
@@ -264,7 +264,7 @@ document.getElementById('editar-contato').addEventListener('click', async functi
     }
 
     try {
-        const response = await fetch(`http://localhost:4000/api/contato/${id_contato}`, {
+        const response = await fetch(`http://localhost:3000/api/contato/${id_contato}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -293,7 +293,7 @@ const modalEditarContato = new bootstrap.Modal(document.getElementById('modalEdi
 async function editarContato(button) {
     let id_contato = button.getAttribute('data-id-contato');
     try {
-        const response = await fetch(`http://localhost:4000/api/contato/${id_contato}`, {
+        const response = await fetch(`http://localhost:3000/api/contato/${id_contato}`, {
             method: 'GET'
         });
 
