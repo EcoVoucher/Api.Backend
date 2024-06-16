@@ -1,3 +1,4 @@
+const cnpj = require('@julioakira/cpf-cnpj-utils').CNPJ;
 const request = require('supertest');
 
 const baseURL = 'http://localhost:3000/api';
@@ -18,7 +19,7 @@ describe('API REST de Usuarios com o token', ()=> {
         const response = await request(baseURL)
         .post('/user/login')
         .set('Content-Type','application/json')
-        .send({"identidade":"36070342810","senha": "teste@11"})
+        .send({"identidade":"49745885088","senha": "teste@11"})
         .expect(200) //OK
 
         token = response.body.access_token
@@ -38,7 +39,7 @@ describe('API REST de Usuarios com o token', ()=> {
 
     dadosEmpresa = {
         "nomeEmpresa": "João Pedro",
-        "cnpj": "3456789",
+        "cnpj": cnpj.Generate(true),
         "email": "joao@joao.com",
         "senha": "123456",
         "telefone": 15981212171,

@@ -19,13 +19,6 @@ const userSchema = new Schema({
         estado: { type: String }
     },
     soma_pegada: { type: Number }
-    // comments: [{ body: String, date: Date }],
-    // date: { type: Date, default: Date.now },
-    // hidden: Boolean,
-    // meta: {
-    //     votes: Number,
-    //     favs: Number
-    // }
 });
 
 userSchema.pre('save', async function(next){// antes de salvar faça isso**

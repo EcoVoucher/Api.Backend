@@ -121,9 +121,9 @@ export async function loginUser(req, res) {
 
         let user = null;
         validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade)}) : user = await Company.findOne({cnpj: parseInt(identidade)});
-        const correspondencia = await bcrypt.compare(senha, user.senha);
+        const validatePassword = user ? await bcrypt.compare(senha, user.senha) : false;
 
-        if (!user || !correspondencia) {
+        if (!user && !validatePassword) {
             new errorLogin({
                 ip: ipClient,
                 identidade: identidade,
@@ -150,6 +150,7 @@ export async function loginUser(req, res) {
             }
         );
     } catch (err) {
+        console.error(err);
         res.status(500).json({
             errors: [{
                 value: `${err.message}`,

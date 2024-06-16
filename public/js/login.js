@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
+            console.log(senha)
             const response = await fetch("/api/user/login", {
                 method: "POST",
                 headers: {
@@ -100,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (value.length === 11) {
             // Validar CPF
             return validateCPF(value);
-            
+
         } else if (value.length === 14) {
             // Validar CNPJ
             return validateCNPJ(value);
