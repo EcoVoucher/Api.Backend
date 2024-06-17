@@ -4,6 +4,7 @@ import connectDatabase from "./config/dbConnect.js";
 import RotasUsuario from './routes/userRoute.js';
 import RotasPegada from './routes/pegadaRoute.js';
 import RotasContato from './routes/contatoRoute.js';
+import RotasPontuacaoPegada from './routes/pontuacaoPegadaRoute.js';
 import * as fs  from 'fs';
 import { exec } from 'child_process';
 import path from 'path';
@@ -41,6 +42,7 @@ app.get('/api', (req, res)=> {
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
 app.use('/api/contato', RotasContato)
+app.use('/api/pontuacao_pegada', RotasPontuacaoPegada)
 app.post('/api/auth', auth, ((req, res) => {  console.log('tes');res.status(200) }));
 app.use('/docs', swaggerUi.serve, async (req, res) => {
     try {
