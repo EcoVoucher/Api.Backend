@@ -48,7 +48,7 @@ async function deletarUsuario(id_usuario) {
         const response = await fetch(`http://localhost:3000/api/user/${id_usuario}`, {
             method: 'DELETE',
             headers: {
-                'access-token': decodedPayload.user.id
+                'access-token': token
             }
         });
 
