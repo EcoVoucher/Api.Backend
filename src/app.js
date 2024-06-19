@@ -38,6 +38,15 @@ app.get('/api', (req, res)=> {
         version: '1.0.0'
     })
 })
+
+
+// Enable CORS
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    next();
+});
 //Rotas da API
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
