@@ -21,7 +21,18 @@ conexao.once("open", () => {
 });
 
 const app = express()
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Permitir todas as origens, use '*' ou especifique domínios
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'); // Métodos permitidos
+    res.header('Access-Control-Allow-Headers', '*'); // Cabeçalhos permitidos
 
+    // Para interceptar requisições OPTIONS (pré-vôo)
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    next();
+});
 app.use(express.json()) //Habilita o parse do JSON
 //Rota de conteúdo público
 app.use('/', express.static('public'), /* #swagger.ignore = true */)
