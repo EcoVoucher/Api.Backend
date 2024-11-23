@@ -20,6 +20,15 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    - name: Run tests
+      run: npm test
+
+    - name: Versioning (simulação)
+      run: echo "Versionamento realizado"
       
     - name: Deploy (simulação)
       run: echo "Deploy do backend realizado"
