@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-   - name: Versioning (simulação)
+    - name: Versioning (simulação)
       run: echo "Versionamento realizado"
       
     - name: Deploy (simulação)
