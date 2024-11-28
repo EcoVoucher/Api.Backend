@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Comando para rodar o backend
-CMD ["npm", "start"]
+CMD ["npm", "dev"]
