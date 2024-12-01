@@ -138,7 +138,7 @@ export async function loginUser(req, res) {
 
         jwt.sign(
             { user: {id: user._id} },
-            process.env.secretKey,
+            process.env.SECRETKEY,
             { expiresIn: process.env.EXPIRES_IN },
             (err, token) => {
                 if (err) throw err

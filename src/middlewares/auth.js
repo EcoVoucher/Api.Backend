@@ -4,7 +4,7 @@ export default async function auth(req, res, next){
     const token = req.header('access-token')
     if(!token) return res.status(401).json({ msg: 'Acesso negado. É obrigatório o envio do token JWT'}); //401-Not Authorized
     try {
-        const decoded = jwt.verify(token, process.env.secretKey)
+        const decoded = jwt.verify(token, process.env.SECRETKEY)
         /*
             o decoded irá conter:
             payload - id do usuário

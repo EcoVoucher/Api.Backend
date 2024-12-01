@@ -61,7 +61,14 @@ app.use((req, res, next) => {
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
 app.use('/api/contato', RotasContato)
-app.post('/api/auth', auth, ((req, res) => {  console.log('tes');res.status(200) }));
+app.post('/api/data', (req, res) => {
+    const data = req.body;
+    // Process the data here
+    res.status(200).json({ message: 'Data received successfully', data });
+});
+app.post('/api/auth', auth, (req, res) => {
+    res.status(200).json({auth: true});
+});
 app.use('/docs', swaggerUi.serve, async (req, res) => {
     try {
         // Verifica se o arquivo swagger-output.json existe
