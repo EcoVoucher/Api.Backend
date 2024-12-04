@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Exponha a porta que o backend irá usar
-EXPOSE 3000
+EXPOSE 4000
 
 # Comando para rodar o backend
 CMD ["npm", "dev"]
