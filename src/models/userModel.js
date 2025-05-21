@@ -3,11 +3,12 @@ import bcrypt from 'bcrypt'
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    cpf: { type: String},
-    nome: { type: String },
+    cpf: { type: String, required: true },
+    nome: { type: String, required: true },
     dataNascimento: { type: Date },
-    email: { type: String },
-    senha: { type: String },
+    email: { type: String, required: true },
+    senha: { type: String, required: true },
+    //codigoSeguranca: { type: String }, // Added
     telefone: { type: String },
     endereco: {
         cep: { type: String },
@@ -50,4 +51,4 @@ companySchema.pre('save', async function(next){// antes de salvar faça isso**
 });
 
 export const User = mongoose.model('user', userSchema, 'user');
-export const Company = mongoose.model('company', companySchema, 'user');
+export const Company = mongoose.model('company', companySchema, 'company');

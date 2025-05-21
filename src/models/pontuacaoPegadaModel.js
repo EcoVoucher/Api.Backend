@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const pontuacaoPegadaSchema = new Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // Referência ao modelo User
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
     pontuacao: [
         {
             entrada: { type: Boolean, required: true },

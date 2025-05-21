@@ -1,7 +1,27 @@
 import express from 'express'
+import { Pegada } from '../models/pegadaModel.js';
 
 
-
+export async function cadastrarPegada(req, res) {
+    //console.log(req.usuario)
+    const pegada = new Pegada({
+        userId: req.usuario.id,
+        valor: req.body.valor,
+        tipo: 'entrada',
+        descricao: req.body.descricao,
+    });
+    const result = await pegada.save().then((result) => {
+        res.status(201).json({
+            message: 'Pegada cadastrada com sucesso!',
+            data: result
+        });
+    }).catch((err) => {
+        res.status(500).json({
+            message: 'Erro ao cadastrar a pegada',
+            error: `${err.message}`
+        });
+    });
+}
 
 export async function getPegada(req, res) {
     const { limit, skip, order } = req.query //Obter da URL

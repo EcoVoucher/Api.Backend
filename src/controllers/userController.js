@@ -201,7 +201,7 @@ export async function createUser(req, res) {
                 dataNascimento:  new Date(dataNascimento),
                 email: email,
                 senha: senha,
-                telefone: parseInt(telefone),
+                telefone: telefone,
                 endereco: {
                     cep: parseInt(cep),
                     endereco: endereco,
@@ -229,7 +229,7 @@ export async function createUser(req, res) {
                 dataNascimento:  new Date(dataNascimento),
                 email: email,
                 senha: senha,
-                telefone: parseInt(telefone),
+                telefone: telefone,
                 endereco: {
                     cep: parseInt(cep),
                     endereco: endereco,
