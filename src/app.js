@@ -9,6 +9,7 @@ import { exec } from 'child_process';
 import path from 'path';
 import {config} from 'dotenv';
 import auth from './middlewares/auth.js';
+import { sendEmail } from './controllers/emailController.js';
 config(); // carrega as variáveis do .env
 
 const conexao = await connectDatabase();
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
     next();
 });
 //Rotas da API
+app.post('/api/email', sendEmail);
 app.use('/api/user', RotasUsuario)
 app.use('/api/pegada', RotasPegada)
 app.use('/api/contato', RotasContato)
