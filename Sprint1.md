@@ -94,7 +94,7 @@ Visando um melhor aproveitamento das habilidades de cada integrante, o time foi 
     
 <span id="links">
 
-→ [Voltar ao topo](https://github.com/EcoVoucher/Api.Backend/blob/main/README.md)
+→ [Voltar a página inical](https://github.com/EcoVoucher/Api.Backend/blob/main/README.md)
 
 
 
