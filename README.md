@@ -1,4 +1,4 @@
-![image](https://github.com/marcusvsbarros/readMeTest/blob/main/logo%20EcoVoucher.jpg)
+![image](https://github.com/EcoVoucher/Api.Backend/blob/main/logo%20ecov.png)
 
 # Sobre o EcoVoucher
 
