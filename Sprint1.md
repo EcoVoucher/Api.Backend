@@ -59,8 +59,7 @@ Este requisito se trata de uma página web com o objetivo de o usuário consegui
 
 Este requisito se trata de uma página web com o objetivo de informar o usuário sobre o projeto, como surgiu a ideia e os requisitos atendidos.
 
-    
-→ [Voltar ao topo](#topo)
+
 
 <span id="metricas">
     
@@ -94,6 +93,8 @@ Visando um melhor aproveitamento das habilidades de cada integrante, o time foi 
 </div>
     
 <span id="links">
+
+→ [Voltar ao topo](https://github.com/EcoVoucher/Api.Backend/blob/main/README.md)
 
 
 
