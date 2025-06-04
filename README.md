@@ -1,4 +1,4 @@
-![image](https://github.com/EcoVoucher/Api.Backend/blob/main/logo%20ecov.png)
+<img src="https://github.com/EcoVoucher/Api.Backend/blob/main/logo%20ecov.png?raw=true" width="900px" />
 
 # Sobre o EcoVoucher
 
