@@ -1,4 +1,7 @@
-<img src="https://github.com/EcoVoucher/Api.Backend/blob/main/logo%20ecov.png?raw=true" width="900px" />
+<p align="center">
+  <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/ecovoucher%20mobile.png?raw=true" width="600px" />
+</p>
+
 
 # Sobre o EcoVoucher
 
