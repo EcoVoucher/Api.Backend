@@ -1,4 +1,7 @@
-<img src="https://github.com/EcoVoucher/Api.Backend/blob/main/logo%20ecov.png?raw=true" width="900px" />
+<p align="center">
+  <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/ecovoucher%20mobile.png?raw=true" width="600px" />
+</p>
+
 
 # Sobre o EcoVoucher
 
@@ -12,33 +15,15 @@ O cidadão coleta o resíduo reciclável, leva até um dos pontos de coleta, pon
 ## Arquitetura
 
 <details>
-   <summary>Diagrama de Caso de Uso</summary>
-    <div align="center">
-        <img src="https://github.com/Eng-FelipeA/EcoVoucher/blob/main/Assets/Diagrama%20de%20Caso%20de%20Uso%20EcoVoucher.jpg">
-    </div>
-</details>
-<details>
-   <summary>Diagrama de Classes</summary>
-    <div align="center">
-        <img src="https://github.com/Eng-FelipeA/EcoVoucher/blob/main/Assets/Diagrama%20de%20Claesses%20EcoVoucher.jpg">
-    </div>
-</details>
-<details>
    <summary>Requisitos Funcionais</summary>
     <div align="center">
-        <img src="https://github.com/Eng-FelipeA/EcoVoucher/blob/main/Assets/%C3%89picos.jpg">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF-APP-EcoVoucherAtual.png">
     </div>
 </details>
 <details>
    <summary>Requisitos Não Funcionais</summary>
     <div align="center">
-        <img src="https://github.com/Eng-FelipeA/EcoVoucher/blob/main/Assets/Requisitos%20N%C3%A3o%20Funcionais.jpg">
-    </div>
-</details>
-<details>
-   <summary>User Stories</summary>
-    <div align="center">
-        <img src="https://github.com/Eng-FelipeA/EcoVoucher/blob/main/Assets/User%20Stories.jpg">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RNF-APP-EcoVoucher.png">
     </div>
 </details>
 
