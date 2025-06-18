@@ -33,6 +33,7 @@ const companySchema = new Schema({
     email: { type: String, required: true },
     senha: { type: String, required: true },
     telefone: { type: String, required: true },
+    aprovado: { type: Boolean, default: false },
     endereco: {
         cep: { type: String, required: true },
         endereco: { type: String, required: true },

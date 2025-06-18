@@ -1,3 +1,5 @@
+import { check, body } from 'express-validator';
+
 const validaCadastro = [
     check('cpf')
         .isString()
@@ -188,6 +190,29 @@ check('senha')
     .trim().withMessage('É obrigatório informar a senha')
     .isLength({min:6}).withMessage('A senha deve ter no mínimo 6 caracteres')
     .isLength({max: 30}).withMessage('A senha deve ter no máximo 30 caracteres')
-
-
 ]
+
+export const validaRecuperaSenha = [
+    
+    check('cpf')
+        // .not()
+        .isEmpty()
+        
+        .trim().withMessage('É obrigatório informar o cpf')
+        // .isEmail().withMessage('O email informado é inválido')
+        .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres')
+        //check('cnpj')
+        .custom(async({ req }) => {
+            if (!req || !req.body || !req.body.cnpj) {
+                throw new Error("CPF é obrigatório");
+            }
+            // if (req && req.body) {
+            //     console.log(req.body.cnpj);
+            // } else {
+            //     console.log('req or req.body is undefined');
+            // }
+            // if(req.body.cpf != undefined && req.body.cnpj != undefined) {
+            //     return;
+            // }
+        })
+];

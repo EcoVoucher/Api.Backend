@@ -20,17 +20,6 @@ import { validaRecuperaSenha } from '../validators/userValidators.js';
    *   description: Endpoints de Usuários
    */
 // #swagger.tags = ['Users']
-router.get('/user/', auth, getUser);
-router.get('/user/:id', auth,  getUserById);
-router.post('/cadastro/pj', createUser);
-router.post('/cadastro/pf', createUser);
-router.post('/login', loginUser);
-router.patch('/alterar_pegada', auth, updateUser);
-router.delete('/:id', auth, deleteUser);
-router.post('/recuperarSenha', validaRecuperaSenha, sendResetCode)
-router.post('/auth/logout', auth, (req, res) => {
-    res.json({ auth: false, token: null });
-}
-);
+router.post('/aprovar-pj', loginUser);
 
 export default router;

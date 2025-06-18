@@ -95,57 +95,69 @@ export async function getUserById(req, res) {
 }
 
 export async function loginUser(req, res) {
-    let {identidade, senha} = req.body;
+    let {cpfOuCnpj, senha, tipo} = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})
     }
-    identidade = identidade.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
+    cpfOuCnpj = cpfOuCnpj.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
 
     try {
-        let isValid = validaCpfOuCnpj(identidade);
+        let isValid = validaCpfOuCnpj(cpfOuCnpj);
         const ipClient = req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
         if (!isValid) {
             new errorLogin({
                 ip: ipClient,
-                identidade: identidade,
+                cpfOuCnpj: cpfOuCnpj,
             }).save().then(() => {
                 console.log('Error Login');
             }).catch(error => {
                 console.error('Erro ao inserir usuário:', error);
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
             });
-            return res.status(404).json({error: true, message: 'Usuário ou senha Inválida'});
+            return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
         }
 
         let user = null;
-        validaCpfOuCnpj(identidade) === EnumDocuments.cpf ? user = await User.findOne({cpf: parseInt(identidade)}) : user = await Company.findOne({cnpj: parseInt(identidade)});
+        validaCpfOuCnpj(cpfOuCnpj) === EnumDocuments.cpf ? user = await User.   findOne({cpf: parseInt(cpfOuCnpj)}) : user = await Company.findOne({cnpj: parseInt(cpfOuCnpj)});
         const validatePassword = user ? await bcrypt.compare(senha, user.senha) : false;
 
         if (!user && !validatePassword) {
             new errorLogin({
                 ip: ipClient,
-                identidade: identidade,
+                cpfOuCnpj: cpfOuCnpj,
             }).save().then(() => {
                 console.log('Error Login');
             }).catch(error => {
                 console.error('Erro ao inserir usuário:', error);
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
             });
-            return res.status(404).json({error: true, message: 'Usuário ou senha Inválida'});
+            return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
         }
-
+        let usuarioResponse = {
+            id: user._id,
+            nome: user.nome,
+            email: user.email,
+        };
+        if(user.cpf != null) {
+            usuarioResponse.cpf = user.cpf;
+            usuarioResponse.tipo = 'pf';
+            
+        } else {
+            usuarioResponse.cnpj = user.cnpj;
+            usuarioResponse.tipo = 'pj';
+        }
         jwt.sign(
             { user: {id: user._id} },
             process.env.SECRETKEY,
             { expiresIn: process.env.EXPIRES_IN },
             (err, token) => {
                 if (err) throw err
-
+                
                 res.status(200).json({
-                    access_token: token,
-                    auth: true
+                    token: token,
+                    usuario: usuarioResponse,
                 });
             }
         );
@@ -257,6 +269,17 @@ export async function createUser(req, res) {
         })
     }
 }
+
+
+export async function sendResetCode(req, res) {
+    const errors = validationResult(req);
+    console.log(errors)
+    if(!errors.isEmpty()){
+        return res.status(400).json({ errors: errors.array()})
+    }
+}
+
+export async function resetPassword(req, res) {}
 
 export async function updateUser(req, res) {
     let {token, soma_pegada} = req.body;

@@ -2,7 +2,9 @@ import express from 'express';
 import swaggerUi from'swagger-ui-express';
 import connectDatabase from "./config/dbConnect.js";
 import RotasUsuario from './routes/userRoute.js';
+import RotasAdmin from './routes/adminRoute.js';
 import RotasPegada from './routes/pegadaRoute.js';
+import RotasPontuacao from './routes/pontuacaoRoute.js';
 import RotasContato from './routes/contatoRoute.js';
 import * as fs  from 'fs';
 import { exec } from 'child_process';
@@ -53,7 +55,11 @@ app.use((req, res, next) => {
 });
 //Rotas da API
 app.post('/api/email', sendEmail);
-app.use('/api/user', RotasUsuario)
+app.use('/api', RotasUsuario)
+app.use('/api', RotasUsuario)
+app.use('/api', RotasPontuacao)
+
+app.use('/api/admin', RotasAdmin)
 app.use('/api/pegada', RotasPegada)
 app.use('/api/contato', RotasContato)
 app.post('/api/data', (req, res) => {
