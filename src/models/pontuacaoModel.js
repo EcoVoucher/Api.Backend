@@ -12,6 +12,7 @@ const pontuacaoSchema = new Schema({
         }
     ],
     totalPontos: { type: Number, required: true },
+    createdAt: { type: Date, default: Date.now },
 });
 
 // pontuacaoSchema.pre('save', async function(next){// antes de salvar faça isso**
