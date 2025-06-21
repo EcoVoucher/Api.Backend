@@ -19,6 +19,7 @@ const userSchema = new Schema({
         cidade: { type: String },
         estado: { type: String }
     },
+    isAdmin: { type: Boolean, default: false },
     pontos: { type: Number, default: 0 },
     primeiroAcesso: { type: Boolean, default: true, required: true },
 });

@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { validaCpfOuCnpj } from '../validators/Documents.js';
 import { EnumDocuments } from '../enums/document.js';
 import errorLogin from '../models/errorLoginModel.js';
+import { Token } from '../models/tokenModel.js';
 
 function comparativo(soma) {
     let comparativo = "";
@@ -66,6 +67,41 @@ export async function getUser(req, res) {
             message: 'Erro ao obter a listagem dos usuários!',
             error: `${err.message}`
         });
+    }
+}
+
+/**
+ * GET /api/prestadores/id/:id
+ * Lista o prestador de serviço pelo id
+ * Parâmetros: id
+ */
+export async function getUserByCpf(req, res) {
+    try {
+        const cpf = req.params.cpf.replace(/[^\d]/g, '');
+        if(!validaCpfOuCnpj(cpf) || validaCpfOuCnpj(cpf) !== EnumDocuments.cpf) {
+            return res.status(400).json({error: true, message: 'CPF inválido'});
+        }
+        const doc = await User
+            .findOne({ 'cpf': '49745885088' }, {_id: false, cpf: true, nome: true, pontos: 150, email: true});
+        if(doc) {
+            res.status(200).json(doc);
+        } else {
+            res.status(404).json({
+                errors: [{
+                    value: 'Usuário não encontrado',
+                    msg: 'Nenhum usuário encontrado com o CPF informado',
+                    param: '/id/:id'
+                }]
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            errors: [{
+                value: `${err.message}`,
+                msg: 'Erro ao obter o prestador pelo ID',
+                param: '/id/:id'
+            }]
+        })
     }
 }
 
@@ -143,7 +179,7 @@ export async function loginUser(req, res) {
         if(user.cpf != null) {
             usuarioResponse.cpf = user.cpf;
             usuarioResponse.tipo = 'pf';
-            
+
         } else {
             usuarioResponse.cnpj = user.cnpj;
             usuarioResponse.tipo = 'pj';
@@ -154,7 +190,7 @@ export async function loginUser(req, res) {
             { expiresIn: process.env.EXPIRES_IN },
             (err, token) => {
                 if (err) throw err
-                
+
                 res.status(200).json({
                     token: token,
                     usuario: usuarioResponse,
@@ -272,11 +308,56 @@ export async function createUser(req, res) {
 
 
 export async function sendResetCode(req, res) {
-    const errors = validationResult(req);
-    console.log(errors)
-    if(!errors.isEmpty()){
-        return res.status(400).json({ errors: errors.array()})
+    // const errors = validationResult(req);
+    // console.log(errors)
+    // if(!errors.isEmpty()){
+    //     return res.status(400).json({ errors: errors.array()})
+    // }
+
+    let user = await User.findOne({cpf: parseInt(req.body.cpf.replace(/[^\d]/g, ''))});
+    if(!user) {
+        return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
     }
+
+
+
+    let token = '';
+    token = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join('');
+    try {
+        // Verifica se o usuário já possui um token
+        let existingToken = await Token.find({ idUser: user._id }).sort().limit(1);
+        // if(existingToken) {
+
+        const tokenAge = (Date.now() - new Date(existingToken.created_at).getTime()) / 1000; // em segundos
+
+
+        if (existingToken) {
+            // Atualiza o token existente
+            existingToken.token = token;
+            existingToken.expires_at = new Date(Date.now() + 3600000); // Define a expiração para 1 hora
+            await existingToken.save();
+        } else {
+            // Cria um novo token
+            
+            const newToken = new Token({
+                idUser: user._id,
+                token: token,
+
+            });
+            await newToken.save();
+        }
+
+        // Aqui você deve enviar o token para o usuário via email ou outro meio
+        console.log(`Código de redefinição enviado para ${user.email}: ${token}`);
+
+        return res.status(200).json({error: false, message: 'Código de redefinição enviado com sucesso!'});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({error: true, message: 'Erro ao enviar o código de redefinição.'});
+    }
+
+
+
 }
 
 export async function resetPassword(req, res) {}
