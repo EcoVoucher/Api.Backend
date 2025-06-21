@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 app.post('/api/email', sendEmail);
 app.use('', RotasUsuario)
 app.use('/api', RotasUsuario)
-app.use('', RotasPontuacao)
+app.use('/api', RotasPontuacao)
 
 app.use('/api/admin', RotasAdmin)
 app.use('/api/pegada', RotasPegada)

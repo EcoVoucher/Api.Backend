@@ -81,18 +81,14 @@ export async function getUserByCpf(req, res) {
         if(!validaCpfOuCnpj(cpf) || validaCpfOuCnpj(cpf) !== EnumDocuments.cpf) {
             return res.status(400).json({error: true, message: 'CPF inválido'});
         }
+        
         const doc = await User
-            .findOne({ 'cpf': '49745885088' }, {_id: false, cpf: true, nome: true, pontos: 150, email: true});
+            .findOne({ 'cpf': cpf }, {_id: false, cpf: true, nome: true, pontos: 150, email: true});
+        console.log(doc)
         if(doc) {
             res.status(200).json(doc);
         } else {
-            res.status(404).json({
-                errors: [{
-                    value: 'Usuário não encontrado',
-                    msg: 'Nenhum usuário encontrado com o CPF informado',
-                    param: '/id/:id'
-                }]
-            });
+            res.status(404).json({ error: true, message: 'Nenhum usuário encontrado com o CPF informado'});
         }
     } catch (err) {
         res.status(500).json({
@@ -342,7 +338,7 @@ export async function sendResetCode(req, res) {
             await existingToken.save();
         } else {
             // Cria um novo token
-            
+
             const newToken = new Token({
                 idUser: user._id,
                 token: token,
