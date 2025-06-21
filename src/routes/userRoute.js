@@ -24,7 +24,7 @@ router.get('/user/', auth, getUser);
 router.get('/user/:id', auth,  getUserById);
 router.post('/cadastro/pj', createUser);
 router.post('/cadastro/pf', createUser);
-router.post('/login', loginUser);
+router.post('/auth/login', loginUser);
 router.patch('/alterar_pegada', auth, updateUser);
 router.delete('/:id', auth, deleteUser);
 router.post('/recuperarSenha', validaRecuperaSenha, sendResetCode)

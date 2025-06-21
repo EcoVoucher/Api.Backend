@@ -123,7 +123,7 @@ export async function loginUser(req, res) {
         validaCpfOuCnpj(cpfOuCnpj) === EnumDocuments.cpf ? user = await User.   findOne({cpf: parseInt(cpfOuCnpj)}) : user = await Company.findOne({cnpj: parseInt(cpfOuCnpj)});
         const validatePassword = user ? await bcrypt.compare(senha, user.senha) : false;
 
-        if (!user && !validatePassword) {
+        if ((!user && !validatePassword) || (user.cnpj != null && !user.aprovado)) {
             new errorLogin({
                 ip: ipClient,
                 cpfOuCnpj: cpfOuCnpj,
@@ -133,6 +133,9 @@ export async function loginUser(req, res) {
                 console.error('Erro ao inserir usuário:', error);
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
             });
+            if(!user.aprovado) {
+                return res.status(403).json({error: true, message: 'Cadastro ainda não aprovado.'});
+            }
             return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
         }
         let usuarioResponse = {
@@ -142,8 +145,9 @@ export async function loginUser(req, res) {
         };
         if(user.cpf != null) {
             usuarioResponse.cpf = user.cpf;
+            usuarioResponse.primeiroAcesso = user.primeiroAcesso;
             usuarioResponse.tipo = 'pf';
-            
+
         } else {
             usuarioResponse.cnpj = user.cnpj;
             usuarioResponse.tipo = 'pj';
@@ -154,7 +158,7 @@ export async function loginUser(req, res) {
             { expiresIn: process.env.EXPIRES_IN },
             (err, token) => {
                 if (err) throw err
-                
+
                 res.status(200).json({
                     token: token,
                     usuario: usuarioResponse,

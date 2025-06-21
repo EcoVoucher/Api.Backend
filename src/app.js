@@ -55,9 +55,9 @@ app.use((req, res, next) => {
 });
 //Rotas da API
 app.post('/api/email', sendEmail);
+app.use('', RotasUsuario)
 app.use('/api', RotasUsuario)
-app.use('/api', RotasUsuario)
-app.use('/api', RotasPontuacao)
+app.use('', RotasPontuacao)
 
 app.use('/api/admin', RotasAdmin)
 app.use('/api/pegada', RotasPegada)
