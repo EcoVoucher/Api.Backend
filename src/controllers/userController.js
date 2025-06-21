@@ -406,7 +406,44 @@ export async function sendResetCode(req, res) {
 
 }
 
-export async function resetPassword(req, res) {}
+export async function resetPassword(req, res) {
+    const {token, novaSenha } = req.body;
+
+    if ( !token || !novaSenha) {
+        return res.status(400).json({ error: true, message: 'CPF/CNPJ, token e nova senha são obrigatórios.' });
+    }
+
+    try {
+        console.log(token)
+        const tokenDoc = await Token.findOne({ token: token });
+        console.log(tokenDoc)
+        if (!tokenDoc) {
+            return res.status(400).json({ error: true, message: 'Token inválido.' });
+        }
+
+        // Verifica se o token expirou (15 minutos)
+        const tokenCreatedAt = tokenDoc.created_at || tokenDoc._id.getTimestamp();
+        const now = new Date();
+        const diffMinutes = (now - tokenCreatedAt) / (1000 * 60);
+        if (diffMinutes > 15) {
+            await Token.deleteOne({ _id: tokenDoc._id });
+            return res.status(400).json({ error: true, message: 'Token expirado.' });
+        }
+
+        // Atualiza a senha do usuário (hash)
+        const hashedPassword = await bcrypt.hash(novaSenha, 10);
+        User.senha = hashedPassword;
+        await User.updateOne();
+
+        // Remove o token após o uso
+        await Token.deleteOne({ _id: tokenDoc._id });
+
+        return res.status(200).json({ error: false, message: 'Senha redefinida com sucesso.' });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: true, message: 'Erro ao redefinir a senha.' });
+    }
+}
 
 export async function updateUser(req, res) {
     let {token, soma_pegada} = req.body;
@@ -418,6 +455,34 @@ export async function updateUser(req, res) {
         }
         user = await User.updateOne({_id: {$eq: token}}, {$set: {soma_pegada: soma_pegada}});
         if (!user) {
+            return res.status(500).json({error: true, message: 'Erro ao alterar a pegada ecológica'});
+        }
+
+        return res.status(200).json({error: false, message: 'Pegada ecológica alterada com sucesso'});
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({
+            errors: [{
+                value: `${err.message}`,
+                msg: 'Erro ao alterar a pegada ecológica'
+            }]
+        })
+    }
+}
+
+export async function aprovarPj(req, res) {
+    let { cnpj } = req.body;
+
+    try {
+        console.log(cnpj)
+        let company = await Company.findOne({cnpj: {$eq: cnpj}});
+        console.log(company)
+        if (!company) {
+            return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
+        }
+        console.log(Company._id)
+        company = await Company.updateOne({_id: company._id}, {$set: {aprovado: true}});
+        if(!company) {
             return res.status(500).json({error: true, message: 'Erro ao alterar a pegada ecológica'});
         }
 
