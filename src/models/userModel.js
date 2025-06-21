@@ -19,7 +19,8 @@ const userSchema = new Schema({
         cidade: { type: String },
         estado: { type: String }
     },
-    soma_pegada: { type: Number }
+    pontos: { type: Number, default: 0 },
+    primeiroAcesso: { type: Boolean, default: true, required: true },
 });
 
 userSchema.pre('save', async function(next){// antes de salvar faça isso**
