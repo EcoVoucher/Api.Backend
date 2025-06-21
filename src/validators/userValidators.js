@@ -193,17 +193,42 @@ check('senha')
 ]
 
 export const validaRecuperaSenha = [
-    
+
     check('cpf')
         // .not()
         .isEmpty()
-        
+
         .trim().withMessage('É obrigatório informar o cpf')
         // .isEmail().withMessage('O email informado é inválido')
         .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres')
         //check('cnpj')
         .custom(async({ req }) => {
-            if (!req || !req.body || !req.body.cnpj) {
+            if(!req || !req.body || !req.body.cpf) {
+                throw new Error("CPF é obrigatório");
+            }
+            // if (req && req.body) {
+            //     console.log(req.body.cnpj);
+            // } else {
+            //     console.log('req or req.body is undefined');
+            // }
+            // if(req.body.cpf != undefined && req.body.cnpj != undefined) {
+            //     return;
+            // }
+        })
+];
+
+export const validaListaUsuarioPorCpf = [
+
+    check('cpf')
+        // .not()
+        .isEmpty()
+
+        .trim().withMessage('É obrigatório informar o cpf')
+        // .isEmail().withMessage('O email informado é inválido')
+        .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres')
+        //check('cnpj')
+        .custom(async({ req }) => {
+            if (!req || !req.params || !req.params.cnpj) {
                 throw new Error("CPF é obrigatório");
             }
             // if (req && req.body) {

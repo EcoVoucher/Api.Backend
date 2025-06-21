@@ -10,8 +10,9 @@ import {
     updateUser,
     deleteUser,
     sendResetCode,
+    getUserByCpf,
 } from '../controllers/userController.js';
-import { validaRecuperaSenha } from '../validators/userValidators.js';
+import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/userValidators.js';
 
 /**
    * @swagger
@@ -20,14 +21,15 @@ import { validaRecuperaSenha } from '../validators/userValidators.js';
    *   description: Endpoints de Usuários
    */
 // #swagger.tags = ['Users']
-router.get('/user/', auth, getUser);
-router.get('/user/:id', auth,  getUserById);
+router.get('/usuarios/', auth, getUser);
+router.get('/usuarios/:id', auth, getUserById);
+router.get('/usuarios/cpf/:cpf', getUserByCpf);
 router.post('/cadastro/pj', createUser);
 router.post('/cadastro/pf', createUser);
 router.post('/auth/login', loginUser);
 router.patch('/alterar_pegada', auth, updateUser);
 router.delete('/:id', auth, deleteUser);
-router.post('/recuperarSenha', validaRecuperaSenha, sendResetCode)
+router.post('/recuperarSenha', sendResetCode)
 router.post('/auth/logout', auth, (req, res) => {
     res.json({ auth: false, token: null });
 }
