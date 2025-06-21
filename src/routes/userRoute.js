@@ -29,7 +29,7 @@ router.post('/cadastro/pf', createUser);
 router.post('/auth/login', loginUser);
 router.patch('/alterar_pegada', auth, updateUser);
 router.delete('/:id', auth, deleteUser);
-router.post('/recuperarSenha', sendResetCode)
+router.post('/recuperarSenha', validaRecuperaSenha, sendResetCode)
 router.post('/auth/logout', auth, (req, res) => {
     res.json({ auth: false, token: null });
 }

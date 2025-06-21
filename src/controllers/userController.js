@@ -6,6 +6,7 @@ import { validaCpfOuCnpj } from '../validators/Documents.js';
 import { EnumDocuments } from '../enums/document.js';
 import errorLogin from '../models/errorLoginModel.js';
 import { Token } from '../models/tokenModel.js';
+import sendEmail, { mascararEmail } from '../utils/emailSenderUtil.js';
 
 function comparativo(soma) {
     let comparativo = "";
@@ -86,13 +87,7 @@ export async function getUserByCpf(req, res) {
         if(doc) {
             res.status(200).json(doc);
         } else {
-            res.status(404).json({
-                errors: [{
-                    value: 'Usuário não encontrado',
-                    msg: 'Nenhum usuário encontrado com o CPF informado',
-                    param: '/id/:id'
-                }]
-            });
+            res.status(404).json({ value: 'Usuário não encontrado', message: 'Nenhum usuário encontrado com o CPF informado'});
         }
     } catch (err) {
         res.status(500).json({
@@ -308,49 +303,100 @@ export async function createUser(req, res) {
 
 
 export async function sendResetCode(req, res) {
-    // const errors = validationResult(req);
-    // console.log(errors)
-    // if(!errors.isEmpty()){
-    //     return res.status(400).json({ errors: errors.array()})
-    // }
+    const errors = validationResult(req);
+    console.log(errors)
+    if(!errors.isEmpty()){
+        return res.status(400).json({ errors: errors.array()})
+    }
 
-    let user = await User.findOne({cpf: parseInt(req.body.cpf.replace(/[^\d]/g, ''))});
+    let user = await User.findOne({cpf: parseInt(req.body.cpfOuCnpj.replace(/[^\d]/g, ''))});
     if(!user) {
         return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
     }
 
-
-
     let token = '';
     token = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join('');
     try {
-        // Verifica se o usuário já possui um token
-        let existingToken = await Token.find({ idUser: user._id }).sort().limit(1);
-        // if(existingToken) {
+        sendEmail({
+            to: user.email,
+            subject: 'Depósito realizado com sucesso!',
+            text: `Olá, ${user.nome}! Recebemos uma solicitação para redefinir a senha da sua conta Eco Voucher. Use o código de verificação ${token} para continuar com a recuperação. Este código expira em 15 minutos. Se você não solicitou esta recuperação de senha, ignore este e-mail. Sua conta permanecerá segura. Nunca compartilhe este código com outras pessoas. Use-o apenas no aplicativo do Eco Voucher. Crie uma senha forte com letras, números e símbolos e mantenha suas informações de login seguras. Em caso de dúvidas, entre em contato com nosso suporte através do aplicativo. Equipe Eco Voucher.`,
+            html: `
+                <!DOCTYPE html>
+                <html lang="pt-br">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Recuperação de Senha - Eco Voucher</title>
+                </head>
+                <body style="margin:0; padding:20px; background-color:#F5F5F5; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height:1.6;">
+                    <div style="max-width:600px; margin:0 auto; background-color:#FFFFFF; border-radius:12px; overflow:hidden; border:1px solid #CDE5CE;">
+                    <div style="background-color:#FFFFFF; padding:40px 30px; text-align:center; border-bottom:1px solid #CDE5CE;">
+                        <div style="margin-bottom:20px;">
+                        <div style="width:80px; height:80px; background-color:#F5F5F5; border-radius:50%; border:1px solid #CDE5CE; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:0 auto;">
+                            <img src="https://via.placeholder.com/80x80/076921/FFFFFF?text=ECO" alt="Eco Voucher Logo" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                        </div>
+                        </div>
+                        <h1 style="color:#076921; font-size:24px; font-weight:600; margin-top:10px;">Recuperação de Senha</h1>
+                    </div>
 
-        const tokenAge = (Date.now() - new Date(existingToken.created_at).getTime()) / 1000; // em segundos
+                    <div style="padding:40px 30px; text-align:center;">
+                        <div style="font-size:18px; color:#1c1c1c; margin-bottom:25px; font-weight:500;">Olá, ${user.nome}!</div>
+                        <div style="font-size:16px; color:#757575; margin-bottom:35px;">Recebemos uma solicitação para redefinir a senha da sua conta Eco Voucher. Use o código de verificação abaixo para continuar com a recuperação da sua senha.</div>
 
+                        <div style="background-color:#076921; border-radius:12px; padding:30px 20px; margin:30px 0; text-align:center;">
+                        <div style="font-size:14px; color:#FFFFFF; font-weight:500; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px;">Seu código de verificação</div>
+                        <div style="display:inline-block;">
+                            <table cellpadding="0" cellspacing="0" border="0" align="center">
+                            <tr>
+                                ${token.split('').map(digit => `
+                                <td style="padding:0 5px;">
+                                    <div style="width:40px; height:50px; background-color:#FFFFFF; border:2px solid #CDE5CE; border-radius:8px; text-align:center; font-size:24px; font-weight:900; color:#076921; line-height:50px;">${digit}</div>
+                                </td>
+                                `).join('')}
+                            </tr>
+                            </table>
+                        </div>
+                        </div>
 
-        if (existingToken) {
-            // Atualiza o token existente
-            existingToken.token = token;
-            existingToken.expires_at = new Date(Date.now() + 3600000); // Define a expiração para 1 hora
-            await existingToken.save();
-        } else {
-            // Cria um novo token
-            
-            const newToken = new Token({
-                idUser: user._id,
-                token: token,
+                        <div style="background-color:#F5F5F5; border-radius:8px; padding:20px; margin:25px 0; border:1px solid #CDE5CE; font-size:14px; color:#757575; font-weight:500;">
+                        ⏰ Este código expira em 15 minutos
+                        </div>
 
-            });
-            await newToken.save();
-        }
+                        <div style="background-color:#fff3cd; border-left:4px solid #ffc107; padding:20px; margin:30px 0; border-radius:0 8px 8px 0; text-align:left;">
+                        <div style="font-size:14px; font-weight:600; color:#e65100; margin-bottom:8px;">⚠️ Importante</div>
+                        <div style="font-size:14px; color:#757575;">Se você não solicitou esta recuperação de senha, ignore este email. Sua conta permanecerá segura.</div>
+                        </div>
 
-        // Aqui você deve enviar o token para o usuário via email ou outro meio
-        console.log(`Código de redefinição enviado para ${user.email}: ${token}`);
+                        <div style="background-color:#f8f9fa; border-radius:8px; padding:20px; margin:25px 0; text-align:left;">
+                        <div style="color:#076921; font-size:16px; margin-bottom:12px;">🔒 Dicas de Segurança</div>
+                        <ul style="list-style:none; padding-left:0; font-size:14px; color:#757575;">
+                            <li style="margin-bottom:8px;">✓ Nunca compartilhe este código com outras pessoas</li>
+                            <li style="margin-bottom:8px;">✓ Use o código apenas no aplicativo do Eco Voucher</li>
+                            <li style="margin-bottom:8px;">✓ Crie uma senha forte com letras, números e símbolos</li>
+                            <li style="margin-bottom:8px;">✓ Mantenha suas informações de login seguras</li>
+                        </ul>
+                        </div>
 
-        return res.status(200).json({error: false, message: 'Código de redefinição enviado com sucesso!'});
+                        <div style="font-size:16px; color:#757575;">Precisa de ajuda? Entre em contato com nosso suporte através do aplicativo.</div>
+                    </div>
+
+                    <div style="background-color:#F5F5F5; color:#757575; padding:30px; text-align:center; border-top:1px solid #CDE5CE;">
+                        <div style="font-size:14px; color:#757575; margin-bottom:15px;">Este é um email automático, não responda a esta mensagem.</div>
+                        <div style="font-size:16px; color:#1c1c1c; font-weight:600;"><span style="color:#076921;">ECO</span> VOUCHER</div>
+                    </div>
+                    </div>
+                </body>
+                </html>
+            `
+        });
+        const newToken = new Token({
+            idUser: user._id,
+            token: token,
+
+        });
+        await newToken.save();
+
+        return res.status(200).json({error: false, message: `Digite código de 6 dígitos enviado por Email para ${mascararEmail(user.email)}`});
     } catch (err) {
         console.error(err);
         return res.status(500).json({error: true, message: 'Erro ao enviar o código de redefinição.'});
