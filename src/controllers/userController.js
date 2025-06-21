@@ -81,7 +81,7 @@ export async function getUserByCpf(req, res) {
         if(!validaCpfOuCnpj(cpf) || validaCpfOuCnpj(cpf) !== EnumDocuments.cpf) {
             return res.status(400).json({error: true, message: 'CPF inválido'});
         }
-        
+
         const doc = await User
             .findOne({ 'cpf': cpf }, {_id: false, cpf: true, nome: true, pontos: 150, email: true});
         console.log(doc)

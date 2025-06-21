@@ -11,6 +11,8 @@ import {
     deleteUser,
     sendResetCode,
     getUserByCpf,
+    resetPassword,
+    aprovarPj,
 } from '../controllers/userController.js';
 import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/userValidators.js';
 
@@ -28,8 +30,10 @@ router.post('/cadastro/pj', createUser);
 router.post('/cadastro/pf', createUser);
 router.post('/auth/login', loginUser);
 router.patch('/alterar_pegada', auth, updateUser);
+router.patch('/admin/aprovar-pj', auth, aprovarPj);
 router.delete('/:id', auth, deleteUser);
-router.post('/recuperarSenha', sendResetCode)
+router.post('/auth/recuperarSenha', validaRecuperaSenha, sendResetCode)
+router.post('/auth/redefinir-senha', validaRecuperaSenha, resetPassword)
 router.post('/auth/logout', auth, (req, res) => {
     res.json({ auth: false, token: null });
 }
