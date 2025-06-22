@@ -4,7 +4,6 @@ import auth from '../middlewares/auth.js';
 
 import {
     getUser,
-    getUserById,
     createUser,
     loginUser,
     updateUser,
@@ -13,6 +12,7 @@ import {
     getUserByCpf,
     resetPassword,
     aprovarPj,
+    getUserByCpfOuCnpj,
 } from '../controllers/userController.js';
 import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/userValidators.js';
 
@@ -24,7 +24,7 @@ import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/use
    */
 // #swagger.tags = ['Users']
 router.get('/usuarios/', auth, getUser);
-router.get('/usuarios/:id', auth, getUserById);
+router.get('/usuarios/:cpfOuCnpj', auth, getUserByCpfOuCnpj);
 router.get('/usuarios/cpf/:cpf', getUserByCpf);
 router.post('/cadastro/pj', createUser);
 router.post('/cadastro/pf', createUser);

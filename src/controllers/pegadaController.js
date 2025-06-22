@@ -1,112 +1,68 @@
-import express from 'express'
-import { Pegada } from '../models/pegadaModel.js';
+import { Pegada } from "../models/pegadaModel.js";
+import { User } from "../models/userModel.js";
 
+export async function createPegada(req, res) {
+	try {
+		const { documento, pontuacao } = req.body;
+        const user = await User.findOne({cpf: documento});
+        if(!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
+        }
 
-export async function cadastrarPegada(req, res) {
-    //console.log(req.usuario)
-    const pegada = new Pegada({
-        userId: req.usuario.id,
-        valor: req.body.valor,
-        tipo: 'entrada',
-        descricao: req.body.descricao,
-    });
-    const result = await pegada.save().then((result) => {
-        res.status(201).json({
-            message: 'Pegada cadastrada com sucesso!',
-            data: result
-        });
-    }).catch((err) => {
-        res.status(500).json({
-            message: 'Erro ao cadastrar a pegada',
-            error: `${err.message}`
-        });
-    });
+        const pegada = await Pegada.findOne({userId: user._id});
+        if(!pegada) {
+            const newPegada = await Pegada.create({
+                userId: user._id,
+                pontuacoes: [{
+                    pontuacao,
+                    data: new Date(),
+                }]
+            });
+            newPegada.save();
+            return res.status(202).json(newPegada);
+        } else {
+            pegada.pontuacoes.push({
+                pontuacao,
+                data: new Date(),
+            });
+
+            await pegada.save();
+            return res.status(200).json(pegada);
+        }
+	} catch (error) {
+		return res.status(500).json({ message: 'Server error', error: error.message });
+	}
 }
 
-export async function getPegada(req, res) {
-    const { limit, skip, order } = req.query //Obter da URL
-    const somaPegada = req.body.soma;
+export async function getPegadaByCpf(req, res) {
+	try {
+		const { cpf } = req.params;
+		const pegada = await Pegada.findOne({ cpf });
+		if (!pegada || pegada.length === 0) {
+			return res.status(404).json({ message: 'Pegada não encontrada para este CPF' });
+		}
+		return res.status(200).json(pegada.pontuacoes);
+	} catch (error) {
+		return res.status(500).json({ message: 'Server error', error: error.message });
+	}
+}
 
+export async function getPegadaUltimaPontuacao(req, res) {
     try {
-        const results = []
+        const { documento } = req.params;
+        const user = await User.findOne({cpf: documento});
+        if(!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
 
-        await db.collection(nomeCollection)
-        .find()
-        .limit(parseInt(limit) || 10)
-        .skip(parseInt(skip) || 0)
-        .sort({ order: 1 })
-        .forEach((doc) => {
-            results.push(doc)
-        });
+        }
 
-        res.status(200).json(results);
-        } catch (err) {
-        res.status(500).json({
-            message: 'Erro ao obter a listagem dos prestadores',
-            error: `${err.message}`
-        });
-    }
-}
-
-export async function getPegadaById(req, res) {
-    try {
-        const docs = []
-        await db.collection(nomeCollection)
-        .find({ '_id': { $eq: new ObjectId(req.params.id) } }, {})
-        .forEach((doc) => {
-            docs.push(doc)
-        })
-        res.status(200).json(docs)
-    } catch (err) {
-        res.status(500).json({
-            errors: [{
-                value: `${err.message}`,
-                msg: 'Erro ao obter o prestador pelo ID',
-                param: '/id/:id'
-            }]
-        })
-    }
-}
-
-export async function getPegadaByRazao(req, res) {
-    try {
-        const filtro = req.params.filtro.toString()
-        const docs = []
-        await db.collection(nomeCollection)
-            .find({
-                $or: [
-                    { 'razao_social': { $regex: filtro, $options: 'i' } },
-                    { 'nome_fantasia': { $regex: filtro, $options: 'i' } }
-                ]
-            }).forEach((doc) => {
-                docs.push(doc)
-            })
-            res.status(200).json(docs)
-        } catch (err) {
-            res.status(500).json({
-                errors: [{
-                    value: `${err.message}`,
-                    msg: 'Erro ao obter o prestador pela razão social',
-                    param: '/razao/:filtro'
-            }]
-        })
-    }
-}
-
-export async function deletePegada(req, res) {
-    const result = await db.collection(nomeCollection).deleteOne({
-        "_id": { $eq: new ObjectId(req.params.id)}
-    })
-
-    if (result.deletedCount === 0){
-        res.status(404).json({
-            errors: [{
-            value: `Não há nenhum prestador com o id ${req.params.id}`,
-            msg: 'Erro ao excluir o prestador',
-            param: '/:id'
-            }]
-        })
-    } else {
-        res.status(200).send(result)
+        const pegada = await Pegada.findOne({ userId: user._id });
+        if (!pegada || pegada.length === 0) {
+            return res.status(404).json({ message: 'Pegada não encontrada para este CPF' });
+        }
+        const ultimaPontuacao = pegada.pontuacoes[pegada.pontuacoes.length - 1];
+        return res.status(200).json(ultimaPontuacao);
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error: error.message });
     }
 }

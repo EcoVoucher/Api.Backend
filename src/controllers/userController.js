@@ -105,15 +105,30 @@ export async function getUserByCpf(req, res) {
  * Lista o prestador de serviço pelo id
  * Parâmetros: id
  */
-export async function getUserById(req, res) {
+export async function getUserByCpfOuCnpj(req, res) {
     try {
-        const docs = []
-        await db.collection(nomeCollection)
-        .find({ '_id': { $eq: new ObjectId(req.params.id) } }, {})
-        .forEach((doc) => {
-            docs.push(doc)
-        })
-        res.status(200).json(docs)
+        const cpfOuCnpj = req.params.cpfOuCnpj.replace(/[^\d]/g, '');
+        const tipoDocumento = await validaCpfOuCnpj(cpfOuCnpj);
+
+
+        if(!tipoDocumento) {
+            return res.status(400).json({error: true, message: 'CPF ou CNPJ inválido'});
+        }
+
+        let usuario = null;
+        if(tipoDocumento === EnumDocuments.cpf) {
+            usuario = await User
+                .findOne({ 'cpf': cpfOuCnpj }, {_id: true, cpf: true, nome: true, pontos: 150, email: true});
+        } else if(tipoDocumento === EnumDocuments.cnpj) {
+            usuario = await Company
+                .findOne({ 'cnpj': cpfOuCnpj }, {_id: true, cnpj: true, nome: true, email: true, pontuacao: true});
+            }
+        if(usuario) {
+            return res.status(200).json(usuario);
+        } else {
+            return res.status(404).json({ value: 'Usuário não encontrado', message: 'Nenhum usuário encontrado com o documento informado'});
+        }
+
     } catch (err) {
         res.status(500).json({
             errors: [{
@@ -240,13 +255,13 @@ export async function createUser(req, res) {
 
             const newUser = new User({
                 nome: nome,
-                cpf: parseInt(cpf),
+                cpf: cpf,
                 dataNascimento:  new Date(dataNascimento),
                 email: email,
                 senha: senha,
                 telefone: telefone,
                 endereco: {
-                    cep: parseInt(cep),
+                    cep: cep,
                     endereco: endereco,
                     numero: parseInt(numero),
                     complemento: complemento,
@@ -268,13 +283,13 @@ export async function createUser(req, res) {
 
             const newCompany = new Company({
                 nomeEmpresa: nomeEmpresa,
-                cnpj: parseInt(cnpj),
+                cnpj: cnpj,
                 dataNascimento:  new Date(dataNascimento),
                 email: email,
                 senha: senha,
                 telefone: telefone,
                 endereco: {
-                    cep: parseInt(cep),
+                    cep: cep,
                     endereco: endereco,
                     numero: parseInt(numero),
                     complemento: complemento,

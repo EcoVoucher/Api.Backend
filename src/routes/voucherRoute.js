@@ -2,15 +2,7 @@ import express from 'express';
 const router = express.Router();
 import auth from '../middlewares/auth.js';
 
-import {
-    getUser,
-    createUser,
-    loginUser,
-    updateUser,
-    deleteUser,
-    sendResetCode,
-} from '../controllers/userController.js';
-import { validaRecuperaSenha } from '../validators/userValidators.js';
+import { createVoucher, getVoucherByCnpj } from '../controllers/voucherController.js';
 
 /**
    * @swagger
@@ -19,6 +11,7 @@ import { validaRecuperaSenha } from '../validators/userValidators.js';
    *   description: Endpoints de Usuários
    */
 // #swagger.tags = ['Users']
-router.post('/aprovar-pj', loginUser);
+router.post('/', createVoucher);
+router.get('/', getVoucherByCnpj);
 
 export default router;

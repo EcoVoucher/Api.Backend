@@ -6,6 +6,7 @@ import RotasAdmin from './routes/adminRoute.js';
 import RotasPegada from './routes/pegadaRoute.js';
 import RotasPontuacao from './routes/pontuacaoRoute.js';
 import RotasContato from './routes/contatoRoute.js';
+import RotasVoucher from './routes/voucherRoute.js';
 import * as fs  from 'fs';
 import { exec } from 'child_process';
 import path from 'path';
@@ -62,6 +63,7 @@ app.use('/api', RotasPontuacao)
 app.use('/api/admin', RotasAdmin)
 app.use('/api/pegada', RotasPegada)
 app.use('/api/contato', RotasContato)
+app.use('/api/vouchers', RotasVoucher)
 app.post('/api/data', (req, res) => {
     const data = req.body;
     // Process the data here
