@@ -118,7 +118,7 @@ export async function getUserByCpfOuCnpj(req, res) {
         let usuario = null;
         if(tipoDocumento === EnumDocuments.cpf) {
             usuario = await User
-                .findOne({ 'cpf': cpfOuCnpj }, {_id: true, cpf: true, nome: true, pontos: 150, email: true});
+                .findOne({ 'cpf': cpfOuCnpj }, {_id: true, cpf: true, nome: true, pontos: 150, email: true, pontuacao: true });
         } else if(tipoDocumento === EnumDocuments.cnpj) {
             usuario = await Company
                 .findOne({ 'cnpj': cpfOuCnpj }, {_id: true, cnpj: true, nome: true, email: true, pontuacao: true});
