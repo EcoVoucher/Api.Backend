@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/:documento', auth, getPegadaUltimaPontuacao);
 router.get('/historico/:documento', auth, getPegadaByCpf);
-router.post('/', auth, createPegada)
+router.post('/salvar', auth, createPegada)
 // router.get('/', auth, getPegada);
 // router.get('/id/:id', auth, getPegadaById);
 // router.get('/razao/:filtro', auth, getPegadaByRazao);

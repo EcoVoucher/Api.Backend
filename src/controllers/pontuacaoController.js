@@ -60,7 +60,10 @@ export class PontuacaoController {
             }
             const email = user.email;
             const newPontuacao = new Pontuacao(req.body);
+            console.log(user.pontos);
+            process.exit(1)
             newPontuacao.save().then((deposito) => {
+                User.updateOne({ _id: user._id }, { $set: { pontos: user.pontos + deposito.totalPontos } });
                 deposito = deposito.toObject();
                 deposito.codigo = deposito._id;
                 deposito.dataHora = new Date(deposito.createdAt).toLocaleString('pt-BR');
@@ -159,7 +162,7 @@ export class PontuacaoController {
                         </html>
                     `
                 });
-                
+
                 return res.status(202).json({status: 'ok', message: 'Depósito registrado com sucesso.', deposito});
             }).catch(error => {
                 console.error('Erro ao inserir deposito:', error);
