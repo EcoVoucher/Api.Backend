@@ -1,14 +1,30 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-const pontuacaoSchema = new Schema({
+const pontuacaoEntradaSchema = new Schema({
     cpf: { type: String, required: true },
     materiais: [
         {
-            _id: false,
-            "nome": { type: String, required: true },
-            "quantidade": { type: Number, required: true },
-            "pontos": { type: Number, required: true }
+            nome: { type: String, required: true },
+            quantidade: { type: Number, required: true },
+            pontos: { type: Number, required: true },
+            tipo: { type: String, enum: ['papel', 'plastico', 'metal', 'vidro'] },
+        }
+    ],
+    totalPontos: { type: Number, required: true },
+    createdAt: { type: Date, default: Date.now },
+});
+    
+const pontuacaoSaidaSchema = new Schema({
+    cpf: { type: String, required: true },
+    materiais: [
+        {
+            idVoucher: { type: Schema.Types.ObjectId, ref: 'voucher' },
+            nome: { type: String, required: true },
+            descricao: { type: String },
+            quantidade: { type: Number, required: true },
+            pontos: {    type: Number, required: true },
+            tipo: { type: String, required: true },
         }
     ],
     totalPontos: { type: Number, required: true },
@@ -20,4 +36,14 @@ const pontuacaoSchema = new Schema({
 //     next();
 // });
 
-export const Pontuacao = mongoose.model('pontuacao', pontuacaoSchema, 'pontuacao');
+
+//_id: true,
+//idVoucher: { type: Schema.Types.ObjectId, ref: 'voucher' },
+//nome: { type: String, required: true },
+//descricao: { type: String },
+//quantidade: { type: Number, required: true },
+//pontos: {    type: Number, required: true },
+//tipo: { type: string, required: true },
+//
+
+export const PontuacaoEntrada = mongoose.model('pontuacao', pontuacaoEntradaSchema, 'pontuacao');

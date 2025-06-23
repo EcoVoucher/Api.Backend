@@ -22,6 +22,7 @@ const userSchema = new Schema({
     isAdmin: { type: Boolean, default: false },
     tipo: { type: String, enum: ['pj', 'pf'], required: true, default: 'pf' }, // 'pj' para pessoa jurídica, 'pf' para pessoa física
     pontuacao: { type: Number, default: 0 },
+    pontos: { type: Number, default: 0 },
     pegada: { type: Number, default: 0 },
     primeiroAcesso: { type: Boolean, default: true, required: true },
 });
