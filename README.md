@@ -65,16 +65,16 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
 <details>
    <summary>📋 Plano de Risco - Aplicativo React Native + Node.js + MongoDB</summary>
 
----      
+-      
 
 Este documento lista os principais riscos associados ao desenvolvimento, operação e infraestrutura do aplicativo, que é hospedado na **AWS (Amazon Web Services)**.
 
----
+-
 
 ## Infraestrutura
 > O backend (Node.js) e o banco de dados (MongoDB) estão hospedados na AWS, utilizando serviços como EC2, Elastic Beanstalk, S3, Route 53 e possivelmente MongoDB Atlas.
 
----
+-
 
 ## Tabela de Riscos
 
@@ -92,7 +92,7 @@ Este documento lista os principais riscos associados ao desenvolvimento, operaç
 | R10 | Legal / LGPD       | Não conformidade com LGPD ou privacidade de dados                          | Crítico | Médio          | Consentimento, anonimização, revisão contínua da coleta                | Notificação à ANPD, correção imediata                          | ❗ Pendente |
 | R11 | Infraestrutura AWS | Queda de serviços da AWS (EC2, S3, etc.)                                   | Crítico | Baixo          | Alta disponibilidade, múltiplas zonas/regions, monitoramento contínuo | Failover automático, migração para outra região                | ⚠️ Em andamento |
 
----
+-
 
 ## ✅ Ações Preventivas
 
@@ -102,7 +102,7 @@ Este documento lista os principais riscos associados ao desenvolvimento, operaç
 - Revisão de **segurança e LGPD** a cada release
 - Documentação e **checklists de manutenção atualizados**
 
----
+-
 
 
 </details>
