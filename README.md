@@ -94,15 +94,14 @@ Este documento lista os principais riscos associados ao desenvolvimento, operaç
 
 
 
-## ✅ Ações Preventivas
+## Ações Preventivas
 
-- Monitoramento com **AWS CloudWatch + SNS**
-- Backups automáticos e **failover** de banco
-- CI/CD com **GitHub Actions**, **Fastlane** e **AWS CodeDeploy**
+- Monitoramento com **AWS CloudWatch**
+- CI/CD com **GitHub Actions**
 - Revisão de **segurança e LGPD** a cada release
 - Documentação e **checklists de manutenção atualizados**
 
--
+
 
 
 </details>
