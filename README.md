@@ -60,9 +60,11 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
   
 → [Voltar ao topo](#topo)
 
+## Segurança
+
 <details>
    <summary>📋 Plano de Risco - Aplicativo React Native + Node.js + MongoDB</summary>
-    <div>
+
       
 
 Este documento lista os principais riscos associados ao desenvolvimento, operação e infraestrutura do aplicativo, que é hospedado na **AWS (Amazon Web Services)**.
