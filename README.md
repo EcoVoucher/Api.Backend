@@ -69,12 +69,12 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
 
       
 
-Este documento lista os principais riscos associados ao desenvolvimento, operação e infraestrutura do aplicativo, que é hospedado na **AWS (Amazon Web Services)**.
+Principais riscos associados ao desenvolvimento, operação e infraestrutura do aplicativo, que é hospedado na **AWS (Amazon Web Services)**.
 
 
 
 ## Infraestrutura
-> O backend (Node.js) e o banco de dados (MongoDB) estão hospedados na AWS, utilizando serviços como EC2, Elastic Beanstalk, S3, Route 53 e possivelmente MongoDB Atlas.
+> O backend (Node.js) e o banco de dados (MongoDB) estão hospedados na AWS, utilizando serviços como EC2, S3, CloudWatch e MongoDB Atlas.
 
 
 
