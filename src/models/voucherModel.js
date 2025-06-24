@@ -3,10 +3,12 @@ const { Schema } = mongoose;
 
 const voucherSchema = new Schema({
     idCompany: { type: Schema.Types.ObjectId, ref: 'company', required: true },
-    tipo: { type: String, enum: ['alimentacao', 'higiene', 'transporte'], required: true },
-    produtos: [],
-    quantidade: { type: Number, required: true , required: true },
-    validade: { type: Date, required: true },
-});
-
+    tipo: { type: String, enum: ['Alimentacao', 'Higiene', 'Transporte'], required: true },
+    produtos: [{ type: String, required:    true }],
+    quantidade: { type: Number, required: true },
+    dataValidade: { type: Date, required: true },
+    codigos: [{ type: String, required: true }],
+    disponiveis: [{ type: String, required: true }],
+}, { timestamps: true });
+ 
 export const Voucher = mongoose.model('voucher', voucherSchema, 'voucher');

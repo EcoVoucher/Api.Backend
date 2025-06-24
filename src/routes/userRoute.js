@@ -13,6 +13,7 @@ import {
     resetPassword,
     aprovarPj,
     getUserByCpfOuCnpj,
+    getHistoricoUser,
 } from '../controllers/userController.js';
 import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/userValidators.js';
 
@@ -24,6 +25,7 @@ import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/use
    */
 // #swagger.tags = ['Users']
 router.get('/usuarios/', auth, getUser);
+router.get('/usuarios/historico/:cpf', auth, getHistoricoUser);
 router.get('/usuarios/:cpfOuCnpj', auth, getUserByCpfOuCnpj);
 router.get('/usuarios/cpf/:cpf', getUserByCpf);
 router.post('/cadastro/pj', createUser);

@@ -14,4 +14,5 @@ import { createVoucher, getVoucherByCnpj } from '../controllers/voucherControlle
 router.post('/', createVoucher);
 router.get('/', getVoucherByCnpj);
 
+
 export default router;

@@ -1,5 +1,5 @@
 import { validationResult } from 'express-validator';
-import { PontuacaoEntrada } from '../models/pontuacaoModel.js';
+import { Deposito, historicoPontuacao } from '../models/pontuacaoModel.js';
 import sendEmail from '../utils/emailSenderUtil.js';
 import { User } from '../models/userModel.js';
 
@@ -59,9 +59,28 @@ export class PontuacaoController {
                 return res.status(404).json({ error: true, message: 'Usuário não encontrado' });
             }
             const email = user.email;
-            const newPontuacao = new PontuacaoEntrada(req.body);
+            const newPontuacao = new Deposito({...req.body, idUser: user._id, descricao: req.body.descricao || 'Depósito de material'});
             newPontuacao.save().then((deposito) => {
                 deposito = deposito.toObject();
+                historicoPontuacao.findOne({ idUser: user._id }).then(historico => {
+                    if (!historico) {
+                        hsitoricoPontuacao.create({
+                            idUser: user._id,
+                            movimentacoes: [{
+                                tipo: 'entrada',
+                                pontos: Number(deposito.totalPontos),
+                                descricao: deposito.descricao,
+                            }]
+                        });
+                    } else {
+                        historico.movimentacoes.push({
+                            tipo: 'entrada',
+                            pontos: Number(deposito.totalPontos),
+                            descricao: deposito.descricao,
+                        });
+                        historico.save();
+                    }
+                });
                 deposito.codigo = deposito._id;
                 deposito.dataHora = new Date(deposito.createdAt).toLocaleString('pt-BR');
                 delete deposito._id;

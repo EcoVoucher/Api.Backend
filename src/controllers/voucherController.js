@@ -40,28 +40,76 @@ export async function createVoucher(req, res) {
         #swagger.tags = ['Voucher']
         #swagger.description = 'Endpoint para criar um novo voucher'
     */
-    const { cnpj,tipo, produtos, quantidade, dataValidade } = req.body;
+    const { cnpj, tipo, produtos, quantidade, dataValidade } = req.body;
+
+    // Exemplo de mapeamento de produtos por tipo de voucher
+    const produtosPorTipo = {
+        Alimentacao: ['Arroz', 'Feijao', 'Macarrao'],
+        Higiene: ['Sabonete', 'Shampoo', 'Pasta de Dente'],
+        Transporte: ['Bilhete Unico', 'Vale Combustivel']
+    };
 
     if (!cnpj || !tipo || !produtos || !quantidade || !dataValidade) {
-        return res.status(400).json({ error: true, message: 'Todos os campos obrigatórios devem ser fornecidos: cnpj, idUser, tipo, produtos, quantidade, dataValidade' });
+        return res.status(400).json({ error: true, message: 'Todos os campos obrigatórios devem ser fornecidos: cnpj, tipo, produtos, quantidade, dataValidade' });
+    }
+
+    // Validação: produtos pertencem ao tipo do voucher
+    const produtosValidos = produtosPorTipo[tipo] || [];
+    const produtosInvalidos = produtos.filter(p => !produtosValidos.includes(p));
+    if (produtosInvalidos.length > 0) {
+        return res.status(400).json({ error: true, message: `Os seguintes produtos não pertencem ao tipo ${tipo}: ${produtosInvalidos.join(', ')}` });
+    }
+
+    // Validação: quantidade positiva e inteira
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        return res.status(400).json({ error: true, message: 'A quantidade deve ser um número inteiro positivo.' });
     }
 
     try {
-        const existingVoucher = await Company.findOne({ cnpj: cnpj });
-        if(!existingVoucher) {
-            return res.status(409).json({ error: true, message: 'Voucher já existe para este CNPJ' });
+        const company = await Company.findOne({ cnpj: cnpj });
+        if (!company) {
+            return res.status(404).json({ error: true, message: 'Empresa não encontrada para o CNPJ informado.' });
         }
 
-        const voucher = new Voucher({
-            idCompany: existingVoucher._id,
+        // Gerar códigos únicos para cada voucher do lote no formato solicitado
+        const generatedCodes = new Set();
+        while (generatedCodes.size < quantidade) {
+            // Exemplo de código: VCH-2025-b1c2-9f4a
+            const ano = new Date(dataValidade).getFullYear();
+            const code = `VCH-${ano}-${Math.random().toString(16).substr(2, 4)}-${Math.random().toString(16).substr(2, 4)}`;
+            generatedCodes.add(code);
+        }
+        const codigos = Array.from(generatedCodes).map(codigo => ({
+            codigo,
+            status: 'valido'
+        }));
+
+        // Cria um lote de vouchers (um documento para o lote)
+        const voucherBatch = new Voucher({
+            idCompany: company._id,
             tipo: tipo,
             produtos: produtos,
             quantidade: quantidade,
-            dataValidade: dataValidade
+            dataValidade: dataValidade,
+            codigos: codigos.map(c => c.codigo), // apenas os códigos puros para o banco
+            disponiveis: codigos.map(c => c.codigo) // Inicialmente todos disponíveis
         });
-        await voucher.save();
+        await voucherBatch.save();
 
-        return res.status(201).json({ message: 'Voucher criado com sucesso', voucher });
+        // Monta o objeto de resposta conforme solicitado
+        const lote = {
+            idLote: codigos[0].codigo,
+            quantidade: quantidade,
+            dataValidade: dataValidade,
+            empresa: company.nome || company.razaoSocial || 'Empresa',
+            endereco: company.endereco || '',
+            tipo: tipo,
+            produtos: produtos,
+            codigos: codigos,
+            criadoEm: voucherBatch.createdAt || new Date().toISOString()
+        };
+
+        return res.status(201).json({ mensagem: 'Vouchers gerados com sucesso', lote });
     } catch (error) {
         console.error('Erro ao criar voucher:', error);
         return res.status(500).json({ error: true, message: 'Erro interno do servidor' });

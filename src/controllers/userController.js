@@ -7,6 +7,7 @@ import { EnumDocuments } from '../enums/document.js';
 import errorLogin from '../models/errorLoginModel.js';
 import { Token } from '../models/tokenModel.js';
 import sendEmail, { mascararEmail } from '../utils/emailSenderUtil.js';
+import { historicoPontuacao } from '../models/pontuacaoModel.js';
 
 function comparativo(soma) {
     let comparativo = "";
@@ -25,6 +26,46 @@ function comparativo(soma) {
     return comparativo;
 }
 
+
+export async function getHistoricoUser(req, res) {
+    /*
+        #swagger.tags = ['Users']
+        #swagger.description = 'Endpoint para obter o histórico do usuário'
+    */
+    try {
+        const cpf = req.params.cpf;
+        const user = await User.findOne({cpf: cpf});
+        if(!user) {
+            return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
+        }
+
+        let historico = await historicoPontuacao.findOne({ idUser: user._id }).populate('idUser', 'nome');
+        console.log(historico)
+        if (!historico) {
+            return res.status(404).json({ error: true, message: 'Histórico não encontrado.' });
+        }
+        res.status(200).json({
+            cpf: user.cpf,
+            nome: user.nome,
+            pontos: user.pontos,
+            movimentacoes: (historico.movimentacoes || []).map(mov => ({
+                ...mov.toObject ? mov.toObject() : mov,
+                data: (() => {
+                    const d = mov.data || mov.createdAt || mov.updatedAt || new Date();
+                    if (!d) return '';
+                    const dateObj = new Date(d);
+                    const day = String(dateObj.getDate()).padStart(2, '0');
+                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    return `${day}/${month}/${year}`;
+                })()
+            }))
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: true, message: 'Erro ao buscar o histórico do usuário.' });
+    }
+}
 /**
  * GET /api/user/
  * Lista os usuarios
