@@ -63,7 +63,9 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
 ## Segurança
 
 <details>
-   <summary>Plano de Risco - Aplicativo React Native + Node.js + MongoDB</summary>
+
+    
+##Plano de Risco - Aplicativo React Native + Node.js + MongoDB
 
       
 
