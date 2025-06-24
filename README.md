@@ -60,6 +60,39 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
   
 → [Voltar ao topo](#topo)
 
+# 📋 Plano de Risco - Aplicativo React Native + Node.js + MongoDB
+
+Este documento lista os principais riscos associados ao desenvolvimento e operação do aplicativo, bem como estratégias de mitigação e planos de contingência.
+
+| ID  | Categoria       | Descrição do Risco                                                     | Impacto | Probabilidade | Mitigação                                                        | Contingência                                               |
+|-----|------------------|------------------------------------------------------------------------|---------|----------------|------------------------------------------------------------------|------------------------------------------------------------|
+| R1  | Tecnológico      | Incompatibilidade entre bibliotecas do React Native após atualizações | Alto    | Médio          | Controle de versão, testes em ambiente separado                 | Reverter versão via Git, registrar bug                     |
+| R2  | Backend/API      | Falha no servidor Node.js (crash, escalabilidade)                     | Alto    | Médio          | Logs, PM2, monitoramento (New Relic/Datadog)                    | Reinício automático, fallback de endpoints                 |
+| R3  | Banco de Dados   | Perda ou corrupção de dados no MongoDB                                | Alto    | Baixo          | Backups, réplica (Replica Set), validações                      | Restauração de backup, alertas                             |
+| R4  | Segurança        | Vazamento de dados sensíveis de usuários                              | Crítico | Médio          | HTTPS, autenticação JWT, validação de entrada, rate limiting    | Bloquear sistema, reset de tokens, acionar plano LGPD      |
+| R5  | Conectividade    | App não funciona offline                                               | Médio   | Alto           | Cache local (AsyncStorage, SQLite)                              | Exibir modo offline, reconectar periodicamente             |
+| R6  | Desempenho       | Lentidão em dispositivos de baixo desempenho                          | Médio   | Alto           | Otimização de componentes, lazy loading                         | Desativar recursos pesados, alertar o usuário              |
+| R7  | Integrações      | APIs de terceiros indisponíveis (ex: pagamento, mapas)                | Alto    | Médio          | Circuit breakers, retries, fallback                             | Mensagem de erro, reprocessamento posterior                |
+| R8  | Equipe           | Saída de desenvolvedores-chave                                        | Médio   | Médio          | Documentação, repositório centralizado, onboarding contínuo     | Redistribuição de tarefas, contratação emergencial         |
+| R9  | Deploy           | Falha na publicação nas lojas (App Store/Google Play)                 | Alto    | Médio          | CI/CD (ex: Fastlane), checklist de publicação                   | Correção e nova submissão rápida                           |
+| R10 | Legal / LGPD     | Não conformidade com a LGPD / privacidade de dados                    | Crítico | Médio          | Consentimento, anonimização, revisão da coleta de dados         | Notificação à ANPD, correções emergenciais                 |
+
+---
+
+## ✅ Ações Preventivas Recomendadas
+
+- Configuração de **CI/CD** com testes automatizados
+- Execução de **testes manuais e automáticos** regulares
+- **Auditorias de segurança e performance** trimestrais
+- **Monitoramento proativo** com alertas
+- **Documentação técnica atualizada** (código, APIs, arquitetura)
+
+> ℹ️ Este plano deve ser revisado a cada sprint ou sempre que houver mudanças significativas no sistema.
+
+---
+→ [Voltar ao topo](#topo)
+
+
 # Tecnologias Utilizadas
 
 <div align="center">
