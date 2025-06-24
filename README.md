@@ -65,34 +65,50 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
     <div>
       
 
-Este documento lista os principais riscos associados ao desenvolvimento e operação do aplicativo, bem como estratégias de mitigação e planos de contingência.
+# 📋 Plano de Risco - Aplicativo React Native + Node.js + MongoDB (Hospedado na AWS)
 
-| ID  | Categoria       | Descrição do Risco                                                     | Impacto | Probabilidade | Mitigação                                                        | Contingência                                               |
-|-----|------------------|------------------------------------------------------------------------|---------|----------------|------------------------------------------------------------------|------------------------------------------------------------|
-| R1  | Tecnológico      | Incompatibilidade entre bibliotecas do React Native após atualizações | Alto    | Médio          | Controle de versão, testes em ambiente separado                 | Reverter versão via Git, registrar bug                     |
-| R2  | Backend/API      | Falha no servidor Node.js (crash, escalabilidade)                     | Alto    | Médio          | Logs, PM2, monitoramento (New Relic/Datadog)                    | Reinício automático, fallback de endpoints                 |
-| R3  | Banco de Dados   | Perda ou corrupção de dados no MongoDB                                | Alto    | Baixo          | Backups, réplica (Replica Set), validações                      | Restauração de backup, alertas                             |
-| R4  | Segurança        | Vazamento de dados sensíveis de usuários                              | Crítico | Médio          | HTTPS, autenticação JWT, validação de entrada, rate limiting    | Bloquear sistema, reset de tokens, acionar plano LGPD      |
-| R5  | Conectividade    | App não funciona offline                                               | Médio   | Alto           | Cache local (AsyncStorage, SQLite)                              | Exibir modo offline, reconectar periodicamente             |
-| R6  | Desempenho       | Lentidão em dispositivos de baixo desempenho                          | Médio   | Alto           | Otimização de componentes, lazy loading                         | Desativar recursos pesados, alertar o usuário              |
-| R7  | Integrações      | APIs de terceiros indisponíveis (ex: pagamento, mapas)                | Alto    | Médio          | Circuit breakers, retries, fallback                             | Mensagem de erro, reprocessamento posterior                |
-| R8  | Equipe           | Saída de desenvolvedores-chave                                        | Médio   | Médio          | Documentação, repositório centralizado, onboarding contínuo     | Redistribuição de tarefas, contratação emergencial         |
-| R9  | Deploy           | Falha na publicação nas lojas (App Store/Google Play)                 | Alto    | Médio          | CI/CD (ex: Fastlane), checklist de publicação                   | Correção e nova submissão rápida                           |
-| R10 | Legal / LGPD     | Não conformidade com a LGPD / privacidade de dados                    | Crítico | Médio          | Consentimento, anonimização, revisão da coleta de dados         | Notificação à ANPD, correções emergenciais                 |
+Este documento lista os principais riscos associados ao desenvolvimento, operação e infraestrutura do aplicativo, que é hospedado na **AWS (Amazon Web Services)**.
 
 ---
 
-## ✅ Ações Preventivas Recomendadas
-
-- Configuração de **CI/CD** com testes automatizados
-- Execução de **testes manuais e automáticos** regulares
-- **Auditorias de segurança e performance** trimestrais
-- **Monitoramento proativo** com alertas
-- **Documentação técnica atualizada** (código, APIs, arquitetura)
-
-> ℹ️ Este plano deve ser revisado a cada sprint ou sempre que houver mudanças significativas no sistema.
+## ☁️ Infraestrutura
+> O backend (Node.js) e o banco de dados (MongoDB) estão hospedados na AWS, utilizando serviços como EC2, Elastic Beanstalk, S3, Route 53 e possivelmente MongoDB Atlas.
 
 ---
+
+## 🔐 Tabela de Riscos
+
+| ID  | Categoria         | Descrição do Risco                                                         | Impacto | Probabilidade | Mitigação                                                              | Contingência                                                   | Status |
+|-----|--------------------|------------------------------------------------------------------------------|---------|----------------|------------------------------------------------------------------------|----------------------------------------------------------------|--------|
+| R1  | Tecnológico        | Incompatibilidade entre bibliotecas do React Native após atualizações      | Alto    | Médio          | Controle de versão, testes em ambiente separado                       | Reverter versão via Git, registrar bug                         | ⚠️ Em andamento |
+| R2  | Backend/API        | Falha no servidor Node.js (crash, escalabilidade)                          | Alto    | Médio          | Logs, PM2, Elastic Beanstalk com Auto Scaling                         | Reinício automático, fallback de endpoints                     | ✅ Resolvido |
+| R3  | Banco de Dados     | Perda ou corrupção de dados no MongoDB                                     | Alto    | Baixo          | Backups automáticos, réplica (MongoDB Atlas), validações              | Restauração de backup, failover automático                     | ✅ Resolvido |
+| R4  | Segurança          | Vazamento de dados sensíveis de usuários                                   | Crítico | Médio          | HTTPS, JWT, validações, WAF da AWS                                    | Bloqueio, reset de tokens, plano LGPD                          | ⚠️ Em andamento |
+| R5  | Conectividade      | App não funciona offline                                                    | Médio   | Alto           | Cache local (AsyncStorage, SQLite)                                     | Exibir modo offline, reconexão automática                      | ❗ Pendente |
+| R6  | Desempenho         | Lentidão em dispositivos de baixo desempenho                               | Médio   | Alto           | Otimização de componentes, lazy loading                                | Desativar recursos pesados, alertar o usuário                  | ⚠️ Em andamento |
+| R7  | Integrações        | APIs de terceiros indisponíveis (pagamentos, mapas, etc.)                  | Alto    | Médio          | Circuit breakers, retries, fallback                                    | Mensagem amigável, reprocessamento posterior                   | ✅ Resolvido |
+| R8  | Equipe             | Saída de desenvolvedores-chave                                             | Médio   | Médio          | Documentação técnica, onboarding contínuo                              | Redistribuição de tarefas, consultoria emergencial             | ⚠️ Em andamento |
+| R9  | Deploy             | Falha na publicação nas lojas (App Store/Google Play)                      | Alto    | Médio          | CI/CD (Fastlane), checklist de publicação                              | Correções rápidas, nova submissão                              | ✅ Resolvido |
+| R10 | Legal / LGPD       | Não conformidade com LGPD ou privacidade de dados                          | Crítico | Médio          | Consentimento, anonimização, revisão contínua da coleta                | Notificação à ANPD, correção imediata                          | ❗ Pendente |
+| R11 | Infraestrutura AWS | Queda de serviços da AWS (EC2, S3, etc.)                                   | Crítico | Baixo          | Alta disponibilidade, múltiplas zonas/regions, monitoramento contínuo | Failover automático, migração para outra região                | ⚠️ Em andamento |
+
+---
+
+## ✅ Ações Preventivas
+
+- Monitoramento com **AWS CloudWatch + SNS**
+- Backups automáticos e **failover** de banco
+- CI/CD com **GitHub Actions**, **Fastlane** e **AWS CodeDeploy**
+- Revisão de **segurança e LGPD** a cada release
+- Documentação e **checklists de manutenção atualizados**
+
+---
+
+> ℹ️ Atualize a coluna **Status** a cada sprint ou mudança relevante.
+
+---
+
+
 
 
     </div>
