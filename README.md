@@ -60,7 +60,10 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
   
 → [Voltar ao topo](#topo)
 
-# 📋 Plano de Risco - Aplicativo React Native + Node.js + MongoDB
+<details>
+   <summary>Requisitos Não Funcionais</summary>
+    <div align="center">
+        # 📋 Plano de Risco - Aplicativo React Native + Node.js + MongoDB
 
 Este documento lista os principais riscos associados ao desenvolvimento e operação do aplicativo, bem como estratégias de mitigação e planos de contingência.
 
@@ -90,6 +93,11 @@ Este documento lista os principais riscos associados ao desenvolvimento e opera�
 > ℹ️ Este plano deve ser revisado a cada sprint ou sempre que houver mudanças significativas no sistema.
 
 ---
+
+
+    </div>
+</details>
+
 → [Voltar ao topo](#topo)
 
 
