@@ -1,18 +1,18 @@
 import express from 'express';
 import swaggerUi from'swagger-ui-express';
-import connectDatabase from "./src/config/dbConnect.js";
-import RotasUsuario from './src/routes/userRoute.js';
-import RotasAdmin from './src/routes/adminRoute.js';
-import RotasPegada from './src/routes/pegadaRoute.js';
-import RotasPontuacao from './src/routes/pontuacaoRoute.js';
-import RotasContato from './src/routes/contatoRoute.js';
-import RotasVoucher from './src/routes/voucherRoute.js';
+import connectDatabase from "./config/dbConnect.js";
+import RotasUsuario from './routes/userRoute.js';
+import RotasAdmin from './routes/adminRoute.js';
+import RotasPegada from './routes/pegadaRoute.js';
+import RotasPontuacao from './routes/pontuacaoRoute.js';
+import RotasContato from './routes/contatoRoute.js';
+import RotasVoucher from './routes/voucherRoute.js';
 import * as fs  from 'fs';
 import { exec } from 'child_process';
 import path from 'path';
 import {config} from 'dotenv';
-import auth from './src/middlewares/auth.js';
-import { sendEmail } from './src/controllers/emailController.js';
+import auth from './middlewares/auth.js';
+import { sendEmail } from './controllers/emailController.js';
 config(); // carrega as variáveis do .env
 
 const conexao = await connectDatabase();
