@@ -1,6 +1,48 @@
 import { Company } from '../models/userModel.js';
 import {Voucher} from '../models/voucherModel.js';
 
+export async function getVoucher(req, res) {
+    /*
+        #swagger.tags = ['Voucher']
+        #swagger.description = 'Endpoint para listar todos os vouchers'
+    */
+    try {
+        // Busca todos os vouchers válidos (dataValidade no futuro) e popula informações da empresa
+        const now = new Date();
+        const vouchers = await Voucher.find({
+            dataValidade: { $gte: now },
+            disponiveis: { $exists: true, $not: { $size: 0 } } // Garante que disponiveis não está vazio
+        }).populate('idCompany');
+
+        const result = vouchers.map(voucher => {
+            const company = voucher.idCompany || {};
+            console.log(company)
+            return {
+                idLote: voucher._id,
+                tipo: voucher.tipo,
+                produtos: voucher.produtos,
+                empresa: company.nome || company.razaoSocial || 'Empresa',
+                endereco: company.endereco.endereco || '',
+                cep: company.endereco.cep || '',
+                //endereco: company.endereco || '',
+                numero: company.endereco.numero || '',
+                bairro: company.endereco.bairro || '',
+                cidade: company.endereco.cidade || '',
+                estado: company.endereco.estado || '',
+
+                validade: voucher.dataValidade ? new Date(voucher.dataValidade).toISOString() : '',
+                quantidade: voucher.quantidade,
+                codigos: voucher.codigos || []
+            };
+        });
+
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error('Erro ao listar vouchers:', error);
+        return res.status(500).json({ error: true, message: 'Erro interno do servidor' });
+    }
+}
+
 export async function getVoucherByCnpj(req, res) {
     /*
         #swagger.tags = ['Voucher']
@@ -40,9 +82,9 @@ export async function createVoucher(req, res) {
         #swagger.tags = ['Voucher']
         #swagger.description = 'Endpoint para criar um novo voucher'
     */
-    const { cnpj, tipo, produtos, quantidade, dataValidade } = req.body;
+    const { tipo, produtos, quantidade, dataValidade } = req.body;
+    const { cnpj } = req.usuario;
 
-    // Exemplo de mapeamento de produtos por tipo de voucher
     const produtosPorTipo = {
         Alimentacao: ['Arroz', 'Feijao', 'Macarrao'],
         Higiene: ['Sabonete', 'Shampoo', 'Pasta de Dente'],
@@ -91,7 +133,7 @@ export async function createVoucher(req, res) {
             produtos: produtos,
             quantidade: quantidade,
             dataValidade: dataValidade,
-            codigos: codigos.map(c => c.codigo), // apenas os códigos puros para o banco
+            codigos: codigos, // salva array de objetos conforme esperado pelo schema
             disponiveis: codigos.map(c => c.codigo) // Inicialmente todos disponíveis
         });
         await voucherBatch.save();

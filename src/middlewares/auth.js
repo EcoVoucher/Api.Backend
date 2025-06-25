@@ -11,8 +11,8 @@ export default async function auth(req, res, next){
             exp (expiration) - Data de expiração
             iat (issued at) - Data de criação
         */
-        req.usuario = await decoded.user
-        next() //direcionamos para o endpoint
+        req.usuario = await decoded.usuario
+    next() //direcionamos para o endpoint
     } catch(e) {
         res.status(403).send({error: `Token inválido: ${e.message}`})
     }

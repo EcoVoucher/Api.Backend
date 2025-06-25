@@ -207,7 +207,7 @@ export async function loginUser(req, res) {
         }
 
         let user = null;
-        validaCpfOuCnpj(cpfOuCnpj) === EnumDocuments.cpf ? user = await User.   findOne({cpf: parseInt(cpfOuCnpj)}) : user = await Company.findOne({cnpj: parseInt(cpfOuCnpj)});
+        validaCpfOuCnpj(cpfOuCnpj) === EnumDocuments.cpf ? user = await User.   findOne({cpf: cpfOuCnpj}) : user = await Company.findOne({cnpj: cpfOuCnpj});
         const validatePassword = user ? await bcrypt.compare(senha, user.senha) : false;
 
         if (!user && !validatePassword) {
@@ -236,7 +236,7 @@ export async function loginUser(req, res) {
             usuarioResponse.tipo = 'pj';
         }
         jwt.sign(
-            { user: {id: user._id} },
+            { usuario: usuarioResponse },
             process.env.SECRETKEY,
             { expiresIn: process.env.EXPIRES_IN },
             (err, token) => {
