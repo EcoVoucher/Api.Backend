@@ -34,7 +34,7 @@ router.post('/auth/login', loginUser);
 router.patch('/alterar_pegada', auth, updateUser);
 router.patch('/admin/aprovar-pj', auth, aprovarPj);
 router.delete('/:id', auth, deleteUser);
-router.post('/auth/recuperarSenha', validaRecuperaSenha, sendResetCode)
+router.post('/auth/recuperar-senha', validaRecuperaSenha, sendResetCode)
 router.post('/auth/redefinir-senha', validaRecuperaSenha, resetPassword)
 router.post('/auth/logout', auth, (req, res) => {
     res.json({ auth: false, token: null });

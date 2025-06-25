@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
     cpf: { type: String, required: true },
     nome: { type: String, required: true },
-    dataNascimento: { type: Date },
+    dataNascimento: { type: String, required: true },
     email: { type: String, required: true },
     senha: { type: String, required: true },
     //codigoSeguranca: { type: String }, // Added

@@ -39,15 +39,13 @@ export async function getHistoricoUser(req, res) {
             return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
         }
 
-        let historico = await historicoPontuacao.findOne({ idUser: user._id }).populate('idUser', 'nome');
+        let historico = await historicoPontuacao.findOne({ idUser: user._id }).populate('idUser', 'nome', 'pontuacao');
         console.log(historico)
-        if (!historico) {
-            return res.status(404).json({ error: true, message: 'Histórico não encontrado.' });
-        }
-        res.status(200).json({
+        return res.status(200).json({
             cpf: user.cpf,
             nome: user.nome,
             pontos: user.pontos,
+            pontuacao: user.pontuacao,
             movimentacoes: (historico.movimentacoes || []).map(mov => ({
                 ...mov.toObject ? mov.toObject() : mov,
                 data: (() => {
@@ -80,30 +78,48 @@ export async function getUser(req, res) {
     const somaPegada = req.body.soma;
 
     try {
-        const results = []
+        let results = []
         let query = null;
-        if (cpf) {
-            query = { 'cpf': { $exists: true }, 'cnpj': { $exists: false } };
-        }
-        if (cnpj) {
-            query = { 'cpf': { $exists: false }, 'cnpj': { $exists: true } };
-        }
+        // if (cpf) {
+        //     query = { 'cpf': { $exists: true }, 'cnpj': { $exists: false } };
+        // }
+        // if (cnpj) {
+        //     query = { 'cpf': { $exists: false }, 'cnpj': { $exists: true } };
+        // }
         const users = await User
-        .find(query)
-        .limit(parseInt(limit) || 10)
-        .skip(parseInt(skip) || 0)
-        .sort({ order: 1 })
+        .find()
+        const company = await Company.find()
+        results.push(...users, ...company);
+        // .limit(parseInt(limit) || 10)
+        // .skip(parseInt(skip) || 0)
+        // .sort({ order: 1 })
+
+
 
         if (users) {
-            for (let i = 0; i < users.length; i++) {
-                users.forEach((doc) => {
-                    doc.comparativo = comparativo(doc.soma_pegada);
-                    results.push(doc);
-                });
-            }
-        }
+            console.log(users.length)
+            results = results.map(user => {
+                let usuarioResponse = {
+                    id: user._id,
+                    nome: user.nome,
+                    email: user.email,
+                };
+                if(user.cpf != null) {
+                    usuarioResponse.cpf = user.cpf;
+                    usuarioResponse.isAdmin = user.isAdmin;
+                    usuarioResponse.primeiroAcesso = user.pontuacao == 0 ? true : false;
+                    usuarioResponse.tipo = 'pf';
+                } else {
+                    usuarioResponse.cnpj = user.cnpj;
+                    usuarioResponse.tipo = 'pj';
+                }
+                return usuarioResponse;
+            });
 
-        res.status(200).json(results);
+            res.status(200).json(results);
+        } else {
+            res.status(200).json([]);
+        }
     } catch (err) {
         res.status(500).json({
             message: 'Erro ao obter a listagem dos usuários!',
@@ -124,7 +140,7 @@ export async function getUserByCpf(req, res) {
             return res.status(400).json({error: true, message: 'CPF inválido'});
         }
         const doc = await User
-            .findOne({ 'cpf': '49745885088' }, {_id: false, cpf: true, nome: true, pontos: 150, email: true});
+            .findOne({ 'cpf': '49745885088' }, {_id: false, cpf: true, nome: true, pontos: true, email: true, pontuacao: true });
         if(doc) {
             res.status(200).json(doc);
         } else {
@@ -162,7 +178,7 @@ export async function getUserByCpfOuCnpj(req, res) {
                 .findOne({ 'cpf': cpfOuCnpj }, {_id: true, cpf: true, nome: true, pontos: 150, email: true, pontuacao: true });
         } else if(tipoDocumento === EnumDocuments.cnpj) {
             usuario = await Company
-                .findOne({ 'cnpj': cpfOuCnpj }, {_id: true, cnpj: true, nome: true, email: true, pontuacao: true});
+                .findOne({ 'cnpj': cpfOuCnpj }, {_id: true, cnpj: true, nome: true, email: true, pontuacao: true, pontos: true });
             }
         if(usuario) {
             return res.status(200).json(usuario);
@@ -194,33 +210,34 @@ export async function loginUser(req, res) {
         let isValid = validaCpfOuCnpj(cpfOuCnpj);
         const ipClient = req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
         if (!isValid) {
-            new errorLogin({
-                ip: ipClient,
-                cpfOuCnpj: cpfOuCnpj,
-            }).save().then(() => {
+            try {
+                await new errorLogin({
+                    ip: ipClient,
+                    cpfOuCnpj: cpfOuCnpj,
+                }).save();
                 console.log('Error Login');
-            }).catch(error => {
+                return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
+            } catch (error) {
                 console.error('Erro ao inserir usuário:', error);
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
-            });
-            return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
+            }
         }
 
         let user = null;
-        validaCpfOuCnpj(cpfOuCnpj) === EnumDocuments.cpf ? user = await User.   findOne({cpf: cpfOuCnpj}) : user = await Company.findOne({cnpj: cpfOuCnpj});
+        validaCpfOuCnpj(cpfOuCnpj) === EnumDocuments.cpf ? user = await User.findOne({cpf: cpfOuCnpj}) : user = await Company.findOne({cnpj: cpfOuCnpj});
         const validatePassword = user ? await bcrypt.compare(senha, user.senha) : false;
 
-        if (!user && !validatePassword) {
-            new errorLogin({
-                ip: ipClient,
-                cpfOuCnpj: cpfOuCnpj,
-            }).save().then(() => {
-                console.log('Error Login');
-            }).catch(error => {
+        if (!user || !validatePassword) {
+            try {
+                await new errorLogin({
+                    ip: ipClient,
+                    cpfOuCnpj: cpfOuCnpj,
+                }).save();
+                return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
+            } catch (error) {
                 console.error('Erro ao inserir usuário:', error);
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
-            });
-            return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
+            }
         }
         let usuarioResponse = {
             id: user._id,
@@ -229,8 +246,9 @@ export async function loginUser(req, res) {
         };
         if(user.cpf != null) {
             usuarioResponse.cpf = user.cpf;
+            usuarioResponse.isAdmin = user.isAdmin;
+            usuarioResponse.primeiroAcesso = user.pontuacao == 0 ? true : false;
             usuarioResponse.tipo = 'pf';
-
         } else {
             usuarioResponse.cnpj = user.cnpj;
             usuarioResponse.tipo = 'pj';
@@ -452,7 +470,7 @@ export async function sendResetCode(req, res) {
         });
         await newToken.save();
 
-        return res.status(200).json({error: false, message: `Digite código de 6 dígitos enviado por Email para ${mascararEmail(user.email)}`});
+        return res.status(200).json({sucesso: true, message: `Digite código de 6 dígitos enviado por Email para ${mascararEmail(user.email)}`});
     } catch (err) {
         console.error(err);
         return res.status(500).json({error: true, message: 'Erro ao enviar o código de redefinição.'});

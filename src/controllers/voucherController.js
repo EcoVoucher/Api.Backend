@@ -16,19 +16,19 @@ export async function getVoucher(req, res) {
 
         const result = vouchers.map(voucher => {
             const company = voucher.idCompany || {};
-            console.log(company)
+            console.log(company.endereco)
             return {
                 idLote: voucher._id,
                 tipo: voucher.tipo,
                 produtos: voucher.produtos,
                 empresa: company.nome || company.razaoSocial || 'Empresa',
-                endereco: company.endereco.endereco || '',
-                cep: company.endereco.cep || '',
-                //endereco: company.endereco || '',
-                numero: company.endereco.numero || '',
-                bairro: company.endereco.bairro || '',
-                cidade: company.endereco.cidade || '',
-                estado: company.endereco.estado || '',
+                //endereco: voucher.endereco.cep || '',
+                // cep: voucher.endereco.cep || '',
+                // endereco: voucher.endereco || '',
+                // numero: voucher.endereco.numero || '',
+                // bairro: voucher.endereco.bairro || '',
+                // cidade: voucher.endereco.cidade || '',
+                // estado: voucher.endereco.estado || '',
 
                 validade: voucher.dataValidade ? new Date(voucher.dataValidade).toISOString() : '',
                 quantidade: voucher.quantidade,
@@ -48,7 +48,7 @@ export async function getVoucherByCnpj(req, res) {
         #swagger.tags = ['Voucher']
         #swagger.description = 'Endpoint para obter o token de um voucher pelo CNPJ'
     */
-    const { cnpj } = req.query;
+    const { cnpj } = req.usuario;
 
     if (!cnpj) {
         return res.status(400).json({ error: true, message: 'CNPJ é obrigatório' });
@@ -61,16 +61,29 @@ export async function getVoucherByCnpj(req, res) {
     }
 
     try {
-        // Aqui você deve implementar a lógica para buscar o token pelo CNPJ
-        // Exemplo fictício:
-        const voucher = await Voucher.find({ idCompany: company._id }, {tipo: true, quantidade: true, validade: true});
-        console.log('Voucher encontrado:', voucher);
+        const vouchers = await Voucher.find({ idCompany: company._id });
 
-        if (!voucher) {
+        console.log('Voucher encontrado:', vouchers);
+
+        if (!vouchers || vouchers.length === 0) {
             return res.status(404).json({ error: true, message: 'Voucher não encontrado' });
         }
 
-        return res.status(200).json(voucher);
+        // Mapear para trocar _id por idLote
+        const result = vouchers.map(voucher => ({
+            idLote: voucher._id,
+            tipo: voucher.tipo,
+            produtos: voucher.produtos,
+            quantidade: voucher.quantidade,
+            empresa: company.nome || company.razaoSocial || 'Empresa',
+            empresa: company.nome || company.razaoSocial || 'Empresa',
+            codigosDisponiveis: voucher.disponiveis || [],
+            dataValidade: voucher.dataValidade ? new Date(voucher.dataValidade).toISOString() : '',
+            criadoEm: voucher.createdAt,
+            codigos: voucher.codigos || []
+        }));
+
+        return res.status(200).json(result);
     } catch (error) {
         console.error('Erro ao buscar o token pelo CNPJ:', error);
         return res.status(500).json({ error: true, message: 'Erro interno do servidor' });
@@ -86,10 +99,10 @@ export async function createVoucher(req, res) {
     const { cnpj } = req.usuario;
 
     const produtosPorTipo = {
-        Alimentacao: ['Arroz', 'Feijao', 'Macarrao'],
-        Higiene: ['Sabonete', 'Shampoo', 'Pasta de Dente'],
-        Transporte: ['Bilhete Unico', 'Vale Combustivel']
-    };
+        Alimentacao: ['Marmitex', 'Arroz 5kg', 'Feijão 1kg', 'Leite integral', 'Cesta básica'],
+        Higiene: ['Pasta dental Colgate', 'Sabonete Dove', 'Papel higiênico', 'Shampoo', 'Sabão em barra'],
+        Transporte: ['Metrô', 'Ônibus'],
+      };
 
     if (!cnpj || !tipo || !produtos || !quantidade || !dataValidade) {
         return res.status(400).json({ error: true, message: 'Todos os campos obrigatórios devem ser fornecidos: cnpj, tipo, produtos, quantidade, dataValidade' });

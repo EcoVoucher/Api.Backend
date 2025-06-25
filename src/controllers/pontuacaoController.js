@@ -64,7 +64,7 @@ export class PontuacaoController {
                 deposito = deposito.toObject();
                 historicoPontuacao.findOne({ idUser: user._id }).then(historico => {
                     if (!historico) {
-                        hsitoricoPontuacao.create({
+                        historicoPontuacao.create({
                             idUser: user._id,
                             movimentacoes: [{
                                 tipo: 'entrada',

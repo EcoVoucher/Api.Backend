@@ -19,6 +19,5 @@ import { validaRecuperaSenha } from '../validators/userValidators.js';
    *   description: Endpoints de Usuários
    */
 // #swagger.tags = ['Users']
-router.post('/aprovar-pj', loginUser);
 
 export default router;
