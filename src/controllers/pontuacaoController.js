@@ -18,7 +18,7 @@ export class PontuacaoController {
         */
         const errors = validationResult(req);
 
-        if (!errors.isEmpty()){
+        if(!errors.isEmpty()){
             return res.status(400).json({ errors: errors.array()})
         }
         const { limit, skip, order } = req.query;
@@ -62,7 +62,7 @@ export class PontuacaoController {
             newPontuacao.save().then((deposito) => {
                 deposito = deposito.toObject();
                 historicoPontuacao.findOne({ idUser: user._id }).then(historico => {
-                    if (!historico) {
+                    if(!historico) {
                         historicoPontuacao.create({
                             idUser: user._id,
                             movimentacoes: [{

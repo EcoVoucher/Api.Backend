@@ -4,58 +4,58 @@ const validaCadastro = [
     check('cpf')
         .isString()
         .custom(async(cnpj, { req }) => {
-            if (req === undefined) {
+            if(req === undefined) {
                 return;
             }
             let cpf = req.body.cpf.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
-            if (cpf.length === 11 && cpf.length !== 0) {
-                if (cpf.length !== 11) {
+            if(cpf.length === 11 && cpf.length !== 0) {
+                if(cpf.length !== 11) {
                     throw new Error("O CPF deve ter 11 dígitos");
                 }
 
                 // Verificar se todos os dígitos são iguais
-                if (/^(\d)\1{10}$/.test(cpf)) {
+                if(/^(\d)\1{10}$/.test(cpf)) {
                     throw new Error("CPF inválido");
                 }
 
                 // Calcular o primeiro dígito verificador
                 let soma = 0;
-                for (let i = 0; i < 9; i++) {
+                for(let i = 0; i < 9; i++) {
                     soma += parseInt(cpf.charAt(i)) * (10 - i);
                 }
                 let resto = 11 - (soma % 11);
                 let digitoVerificador1 = (resto === 10 || resto === 11) ? 0 : resto;
 
                 // Verificar se o primeiro dígito verificador está correto
-                if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
+                if(digitoVerificador1 !== parseInt(cpf.charAt(9))) {
                     throw new Error("CPF inválido");
                 }
 
                 // Calcular o segundo dígito verificador
                 soma = 0;
-                for (let i = 0; i < 10; i++) {
+                for(let i = 0; i < 10; i++) {
                     soma += parseInt(cpf.charAt(i)) * (11 - i);
                 }
                 resto = 11 - (soma % 11);
                 let digitoVerificador2 = (resto === 10 || resto === 11) ? 0 : resto;
 
                 // Verificar se o segundo dígito verificador está correto
-                if (digitoVerificador2 !== parseInt(cpf.charAt(10))) {
+                if(digitoVerificador2 !== parseInt(cpf.charAt(10))) {
                     throw new Error("CPF inválido");
                 }
 
                 return true; // CPF válido
-            } else if (cpf.length === 14) {
+            } else if(cpf.length === 14) {
                 return "CNPJ";
             }
         }),
     check('cnpj')
         .custom(async({ req }) => {
-            if (req === undefined) {
+            if(req === undefined) {
                 return;
             }
             let cnpj = req.body.cnpj.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
-            if (cnpj.length == 14 && cnpj.length != 0) {
+            if(cnpj.length == 14 && cnpj.length != 0) {
                 var b = [ 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 ]
                 //var c = String(cnpj).replace(/[^\d]/g, '')
 
@@ -65,11 +65,11 @@ const validaCadastro = [
                 if(/0{14}/.test(cnpj))
                     throw new Error("CNPJ inválido!");
 
-                for (var i = 0, n = 0; i < 12; n += cnpj[i] * b[++i]);
+                for(var i = 0, n = 0; i < 12; n += cnpj[i] * b[++i]);
                 if(cnpj[12] != (((n %= 11) < 2) ? 0 : 11 - n))
                     throw new Error("CNPJ inválido!");
 
-                for (var i = 0, n = 0; i <= 12; n += cnpj[i] * b[i++]);
+                for(var i = 0, n = 0; i <= 12; n += cnpj[i] * b[i++]);
                 if(cnpj[13] != (((n %= 11) < 2) ? 0 : 11 - n))
                     throw new Error("CNPJ inválido!");
 
@@ -125,44 +125,44 @@ const validaLogin = [
         .trim().withMessage('É obrigatório informar o cpf/cnpj')
         .custom(async(senha, { req }) => {
             let cpf = req.body.identidade.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
-            if (cpf.length === 11) {
-                if (cpf.length !== 11) {
+            if(cpf.length === 11) {
+                if(cpf.length !== 11) {
                     throw new Error("O CPF deve ter 11 dígitos");
                 }
 
                 // Verificar se todos os dígitos são iguais
-                if (/^(\d)\1{10}$/.test(cpf)) {
+                if(/^(\d)\1{10}$/.test(cpf)) {
                     throw new Error("CPF inválido");
                 }
 
                 // Calcular o primeiro dígito verificador
                 let soma = 0;
-                for (let i = 0; i < 9; i++) {
+                for(let i = 0; i < 9; i++) {
                     soma += parseInt(cpf.charAt(i)) * (10 - i);
                 }
                 let resto = 11 - (soma % 11);
                 let digitoVerificador1 = (resto === 10 || resto === 11) ? 0 : resto;
 
                 // Verificar se o primeiro dígito verificador está correto
-                if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
+                if(digitoVerificador1 !== parseInt(cpf.charAt(9))) {
                     throw new Error("CPF inválido");
                 }
 
                 // Calcular o segundo dígito verificador
                 soma = 0;
-                for (let i = 0; i < 10; i++) {
+                for(let i = 0; i < 10; i++) {
                     soma += parseInt(cpf.charAt(i)) * (11 - i);
                 }
                 resto = 11 - (soma % 11);
                 let digitoVerificador2 = (resto === 10 || resto === 11) ? 0 : resto;
 
                 // Verificar se o segundo dígito verificador está correto
-                if (digitoVerificador2 !== parseInt(cpf.charAt(10))) {
+                if(digitoVerificador2 !== parseInt(cpf.charAt(10))) {
                     throw new Error("CPF inválido");
                 }
 
                 return true; // CPF válido
-            } else if (cpf.length === 14) {
+            } else if(cpf.length === 14) {
                 return "CNPJ";
             } else {
                 throw new Error("CPF/CNPJ inválido!");
@@ -200,44 +200,44 @@ export const validaRecuperaSenha = [
         .trim().withMessage('É obrigatório informar o cpf/cnpj')
         .custom(async(senha, { req }) => {
             let cpf = req.body.cpfOuCnpj.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
-            if (cpf.length === 11) {
-                if (cpf.length !== 11) {
+            if(cpf.length === 11) {
+                if(cpf.length !== 11) {
                     throw new Error("O CPF deve ter 11 dígitos");
                 }
 
                 // Verificar se todos os dígitos são iguais
-                if (/^(\d)\1{10}$/.test(cpf)) {
+                if(/^(\d)\1{10}$/.test(cpf)) {
                     throw new Error("CPF inválido");
                 }
 
                 // Calcular o primeiro dígito verificador
                 let soma = 0;
-                for (let i = 0; i < 9; i++) {
+                for(let i = 0; i < 9; i++) {
                     soma += parseInt(cpf.charAt(i)) * (10 - i);
                 }
                 let resto = 11 - (soma % 11);
                 let digitoVerificador1 = (resto === 10 || resto === 11) ? 0 : resto;
 
                 // Verificar se o primeiro dígito verificador está correto
-                if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
+                if(digitoVerificador1 !== parseInt(cpf.charAt(9))) {
                     throw new Error("CPF inválido");
                 }
 
                 // Calcular o segundo dígito verificador
                 soma = 0;
-                for (let i = 0; i < 10; i++) {
+                for(let i = 0; i < 10; i++) {
                     soma += parseInt(cpf.charAt(i)) * (11 - i);
                 }
                 resto = 11 - (soma % 11);
                 let digitoVerificador2 = (resto === 10 || resto === 11) ? 0 : resto;
 
                 // Verificar se o segundo dígito verificador está correto
-                if (digitoVerificador2 !== parseInt(cpf.charAt(10))) {
+                if(digitoVerificador2 !== parseInt(cpf.charAt(10))) {
                     throw new Error("CPF inválido");
                 }
 
                 return true; // CPF válido
-            } else if (cpf.length === 14) {
+            } else if(cpf.length === 14) {
                 return "CNPJ";
             } else {
                 throw new Error("CPF/CNPJ inválido!");
@@ -256,16 +256,8 @@ export const validaListaUsuarioPorCpf = [
         .isLength({ max: 100 }).withMessage('O email deve ter no máximo 100 caracteres')
         //check('cnpj')
         .custom(async({ req }) => {
-            if (!req || !req.params || !req.params.cnpj) {
+            if(!req || !req.params || !req.params.cnpj) {
                 throw new Error("CPF é obrigatório");
             }
-            // if (req && req.body) {
-            //     console.log(req.body.cnpj);
-            // } else {
-            //     console.log('req or req.body is undefined');
-            // }
-            // if(req.body.cpf != undefined && req.body.cnpj != undefined) {
-            //     return;
-            // }
         })
 ];

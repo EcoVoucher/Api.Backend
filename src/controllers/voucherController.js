@@ -94,33 +94,33 @@ export async function getVoucherByCpfETipo(req, res) {
     const { cnpj } = req.usuario;
     const { cpf, tipo } = req.query;
 
-    if (!cnpj || !cpf || !tipo) {
+    if(!cnpj || !cpf || !tipo) {
         return res.status(400).json({ error: true, message: 'CNPJ, CPF e tipo são obrigatórios.' });
     }
 
     try {
         // Busca o usuário pelo CPF
         const user = await User.findOne({ cpf: cpf });
-        if (!user) {
+        if(!user) {
             return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
         }
 
         // Busca o histórico de pontuação do usuário
         const historico = await historicoPontuacao.findOne({ idUser: user._id });
-        if (!historico || !historico.movimentacoes || historico.movimentacoes.length === 0) {
+        if(!historico || !historico.movimentacoes || historico.movimentacoes.length === 0) {
             return res.status(404).json({ error: true, message: 'Nenhum voucher encontrado para este usuário.' });
         }
 
         // Busca a empresa pelo CNPJ logado
         const company = await Company.findOne({ cnpj: cnpj });
-        if (!company) {
+        if(!company) {
             return res.status(404).json({ error: true, message: 'Empresa não encontrada para o CNPJ informado.' });
         }
 
         // Filtra movimentações pelo tipo de voucher
         const movimentacoesFiltradas = historico.movimentacoes.filter(mov => mov.tipoVoucher === tipo);
 
-        if (movimentacoesFiltradas.length === 0) {
+        if(movimentacoesFiltradas.length === 0) {
             return res.status(404).json({ error: true, message: 'Nenhum voucher encontrado para o tipo informado.' });
         }
 
@@ -131,7 +131,7 @@ export async function getVoucherByCpfETipo(req, res) {
         // Monta o resultado apenas para vouchers da empresa logada
         const result = movimentacoesFiltradas.map(mov => {
             const voucher = vouchers.find(v => v._id.equals(mov.idVoucher));
-            if (!voucher) {
+            if(!voucher) {
                 // Se não encontrar o voucher, retorna um objeto vazio ou com informações mínimas
                 return {
                     idLote: mov.idVoucher,
@@ -148,8 +148,7 @@ export async function getVoucherByCpfETipo(req, res) {
             const companyData = voucher.idCompany || {};
             // Formata o endereço se existir
             let enderecoFormatado = '';
-            if (companyData.endereco) {
-                console.log(companyData.endereco);
+            if(companyData.endereco) {
                 const { cep, endereco, numero, bairro, cidade, estado } = companyData.endereco;
                 enderecoFormatado = [
                     endereco,
@@ -188,13 +187,13 @@ export async function getVoucherEstatisticasCnpj(req, res) {
     */
     try {
         const { cnpj } = req.usuario;
-        if (!cnpj) {
+        if(!cnpj) {
             return res.status(400).json({ error: true, message: 'CNPJ é obrigatório.' });
         }
 
         // Busca a empresa pelo CNPJ
         const company = await Company.findOne({ cnpj: cnpj });
-        if (!company) {
+        if(!company) {
             return res.status(404).json({ error: true, message: 'Empresa não encontrada para o CNPJ informado.' });
         }
 
@@ -205,7 +204,7 @@ export async function getVoucherEstatisticasCnpj(req, res) {
         const porLote = {};
         let totalComprados = 0;
 
-        for (const voucher of vouchers) {
+        for(const voucher of vouchers) {
             // Conta quantos códigos do lote foram comprados
             const adquiridos = (voucher.codigos || []).filter(c => c.status === 'comprado' || c.status === 'utilizado').length;
             porLote[voucher._id] = adquiridos;
@@ -246,7 +245,6 @@ export async function createVoucher(req, res) {
     };
 
     if(!cnpj || !tipo || !produtos || !quantidade || !dataValidade) {
-        console.log('Campos obrigatórios não fornecidos:', { cnpj, tipo, produtos, quantidade, dataValidade, pontos });
         return res.status(400).json({ error: true, message: 'Todos os campos obrigatórios devem ser fornecidos: cnpj, tipo, produtos, quantidade, dataValidade' });
     }
 
@@ -361,9 +359,9 @@ export async function utilizarVoucher(req, res) {
         codigoObj.status = 'utilizado';
 
         // Atualiza o status para 'utilizado' também no histórico do usuário
-        if (historico && historico.movimentacoes && Array.isArray(historico.movimentacoes)) {
+        if(historico && historico.movimentacoes && Array.isArray(historico.movimentacoes)) {
             const mov = historico.movimentacoes.find(m => m.codigoVoucher === codigo && m.status === 'comprado');
-            if (mov) {
+            if(mov) {
             mov.status = 'utilizado';
             await historico.save();
             }
@@ -386,16 +384,16 @@ export async function comprarVoucher(req, res) {
     let idLote = req.body.vouchers;
     const { cpf } = req.usuario;
 
-    if (!idLote || !cpf) {
+    if(!idLote || !cpf) {
         return res.status(400).json({ error: true, message: 'idLote e cpf são obrigatórios' });
     }
 
-    if (!Array.isArray(idLote)) {
+    if(!Array.isArray(idLote)) {
         idLote = [idLote];
     }
 
     const uniqueIds = new Set(idLote);
-    if (uniqueIds.size !== idLote.length) {
+    if(uniqueIds.size !== idLote.length) {
         return res.status(400).json({
             error: true,
             message: 'Não é permitido comprar vouchers do mesmo lote mais de uma vez na mesma requisição.'
@@ -406,21 +404,21 @@ export async function comprarVoucher(req, res) {
         const results = [];
 
         const user = await User.findOne({ cpf });
-        if (!user) {
+        if(!user) {
             return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
         }
 
         let historico = await historicoPontuacao.findOne({ idUser: user._id });
-        if (!historico) {
+        if(!historico) {
             historico = new historicoPontuacao({ idUser: user._id, movimentacoes: [] });
         }
 
         let pontosNecessarios = 0;
         const vouchersParaCompra = [];
 
-        for (const loteId of idLote) {
+        for(const loteId of idLote) {
             const voucher = await Voucher.findOne({ _id: loteId });
-            if (!voucher) {
+            if(!voucher) {
                 results.push({ idLote: loteId, sucesso: false, message: 'Voucher não encontrado.' });
                 continue;
             }
@@ -428,23 +426,23 @@ export async function comprarVoucher(req, res) {
             pontosNecessarios += voucher.pontos || 0;
         }
 
-        if (user.pontos < pontosNecessarios) {
+        if(user.pontos < pontosNecessarios) {
             return res.status(400).json({
                 error: true,
                 message: `Pontos insuficientes. Você possui ${user.pontos} pontos e precisa de ${pontosNecessarios} pontos para esta compra.`
             });
         }
 
-        for (const voucher of vouchersParaCompra) {
+        for(const voucher of vouchersParaCompra) {
             const loteId = voucher._id.toString();
 
-            if (!voucher.disponiveis || voucher.disponiveis.length === 0) {
+            if(!voucher.disponiveis || voucher.disponiveis.length === 0) {
                 results.push({ idLote: loteId, sucesso: false, message: 'Não há códigos disponíveis para este voucher.' });
                 continue;
             }
 
             const existeValido = voucher.codigos.some(c => c.status === 'valido');
-            if (!existeValido) {
+            if(!existeValido) {
                 results.push({ idLote: loteId, sucesso: false, message: 'Não há códigos válidos neste lote.' });
                 continue;
             }
@@ -452,7 +450,7 @@ export async function comprarVoucher(req, res) {
             const codigo = voucher.disponiveis[0];
             const codigoObj = voucher.codigos.find(c => c.codigo === codigo);
 
-            if (!codigoObj || codigoObj.status !== 'valido') {
+            if(!codigoObj || codigoObj.status !== 'valido') {
                 results.push({ idLote: loteId, sucesso: false, message: 'Código já utilizado ou inválido' });
                 continue;
             }

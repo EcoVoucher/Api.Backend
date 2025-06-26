@@ -4,7 +4,7 @@ export const contatoCreate = async (req, res) => {
     try {
         const contato = await create(req.body);
 
-        if (!contato) {
+        if(!contato) {
             return res.status(400).send({ message: "Erro ao enviar a mensagem" });
         }
 
@@ -18,7 +18,7 @@ export const contatoCreate = async (req, res) => {
 export const findAll = async (req, res) => {
     try {
         const contatos = await findAllService();
-        if (contatos.length === 0) {
+        if(contatos.length === 0) {
             return res.status(400).send({ message: "Não há contatos cadastrados" });
         }
         const contatosFormatados = contatos.map(contato => ({
@@ -34,7 +34,7 @@ export const findAll = async (req, res) => {
 export const findContatoById = async (req, res) => {
     try {
         const contato = await findByIdService(req.params.id);
-        if (!contato) {
+        if(!contato) {
             return res.status(404).send({ message: "Contato não encontrado" });
         }
 
@@ -53,7 +53,7 @@ export const updateContato = async (req, res) => {
     try {
         const contato = await updateService(req.params.id, req.body);
 
-        if (!contato) {
+        if(!contato) {
             return res.status(404).send({ message: "Contato não encontrado" });
         }
 
@@ -74,7 +74,7 @@ export const deleteContato = async (req, res) => {
     try {
         const contato = await remove(req.params.id);
 
-        if (!contato) {
+        if(!contato) {
             return res.status(404).send({ message: "Contato não encontrado" });
         }
 
@@ -91,7 +91,7 @@ export const getComplexContato = async (req, res) => {
         const tiposArray = tipos.split(',').map(Number); // Converte a string de tipos em um array de números
         const contatos = await getComplexQuery(tiposArray, dateStart, dateEnd);
 
-        if (contatos.length === 0) {
+        if(contatos.length === 0) {
             return res.status(404).send({ message: "Nenhum contato encontrado com os critérios fornecidos" });
         }
 

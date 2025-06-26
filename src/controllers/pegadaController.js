@@ -40,20 +40,16 @@ export async function getPegadaByCpf(req, res) {
         const cpf = req.params.documento;
 
         const user = await User.findOne({ cpf: cpf });
-        if (!user) {
+        if(!user) {
             return res.status(404).json({ message: 'Usuário não encontrado' });
         }
-        console.log('CPF recebido:', user._id);
 
         const pegadas = await Pegada.find({ userId: user._id });
-        console.log('Pegadas encontradas:', pegadas);
-        if (!pegadas || pegadas.length === 0) {
+        if(!pegadas || pegadas.length === 0) {
             return res.status(404).json({ message: 'Pegada não encontrada para este CPF' });
         }
         // Se quiser retornar todas as pontuações ordenadas por id:
         const todasPontuacoes = pegadas.flatMap(p => p.pontuacoes);
-        console.log(todasPontuacoes);
-        console.log(pegadas)
         return res.status(200).json(todasPontuacoes);
 	} catch (error) {
 		return res.status(500).json({ message: 'Server error', error: error.message });
@@ -70,7 +66,7 @@ export async function getPegadaUltimaPontuacao(req, res) {
         }
 
         const pegada = await Pegada.findOne({ userId: user._id });
-        if (!pegada || pegada.length === 0) {
+        if(!pegada || pegada.length === 0) {
             return res.status(404).json({ message: 'Pegada não encontrada para este CPF' });
         }
         const ultimaPontuacao = pegada.pontuacoes[pegada.pontuacoes.length - 1];

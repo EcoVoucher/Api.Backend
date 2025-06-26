@@ -4,7 +4,7 @@ config();
 
 const {MONGODB_URI} = process.env;
 
-if (!MONGODB_URI) {
+if(!MONGODB_URI) {
     throw new Error(
         'Por favor, defina a variável de ambiente MONGODB_URI dentro do arquivo .env'
     )

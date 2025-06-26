@@ -19,7 +19,7 @@ export async function createPontuacaoPegada(req, res) {
         const userId = decoded.user.id;
 
         user = await User.findById(userId);
-        if (!user) {
+        if(!user) {
             return res.status(403).json({error: true, message: 'Usuário não encontrado!'});
         }
     } catch (err) {
@@ -30,12 +30,12 @@ export async function createPontuacaoPegada(req, res) {
     }
 
     const { entrada, valor } = req.body;
-    if (valor <= 0) {
+    if(valor <= 0) {
         return res.status(400).json({error: true, message: 'Entrada inválida!'});
     }
     let pontuacaoPegada = await PontuacaoPegada.findOne({ userId: user._id });
 
-    if (!pontuacaoPegada) {
+    if(!pontuacaoPegada) {
         pontuacaoPegada = new PontuacaoPegada({
             userId: user._id,
             pontuacao: [{

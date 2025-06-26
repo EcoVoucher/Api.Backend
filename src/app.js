@@ -22,7 +22,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', '*'); // Cabeçalhos permitidos
 
     // Para interceptar requisições OPTIONS (pré-vôo)
-    if (req.method === 'OPTIONS') {
+    if(req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
@@ -75,7 +75,7 @@ app.use('/docs', swaggerUi.serve, async (req, res) => {
 
         // Se o arquivo já existir, faz a leitura e continua com a configuração do Swagger UI
         fs.readFile('./helpers/swagger-output.json', 'utf-8', (readFileErr, snapshot) => {
-            if (readFileErr) {
+            if(readFileErr) {
                 console.error('Erro ao ler o arquivo existente:', readFileErr);
                 return res.status(500).json({ error: 'Erro ao ler o arquivo existente' });
             }
@@ -85,14 +85,14 @@ app.use('/docs', swaggerUi.serve, async (req, res) => {
             return res.status(200).send(swaggerUi.generateHTML(swaggerFile));
         });
     } catch (err) {
-        if (err.code === 'ENOENT') {
+        if(err.code === 'ENOENT') {
             // Se o arquivo não existir, inicia o processo para gerá-lo
             exec("npm run swagger", (error, stdout, stderr) => {
-                if (error) {
+                if(error) {
                     console.error(`Erro: ${error.message}`);
                     return res.status(500).send('Erro ao executar geração do Swagger');
                 }
-                if (stderr) {
+                if(stderr) {
                     console.error(`Stderr: ${stderr}`);
                     return res.status(500).send('Erro ao executar geração do Swagger');
                 }
@@ -100,7 +100,7 @@ app.use('/docs', swaggerUi.serve, async (req, res) => {
 
                 // Após a geração bem-sucedida do arquivo, faça a leitura e continue com a configuração do Swagger UI
                 fs.readFile('./helpers/swagger-output.json', 'utf-8', (readFileErr, snapshot) => {
-                    if (readFileErr) {
+                    if(readFileErr) {
                         console.error('Erro ao ler o arquivo gerado:', readFileErr);
                         return res.status(500).send('Erro ao ler o arquivo gerado');
                     }

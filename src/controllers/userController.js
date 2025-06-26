@@ -11,13 +11,13 @@ import { historicoPontuacao } from '../models/pontuacaoModel.js';
 
 function comparativo(soma) {
     let comparativo = "";
-    if (soma <= 150) {
+    if(soma <= 150) {
         comparativo = "É menor que 4 gha, equivalente à dos E.U.A.";
-    } else if (soma <= 400) {
+    } else if(soma <= 400) {
         comparativo = "Está entre 4 e 6 gha, equivalente à da França";
-    } else if (soma <= 600) {
+    } else if(soma <= 600) {
         comparativo = "Está entre 6 e 8 gha, equivalente à da Suécia";
-    } else if (soma <= 800) {
+    } else if(soma <= 800) {
         comparativo = "Está entre 8 e 10 gha, padrão Brasil";
     } else {
         comparativo = "É maior que 10 gha, dentro da média mundial";
@@ -26,7 +26,7 @@ function comparativo(soma) {
     return comparativo;
 }
 
-export async function 
+export async function
 getHistoricoUser(req, res) {
     /*
         #swagger.tags = ['Users']
@@ -40,7 +40,6 @@ getHistoricoUser(req, res) {
         }
 
         let historico = await historicoPontuacao.findOne({ idUser: user._id }).populate('idUser', 'nome', 'pontuacao');
-        console.log(historico)
         return res.status(200).json({
             cpf: user.cpf,
             nome: user.nome,
@@ -50,7 +49,7 @@ getHistoricoUser(req, res) {
                 ...mov.toObject ? mov.toObject() : mov,
                 data: (() => {
                     const d = mov.data || mov.createdAt || mov.updatedAt || new Date();
-                    if (!d) return '';
+                    if(!d) return '';
                     const dateObj = new Date(d);
                     const day = String(dateObj.getDate()).padStart(2, '0');
                     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -81,10 +80,10 @@ export async function getUser(req, res) {
     try {
         let results = []
         let query = null;
-        // if (cpf) {
+        // if(cpf) {
         //     query = { 'cpf': { $exists: true }, 'cnpj': { $exists: false } };
         // }
-        // if (cnpj) {
+        // if(cnpj) {
         //     query = { 'cpf': { $exists: false }, 'cnpj': { $exists: true } };
         // }
         const users = await User
@@ -97,7 +96,7 @@ export async function getUser(req, res) {
 
 
 
-        if (users) {
+        if(users) {
             results = results.map(user => {
                 let usuarioResponse = {
                     id: user._id,
@@ -203,7 +202,7 @@ export async function loginUser(req, res) {
     let {cpfOuCnpj, senha, tipo} = req.body;
     const errors = validationResult(req);
 
-    if (!errors.isEmpty()){
+    if(!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})
     }
     cpfOuCnpj = cpfOuCnpj.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
@@ -211,13 +210,12 @@ export async function loginUser(req, res) {
     try {
         let isValid = validaCpfOuCnpj(cpfOuCnpj);
         const ipClient = req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
-        if (!isValid) {
+        if(!isValid) {
             try {
                 await new errorLogin({
                     ip: ipClient,
                     cpfOuCnpj: cpfOuCnpj,
                 }).save();
-                console.log('Error Login');
                 return res.status(401).json({error: true, message: 'CPF/CNPJ ou senha incorretos.'});
             } catch (error) {
                 console.error('Erro ao inserir usuário:', error);
@@ -229,7 +227,7 @@ export async function loginUser(req, res) {
         validaCpfOuCnpj(cpfOuCnpj) === EnumDocuments.cpf ? user = await User.findOne({cpf: cpfOuCnpj}) : user = await Company.findOne({cnpj: cpfOuCnpj});
         const validatePassword = user ? await bcrypt.compare(senha, user.senha) : false;
 
-        if (!user || !validatePassword) {
+        if(!user || !validatePassword) {
             try {
                 await new errorLogin({
                     ip: ipClient,
@@ -269,7 +267,7 @@ export async function loginUser(req, res) {
             process.env.SECRETKEY,
             { expiresIn: process.env.EXPIRES_IN },
             (err, token) => {
-                if (err) throw err
+                if(err) throw err
 
                 res.status(200).json({
                     token: token,
@@ -312,14 +310,14 @@ export async function createUser(req, res) {
     if(cnpj) cnpj = cnpj.replace(/[^\d]/g, ''); // Remover caracteres não numéricos
     const errors = validationResult(req);
 
-    if (!errors.isEmpty()){
+    if(!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})
     }
     try {
         let user = null;
-        if (cpf) {
+        if(cpf) {
             user = await User.findOne({cpf: cpf});
-            if (user) {
+            if(user) {
                 return res.status(409).json({error: true, message: 'CPF já cadastrado'});
             }
 
@@ -349,7 +347,7 @@ export async function createUser(req, res) {
             });
         } else {
             let company = await Company.findOne({cnpj: cnpj});
-            if (company) return res.status(409).json({error: true, message: 'CNPJ já cadastrado'});
+            if(company) return res.status(409).json({error: true, message: 'CNPJ já cadastrado'});
 
             const newCompany = new Company({
                 nomeEmpresa: nomeEmpresa,
@@ -395,35 +393,33 @@ export async function alterarSenha(req, res) {
     const { cpfOuCnpj, senhaAtual, novaSenha } = req.body;
 
     // Validação básica dos campos
-    if (!cpfOuCnpj || !senhaAtual || !novaSenha) {
+    if(!cpfOuCnpj || !senhaAtual || !novaSenha) {
         return res.status(400).json({ error: true, message: 'Todos os campos são obrigatórios.' });
     }
 
     // Validação de nova senha (mínimo 6 caracteres, letras, números e caractere especial)
     const senhaRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{6,}$/;
-    if (!senhaRegex.test(novaSenha)) {
+    if(!senhaRegex.test(novaSenha)) {
         return res.status(400).json({ error: true, message: 'A nova senha deve ter no mínimo 6 caracteres, incluindo letras, números e caractere especial.' });
     }
 
     try {
         const docType = validaCpfOuCnpj(cpfOuCnpj);
         let user = null;
-        if (docType === EnumDocuments.cpf) {
+        if(docType === EnumDocuments.cpf) {
             user = await User.findOne({ cpf: cpfOuCnpj });
-        } else if (docType === EnumDocuments.cnpj) {
+        } else if(docType === EnumDocuments.cnpj) {
             user = await Company.findOne({ cnpj: cpfOuCnpj });
         } else {
             return res.status(400).json({ error: true, message: 'Identificador inválido.' });
         }
 
-        console.log(user)
-
-        if (!user) {
+        if(!user) {
             return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
         }
 
         const senhaCorreta = await bcrypt.compare(senhaAtual, user.senha);
-        if (!senhaCorreta) {
+        if(!senhaCorreta) {
             return res.status(401).json({ error: true, message: 'Senha atual incorreta.' });
         }
 
@@ -541,15 +537,13 @@ export async function sendResetCode(req, res) {
 export async function resetPassword(req, res) {
     const {token, novaSenha } = req.body;
 
-    if ( !token || !novaSenha) {
+    if( !token || !novaSenha) {
         return res.status(400).json({ error: true, message: 'CPF/CNPJ, token e nova senha são obrigatórios.' });
     }
 
     try {
-        console.log(token)
         const tokenDoc = await Token.findOne({ token: token });
-        console.log(tokenDoc)
-        if (!tokenDoc) {
+        if(!tokenDoc) {
             return res.status(400).json({ error: true, message: 'Token inválido.' });
         }
 
@@ -557,7 +551,7 @@ export async function resetPassword(req, res) {
         const tokenCreatedAt = tokenDoc.created_at || tokenDoc._id.getTimestamp();
         const now = new Date();
         const diffMinutes = (now - tokenCreatedAt) / (1000 * 60);
-        if (diffMinutes > 15) {
+        if(diffMinutes > 15) {
             await Token.deleteOne({ _id: tokenDoc._id });
             return res.status(400).json({ error: true, message: 'Token expirado.' });
         }
@@ -579,14 +573,13 @@ export async function resetPassword(req, res) {
 
 export async function updateUser(req, res) {
     let {token, soma_pegada} = req.body;
-    console.log(token)
     try {
         let user = await User.findOne({_id: {$eq: token}});
-        if (!user) {
+        if(!user) {
             return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
         }
         user = await User.updateOne({_id: {$eq: token}}, {$set: {soma_pegada: soma_pegada}});
-        if (!user) {
+        if(!user) {
             return res.status(500).json({error: true, message: 'Erro ao alterar a pegada ecológica'});
         }
 
@@ -606,13 +599,10 @@ export async function aprovarPj(req, res) {
     let { cnpj } = req.body;
 
     try {
-        console.log(cnpj)
         let company = await Company.findOne({cnpj: {$eq: cnpj}});
-        console.log(company)
-        if (!company) {
+        if(!company) {
             return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
         }
-        console.log(Company._id)
         company = await Company.updateOne({_id: company._id}, {$set: {aprovado: true}});
         if(!company) {
             return res.status(500).json({error: true, message: 'Erro ao alterar a pegada ecológica'});
@@ -633,7 +623,7 @@ export async function aprovarPj(req, res) {
 export async function deleteUser(req, res) {
     const result = await User.deleteOne({ "_id": {$eq: req.params.id} });
 
-    if (result.deletedCount === 0){
+    if(result.deletedCount === 0){
         res.status(404).json({
             errors: [{
                 value: `Não há nenhum usuário com o id ${req.params.id}`,

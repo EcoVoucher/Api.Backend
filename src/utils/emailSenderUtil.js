@@ -3,7 +3,7 @@ import transporter from '../config/emailConfig.js';
 export function mascararEmail(email) {
     // Verifica se o e-mail é válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if(!emailRegex.test(email)) {
         throw new Error("E-mail inválido");
     }
 
@@ -30,7 +30,6 @@ const sendEmail = async ({ to, subject, text, html }) => {
 
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log('Email enviado: ' + info.response);
         return info;
     } catch (error) {
         console.error('Erro ao enviar e-mail:', error);
