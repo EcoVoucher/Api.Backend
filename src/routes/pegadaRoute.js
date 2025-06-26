@@ -9,8 +9,17 @@ import {
 import auth from '../middlewares/auth.js';
 
 const router = express.Router();
+router.use('',  (req, res, next) => {
+    /**
+     * @swagger
+     * tags:
+     *   name: Pegadas
+     *   description: Endpoints de Pegadas
+     */
+    // #swagger.tags = ['Pegadas']
 
-
+    next();
+});
 router.get('/:documento', auth, getPegadaUltimaPontuacao);
 router.get('/historico/:documento', auth, getPegadaByCpf);
 router.post('/salvar', auth, createPegada)

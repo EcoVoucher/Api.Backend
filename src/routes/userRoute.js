@@ -18,13 +18,17 @@ import {
 } from '../controllers/userController.js';
 import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/userValidators.js';
 
-/**
-   * @swagger
-   * tags:
-   *   name: User
-   *   description: Endpoints de Usuários
-   */
-// #swagger.tags = ['Users']
+router.use('',  (req, res, next) => {
+    /**
+     * @swagger
+     * tags:
+     *   name: Users
+     *   description: Endpoints de Usuários
+     */
+    // #swagger.tags = ['Users']
+
+    next();
+});
 router.get('/usuarios/', auth, getUser);
 router.get('/usuarios/historico/:cpf', auth, getHistoricoUser);
 router.get('/usuarios/:cpfOuCnpj', auth, getUserByCpfOuCnpj);

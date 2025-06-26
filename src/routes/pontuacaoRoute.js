@@ -8,10 +8,10 @@ import { validaDepositos } from '../validators/pontuacaoValidators.js';
 /**
    * @swagger
    * tags:
-   *   name: Pontuacao
+   *   name: Deposito
    *   description: Endpoints de Pontuação
    */
-// #swagger.tags = ['Pontuacao']
+// #swagger.tags = ['Deposito']
 router.post('/depositos', validaDepositos, pontuacaoController.postPontuacao);
 
 export default router;
