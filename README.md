@@ -62,13 +62,13 @@ Para auxiliar a polpulação, foi desenvolvido um app gratuito, onde o cidadão 
     <details>
       <summary>RF007 - O APP deve exibir o histórico de resíduos entregues com os dados relativos</summary>
         <div align="center">
-        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF08.jpg">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF08.jpg" alt="RF08" width="300"/>
         </div>
     </details>
     <details>
       <summary>RF008 - O APP deve permitir ao usuário acompanhar o acúmulo de créditos</summary>
         <div align="center">
-        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF08.jpg">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF08.jpg" alt="RF08" width="300">
         </div>
     </details>
     <details>
@@ -185,19 +185,14 @@ Para auxiliar a polpulação, foi desenvolvido um app gratuito, onde o cidadão 
 </details>
 
 ## Apresentação
-Confira a seguir uma demonstração das funcionalidades do site:
 <details>
-   <summary>Cadastro</summary>
+   <summary>Visão gerais do APP</summary>
+    <sumary>• Desenvolvimento de aplicativo mobile em React Native, com arquitetura baseada em componentes reutilizáveis, integração a banco de dados MongoDB hospedado na AWS, aplicando boas práticas de segurança da informação, incluindo controle de acesso, criptografia de dados sensíveis e autenticação segura.</sumary>
     <div align="center">
-        <img src="https://github.com/Eng-FelipeA/EcoVoucher/blob/main/Assets/Tela-de-Cadastro-Ecovoucher.gif">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF10.gif">
     </div>
 </details>
-<details>
-   <summary>Login</summary>
-    <div align="center">
-        <img src="https://github.com/Eng-FelipeA/EcoVoucher/blob/main/Assets/Tela-de-Login-EcoVoucher.gif">
-    </div>
-</details>
+
 
 ## Sprints
 Cada entrega foi realizada a partir da criação de uma **tag** em cada repositório (web e todos os microsserviços), além da criação de uma branch neste repositório com um relatório completo de tudo o que foi desenvolvido naquela sprint. Observe a relação a seguir:
