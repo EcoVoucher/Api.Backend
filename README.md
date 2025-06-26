@@ -15,6 +15,13 @@ Para auxiliar a polpulação, foi desenvolvido um app gratuito, onde o cidadão 
 ## Arquitetura
 
 <details>
+   <summary>Diagrama AWS</summary>
+    <summary>A estrutura do projeto está hospedada na AWS, sob um domínio DNS configurado para direcionamento das aplicações. O backend está distribuído em duas instâncias EC2 separadas: uma dedicada à API e outra isolada para o banco de dados MongoDB, garantindo maior segurança e controle de acesso. Um bucket S3 foi provisionado para armazenamento de arquivos, com uso eventual e preparado para replicação futura. O controle de permissões é gerenciado por IAM Roles aplicadas tanto na instância da API quanto no S3, garantindo acesso seguro e restrito. Toda a infraestrutura é monitorada continuamente por meio do Amazon CloudWatch, proporcionando visibilidade em tempo real e alertas de desempenho e disponibilidade.</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/Diagrama%20AWS.png">
+        </div>
+</details>
+<details>
    <summary>Requisitos Funcionais</summary>
     <details>
       <summary>RF001 - O APP deve permitir cadastro de usuário de dados mínimos (nome completo, cpf, email...) </summary>
