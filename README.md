@@ -17,11 +17,53 @@ O cidadão coleta o resíduo reciclável, leva até um dos pontos de coleta, pon
 <details>
    <summary>Requisitos Funcionais</summary>
     <details>
-  <summary>Cadastro</summary>
+      <summary>RF001</summary>
         <div align="center">
         <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF01%20-%20Video.gif">
-    </div>
-</details>
+        </div>
+    </details>
+    <details>
+      <summary>RF002</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF02.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF004</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF04.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF005</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF05.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF006</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF06.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF008</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF08.jpg">
+        </div>
+    </details>
+    <details>
+      <summary>RF010</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF10.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF016</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF16.gif">
+        </div>
+    </details>
 </details>
 <details>
    <summary>Requisitos Não Funcionais</summary>
