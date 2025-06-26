@@ -14,6 +14,7 @@ import {
     aprovarPj,
     getUserByCpfOuCnpj,
     getHistoricoUser,
+    alterarSenha,
 } from '../controllers/userController.js';
 import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/userValidators.js';
 
@@ -31,6 +32,7 @@ router.get('/usuarios/cpf/:cpf', getUserByCpf);
 router.post('/cadastro/pj', createUser);
 router.post('/cadastro/pf', createUser);
 router.post('/auth/login', loginUser);
+router.post('/usuarios/recuperar-senha', auth, alterarSenha)
 router.patch('/alterar_pegada', auth, updateUser);
 router.patch('/admin/aprovar-pj', auth, aprovarPj);
 router.delete('/:id', auth, deleteUser);

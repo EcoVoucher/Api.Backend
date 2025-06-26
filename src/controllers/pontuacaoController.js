@@ -46,7 +46,6 @@ export class PontuacaoController {
             #swagger.tags = ['Pontuacao']
             #swagger.description = 'Endpoint para obter a pontuação dos usuários'
         */
-        const { limit, skip, order } = req.query;
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
@@ -82,7 +81,7 @@ export class PontuacaoController {
                     }
                 });
                 deposito.codigo = deposito._id;
-                deposito.dataHora = new Date(deposito.createdAt).toLocaleString('pt-BR');
+                deposito.data = new Date(deposito.createdAt);
                 delete deposito._id;
                 delete deposito.__v;
 

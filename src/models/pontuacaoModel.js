@@ -21,12 +21,13 @@ const historicoPontuacaoSchema = new Schema({
     movimentacoes: [
         {
             idVoucher: { type: Schema.Types.ObjectId, ref: 'voucher' },
-            tipo: { type: String, enum: ['entrada', 'saida'], required: true },
+            codigoVoucher: { type: String },
+            tipo: { type: String, enum: ['entrada', 'saida', 'transacao'], required: true },
             pontos: { type: Number, required: true },
             descricao: { type: String, required: true },
             timestamp: { type: Date, default: Date.now },
             tipoVoucher: { type: String }, // Opcional para saídas
-            status: { type: String, enum: ['valido', 'invalido'] },
+            status: { type: String, enum: ['valido', 'invalido', 'comprado', 'utilizado'] },
         }
     ]
 });

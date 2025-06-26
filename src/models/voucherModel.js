@@ -12,6 +12,7 @@ const voucherSchema = new Schema({
         status: { type: String, required: true }
     }],
     disponiveis: [{ type: String, required: true }],
+    pontos: { type: Number, required: true }, // Adiciona o campo pontos
 }, { timestamps: true });
 
 export const Voucher = mongoose.model('voucher', voucherSchema, 'voucher');

@@ -26,8 +26,8 @@ function comparativo(soma) {
     return comparativo;
 }
 
-
-export async function getHistoricoUser(req, res) {
+export async function 
+getHistoricoUser(req, res) {
     /*
         #swagger.tags = ['Users']
         #swagger.description = 'Endpoint para obter o histórico do usuário'
@@ -46,7 +46,7 @@ export async function getHistoricoUser(req, res) {
             nome: user.nome,
             pontos: user.pontos,
             pontuacao: user.pontuacao,
-            movimentacoes: (historico.movimentacoes || []).map(mov => ({
+            movimentacoes: (historico && historico.movimentacoes ? historico.movimentacoes : []).map(mov => ({
                 ...mov.toObject ? mov.toObject() : mov,
                 data: (() => {
                     const d = mov.data || mov.createdAt || mov.updatedAt || new Date();
@@ -64,6 +64,7 @@ export async function getHistoricoUser(req, res) {
         return res.status(500).json({ error: true, message: 'Erro ao buscar o histórico do usuário.' });
     }
 }
+
 /**
  * GET /api/user/
  * Lista os usuarios
@@ -97,12 +98,12 @@ export async function getUser(req, res) {
 
 
         if (users) {
-            console.log(users.length)
             results = results.map(user => {
                 let usuarioResponse = {
                     id: user._id,
                     nome: user.nome,
                     email: user.email,
+                    endereco: user.endereco
                 };
                 if(user.cpf != null) {
                     usuarioResponse.cpf = user.cpf;
@@ -112,6 +113,7 @@ export async function getUser(req, res) {
                 } else {
                     usuarioResponse.cnpj = user.cnpj;
                     usuarioResponse.tipo = 'pj';
+                    usuarioResponse.nome = user.nomeEmpresa || user.nome; // Garante nome para PJ
                 }
                 return usuarioResponse;
             });
@@ -140,7 +142,7 @@ export async function getUserByCpf(req, res) {
             return res.status(400).json({error: true, message: 'CPF inválido'});
         }
         const doc = await User
-            .findOne({ 'cpf': '49745885088' }, {_id: false, cpf: true, nome: true, pontos: true, email: true, pontuacao: true });
+            .findOne({ 'cpf': cpf }, {_id: false, cpf: true, nome: true, pontos: true, email: true, pontuacao: true });
         if(doc) {
             res.status(200).json(doc);
         } else {
@@ -243,6 +245,11 @@ export async function loginUser(req, res) {
             id: user._id,
             nome: user.nome,
             email: user.email,
+            endereco: user.endereco.endereco,
+            bairro: user.endereco.bairro,
+            numero: user.endereco.numero,
+            cidade: user.endereco.cidade,
+            cep: user.endereco.cep,
         };
         if(user.cpf != null) {
             usuarioResponse.cpf = user.cpf;
@@ -250,6 +257,10 @@ export async function loginUser(req, res) {
             usuarioResponse.primeiroAcesso = user.pontuacao == 0 ? true : false;
             usuarioResponse.tipo = 'pf';
         } else {
+            if(!user.aprovado) {
+                return res.status(403).json({error: true, message: 'Empresa não aprovada!'});
+            }
+            usuarioResponse.nomeEmpresa = user.nomeEmpresa || user.nome; // Garante nome para PJ
             usuarioResponse.cnpj = user.cnpj;
             usuarioResponse.tipo = 'pj';
         }
@@ -307,7 +318,7 @@ export async function createUser(req, res) {
     try {
         let user = null;
         if (cpf) {
-            user = await User.findOne({cpf: parseInt(cpf)});
+            user = await User.findOne({cpf: cpf});
             if (user) {
                 return res.status(409).json({error: true, message: 'CPF já cadastrado'});
             }
@@ -322,7 +333,7 @@ export async function createUser(req, res) {
                 endereco: {
                     cep: cep,
                     endereco: endereco,
-                    numero: parseInt(numero),
+                    numero: numero,
                     complemento: complemento,
                     bairro: bairro,
                     cidade: cidade,
@@ -337,7 +348,7 @@ export async function createUser(req, res) {
                 return res.status(500).json({error: true, message: 'Erro ao efetuar o cadastro'});
             });
         } else {
-            let company = await Company.findOne({cnpj: parseInt(cnpj)});
+            let company = await Company.findOne({cnpj: cnpj});
             if (company) return res.status(409).json({error: true, message: 'CNPJ já cadastrado'});
 
             const newCompany = new Company({
@@ -350,7 +361,7 @@ export async function createUser(req, res) {
                 endereco: {
                     cep: cep,
                     endereco: endereco,
-                    numero: parseInt(numero),
+                    numero: numero,
                     complemento: complemento,
                     bairro: bairro,
                     cidade: cidade,
@@ -375,15 +386,65 @@ export async function createUser(req, res) {
     }
 }
 
+/**
+ * POST /api/user/alterarSenha
+ * Altera a senha do usuário (CPF ou CNPJ)
+ * Body: { identificador, senhaAtual, novaSenha }
+ */
+export async function alterarSenha(req, res) {
+    const { cpfOuCnpj, senhaAtual, novaSenha } = req.body;
+
+    // Validação básica dos campos
+    if (!cpfOuCnpj || !senhaAtual || !novaSenha) {
+        return res.status(400).json({ error: true, message: 'Todos os campos são obrigatórios.' });
+    }
+
+    // Validação de nova senha (mínimo 6 caracteres, letras, números e caractere especial)
+    const senhaRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{6,}$/;
+    if (!senhaRegex.test(novaSenha)) {
+        return res.status(400).json({ error: true, message: 'A nova senha deve ter no mínimo 6 caracteres, incluindo letras, números e caractere especial.' });
+    }
+
+    try {
+        const docType = validaCpfOuCnpj(cpfOuCnpj);
+        let user = null;
+        if (docType === EnumDocuments.cpf) {
+            user = await User.findOne({ cpf: cpfOuCnpj });
+        } else if (docType === EnumDocuments.cnpj) {
+            user = await Company.findOne({ cnpj: cpfOuCnpj });
+        } else {
+            return res.status(400).json({ error: true, message: 'Identificador inválido.' });
+        }
+
+        console.log(user)
+
+        if (!user) {
+            return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
+        }
+
+        const senhaCorreta = await bcrypt.compare(senhaAtual, user.senha);
+        if (!senhaCorreta) {
+            return res.status(401).json({ error: true, message: 'Senha atual incorreta.' });
+        }
+
+        // const novaSenhaHash = await bcrypt.hash(novaSenha, 10);
+        user.senha = novaSenha;
+        await user.save();
+
+        return res.status(200).json({ error: false, message: 'Senha alterada com sucesso.' });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: true, message: 'Erro ao alterar a senha.' });
+    }
+}
 
 export async function sendResetCode(req, res) {
     const errors = validationResult(req);
-    console.log(errors)
     if(!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})
     }
 
-    let user = await User.findOne({cpf: parseInt(req.body.cpfOuCnpj.replace(/[^\d]/g, ''))});
+    let user = await User.findOne({cpf: req.body.cpfOuCnpj.replace(/[^\d]/g, '')});
     if(!user) {
         return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
     }
@@ -475,9 +536,6 @@ export async function sendResetCode(req, res) {
         console.error(err);
         return res.status(500).json({error: true, message: 'Erro ao enviar o código de redefinição.'});
     }
-
-
-
 }
 
 export async function resetPassword(req, res) {

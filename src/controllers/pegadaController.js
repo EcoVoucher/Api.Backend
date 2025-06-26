@@ -37,14 +37,24 @@ export async function createPegada(req, res) {
 
 export async function getPegadaByCpf(req, res) {
 	try {
-		const cpf = req.params.documento;
-        const pegadas = await Pegada.find({ cpf: cpf }).sort({ _id: 1 });
+        const cpf = req.params.documento;
+
+        const user = await User.findOne({ cpf: cpf });
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
+        }
+        console.log('CPF recebido:', user._id);
+
+        const pegadas = await Pegada.find({ userId: user._id });
+        console.log('Pegadas encontradas:', pegadas);
         if (!pegadas || pegadas.length === 0) {
             return res.status(404).json({ message: 'Pegada não encontrada para este CPF' });
         }
         // Se quiser retornar todas as pontuações ordenadas por id:
         const todasPontuacoes = pegadas.flatMap(p => p.pontuacoes);
-        return res.status(200).json(pegadas);
+        console.log(todasPontuacoes);
+        console.log(pegadas)
+        return res.status(200).json(todasPontuacoes);
 	} catch (error) {
 		return res.status(500).json({ message: 'Server error', error: error.message });
 	}
