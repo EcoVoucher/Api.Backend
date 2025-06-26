@@ -17,12 +17,74 @@ O cidadão coleta o resíduo reciclável, leva até um dos pontos de coleta, pon
 <details>
    <summary>Requisitos Funcionais</summary>
     <details>
-  <summary>Cadastro</summary>
+      <summary>RF001 - O APP deve permitir cadastro de usuário de dados mínimos (nome completo, cpf, email...) </summary>
         <div align="center">
         <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF01%20-%20Video.gif">
-    </div>
+        </div>
+    </details>
+    <details>
+      <summary>RF002 - O APP deve permitir que o usuário faça login</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF02.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF003 - O APP deve permitir a visualização e alteração do perfil do usuário</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF04.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF004 - O APP deve exibir o saldo atual de créditos do usuário</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF05.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF005 - O APP deve permitir que o usuário localize pontos de coletas mais próximo</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF06.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF006 - O APP deve exibir informações de cada ponto de coleta</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF06.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF007 - O APP deve exibir o histórico de resíduos entregues com os dados relativos</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF08.jpg">
+        </div>
+    </details>
+    <details>
+      <summary>RF008 - O APP deve permitir ao usuário acompanhar o acúmulo de créditos</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF08.jpg">
+        </div>
+    </details>
+    <details>
+      <summary>RF009 - O APP deve permitir que o usuário acesse as opções de uso dos créditos</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF10.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF010 - O APP deve gerar um comprovante digital</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF10.gif">
+        </div>
+    </details>
+    <details>
+      <summary>RF011 - O APP deve possuir interface simples, intuitiva e acessível.</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF16.gif">
+        </div>
+    </details>
 </details>
-</details>
+
+
 <details>
    <summary>Requisitos Não Funcionais</summary>
     <div align="center">
