@@ -84,13 +84,26 @@ O cidadão coleta o resíduo reciclável, leva até um dos pontos de coleta, pon
     </details>
 </details>
 
+## Requisitos Não Funcionais
 
-<details>
-   <summary>Requisitos Não Funcionais</summary>
-    <div align="center">
-        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RNF-APP-EcoVoucher.png">
-    </div>
-</details>
+| NÚMERO DO REQUISITO | NOME                                  | DESCRIÇÃO                                                                                                                                                          |
+|---------------------|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| RNF001              | Desenvolvimento                       | Desenvolver o app em HTML, JavaScript, TypeScript, CSS utilizando o framework React-Native                                                                         |
+| RNF002              | Tempo de resposta aceitável           | O app deve responder às interações do usuário (como abrir uma tela ou executar uma consulta no SQLite)                                                            |
+| RNF003              | Execução assíncrona de queries        | Uso de APIs assíncronas para evitar bloqueio da UI.                                                                                                                |
+| RNF004              | Gestão de memória eficiente           | O app deve evitar vazamentos de memória relacionados a conexões persistentes com o banco SQLite.                                                                  |
+| RNF005              | Criptografia de dados sensíveis       | Caso dados pessoais ou sensíveis sejam armazenados, o SQLite deve ser utilizado com alguma camada de criptografia.                                                |
+| RNF006              | Proteção contra injeção de SQL        | Uso de queries parametrizadas ou prepared statements.                                                                                                              |
+| RNF007              | Armazenamento local seguro            | Proteção do arquivo do banco de dados com permissões restritas no sistema de arquivos do dispositivo.                                                             |
+| RNF008              | Feedback ao usuário                   | O app deve informar visualmente o usuário quando estiver acessando ou manipulando dados (ex: spinners durante carregamento).                                      |
+| RNF009              | Compatibilidade com modo off-line     | Como SQLite é local, o app deve funcionar completamente off-line para as funcionalidades que não dependem da internet.                                            |
+| RNF010              | Compatibilidade com Android e iOS     | O app deve funcionar corretamente nos dois sistemas operacionais, utilizando bibliotecas como react-native-sqlite-storage ou react-native-sqlite-2 que suportem ambos. |
+| RNF011              | Independência da arquitetura do dispositivo | O banco não deve depender de features específicas de hardware ou arquitetura.                                                                                      |
+| RNF012              | Estrutura clara do schema de banco    | Scripts de criação do banco bem organizados e versionados.                                                                                                         |
+| RNF013              | Logs e tratamento de erros adequados  | O app deve registrar falhas em operações de banco para facilitar a correção de bugs.                                                                              |
+| RNF014              | Gerenciamento de grande volume de dados | O app deve ser capaz de lidar com crescimento progressivo dos dados locais (indexação, paginamento, etc.).                                                        |
+| RNF015              | Boa estrutura de índices              | Queries otimizadas com uso de índices para melhorar desempenho conforme os dados crescem.                                                                         |
+
 
 
 ## Apresentação
