@@ -18,9 +18,9 @@ O cidadão coleta o resíduo reciclável, leva até um dos pontos de coleta, pon
    <summary>Requisitos Funcionais</summary>
     <details>
   <summary>Cadastro</summary>
-  <p>
-    📽️ <a href="https://github.com/EcoVoucher/Api.Backend/blob/main/RF01%20-%20Video.mp4">Clique aqui para ver o vídeo de Cadastro</a>
-  </p>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF01%20-%20Video.gif">
+    </div>
 </details>
 </details>
 <details>
