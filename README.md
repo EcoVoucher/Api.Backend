@@ -84,27 +84,98 @@ O cidadão coleta o resíduo reciclável, leva até um dos pontos de coleta, pon
     </details>
 </details>
 
-## Requisitos Não Funcionais
+<details>
+<summary>Requisitos Não Funcionais</summary>
+<div>
+<table border="1">
+  <thead>
+    <tr>
+      <th>NÚMERO DO REQUISITO</th>
+      <th>NOME</th>
+      <th>DESCRIÇÃO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RNF001</td>
+      <td>Desenvolvimento</td>
+      <td>Desenvolver o app em HTML, JavaScript, TypeScript, CSS utilizando o framework React-Native</td>
+    </tr>
+    <tr>
+      <td>RNF002</td>
+      <td>Tempo de resposta aceitável</td>
+      <td>O app deve responder às interações do usuário (como abrir uma tela ou executar uma consulta no SQLite)</td>
+    </tr>
+    <tr>
+      <td>RNF003</td>
+      <td>Execução assíncrona de queries</td>
+      <td>Uso de APIs assíncronas para evitar bloqueio da UI.</td>
+    </tr>
+    <tr>
+      <td>RNF004</td>
+      <td>Gestão de memória eficiente</td>
+      <td>O app deve evitar vazamentos de memória relacionados a conexões persistentes com o banco SQLite.</td>
+    </tr>
+    <tr>
+      <td>RNF005</td>
+      <td>Criptografia de dados sensíveis</td>
+      <td>Caso dados pessoais ou sensíveis sejam armazenados, o SQLite deve ser utilizado com alguma camada de criptografia.</td>
+    </tr>
+    <tr>
+      <td>RNF006</td>
+      <td>Proteção contra injeção de SQL</td>
+      <td>Uso de queries parametrizadas ou prepared statements.</td>
+    </tr>
+    <tr>
+      <td>RNF007</td>
+      <td>Armazenamento local seguro</td>
+      <td>Proteção do arquivo do banco de dados com permissões restritas no sistema de arquivos do dispositivo.</td>
+    </tr>
+    <tr>
+      <td>RNF008</td>
+      <td>Feedback ao usuário</td>
+      <td>O app deve informar visualmente o usuário quando estiver acessando ou manipulando dados (ex: spinners durante carregamento).</td>
+    </tr>
+    <tr>
+      <td>RNF009</td>
+      <td>Compatibilidade com modo off-line</td>
+      <td>Como SQLite é local, o app deve funcionar completamente off-line para as funcionalidades que não dependem da internet.</td>
+    </tr>
+    <tr>
+      <td>RNF010</td>
+      <td>Compatibilidade com Android e iOS</td>
+      <td>O app deve funcionar corretamente nos dois sistemas operacionais, utilizando bibliotecas como react-native-sqlite-storage ou react-native-sqlite-2 que suportem ambos.</td>
+    </tr>
+    <tr>
+      <td>RNF011</td>
+      <td>Independência da arquitetura do dispositivo</td>
+      <td>O banco não deve depender de features específicas de hardware ou arquitetura.</td>
+    </tr>
+    <tr>
+      <td>RNF012</td>
+      <td>Estrutura clara do schema de banco</td>
+      <td>Scripts de criação do banco bem organizados e versionados. Migrações controladas: Implementação de controle de versões para o banco de dados com suporte a migrações.</td>
+    </tr>
+    <tr>
+      <td>RNF013</td>
+      <td>Logs e tratamento de erros adequados</td>
+      <td>O app deve registrar falhas em operações de banco para facilitar a correção de bugs.</td>
+    </tr>
+    <tr>
+      <td>RNF014</td>
+      <td>Gerenciamento de grande volume de dados</td>
+      <td>O app deve ser capaz de lidar com crescimento progressivo dos dados locais (indexação, paginamento, etc.).</td>
+    </tr>
+    <tr>
+      <td>RNF015</td>
+      <td>Boa estrutura de índices</td>
+      <td>Queries otimizadas com uso de índices para melhorar desempenho conforme os dados crescem.</td>
+    </tr>
+  </tbody>
+</table>
 
-| NÚMERO DO REQUISITO | NOME                                  | DESCRIÇÃO                                                                                                                                                          |
-|---------------------|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| RNF001              | Desenvolvimento                       | Desenvolver o app em HTML, JavaScript, TypeScript, CSS utilizando o framework React-Native                                                                         |
-| RNF002              | Tempo de resposta aceitável           | O app deve responder às interações do usuário (como abrir uma tela ou executar uma consulta no SQLite)                                                            |
-| RNF003              | Execução assíncrona de queries        | Uso de APIs assíncronas para evitar bloqueio da UI.                                                                                                                |
-| RNF004              | Gestão de memória eficiente           | O app deve evitar vazamentos de memória relacionados a conexões persistentes com o banco SQLite.                                                                  |
-| RNF005              | Criptografia de dados sensíveis       | Caso dados pessoais ou sensíveis sejam armazenados, o SQLite deve ser utilizado com alguma camada de criptografia.                                                |
-| RNF006              | Proteção contra injeção de SQL        | Uso de queries parametrizadas ou prepared statements.                                                                                                              |
-| RNF007              | Armazenamento local seguro            | Proteção do arquivo do banco de dados com permissões restritas no sistema de arquivos do dispositivo.                                                             |
-| RNF008              | Feedback ao usuário                   | O app deve informar visualmente o usuário quando estiver acessando ou manipulando dados (ex: spinners durante carregamento).                                      |
-| RNF009              | Compatibilidade com modo off-line     | Como SQLite é local, o app deve funcionar completamente off-line para as funcionalidades que não dependem da internet.                                            |
-| RNF010              | Compatibilidade com Android e iOS     | O app deve funcionar corretamente nos dois sistemas operacionais, utilizando bibliotecas como react-native-sqlite-storage ou react-native-sqlite-2 que suportem ambos. |
-| RNF011              | Independência da arquitetura do dispositivo | O banco não deve depender de features específicas de hardware ou arquitetura.                                                                                      |
-| RNF012              | Estrutura clara do schema de banco    | Scripts de criação do banco bem organizados e versionados.                                                                                                         |
-| RNF013              | Logs e tratamento de erros adequados  | O app deve registrar falhas em operações de banco para facilitar a correção de bugs.                                                                              |
-| RNF014              | Gerenciamento de grande volume de dados | O app deve ser capaz de lidar com crescimento progressivo dos dados locais (indexação, paginamento, etc.).                                                        |
-| RNF015              | Boa estrutura de índices              | Queries otimizadas com uso de índices para melhorar desempenho conforme os dados crescem.                                                                         |
-
-
+</div>
+</details>
 
 ## Apresentação
 Confira a seguir uma demonstração das funcionalidades do site:
