@@ -266,7 +266,7 @@ Principais riscos associados ao desenvolvimento, operação e infraestrutura do 
 
 <div align="center">
     
-![Timeline](https://github.com/EcoVoucher/Api.Backend/blob/main/Timeline%20atualizada.png)
+![Timeline](https://github.com/EcoVoucher/Api.Backend/blob/main/timeline.png)
 </div>
 
 
