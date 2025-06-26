@@ -189,7 +189,7 @@ Para auxiliar a polpulação, foi desenvolvido um app gratuito, onde o cidadão 
    <summary>Visão Geral do APP</summary>
     <sumary>Desenvolvimento de aplicativo mobile em React Native, com arquitetura baseada em componentes reutilizáveis, integração a banco de dados MongoDB hospedado na AWS, aplicando boas práticas de segurança da informação, incluindo controle de acesso, criptografia de dados sensíveis e autenticação segura.</sumary>
     <div align="center">
-        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF10.gif">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/RF16.gif">
     </div>
 </details>
 
