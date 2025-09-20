@@ -15,6 +15,7 @@ import {
     getUserByCpfOuCnpj,
     getHistoricoUser,
     alterarSenha,
+    validateToken,
 } from '../controllers/userController.js';
 import { validaListaUsuarioPorCpf, validaRecuperaSenha } from '../validators/userValidators.js';
 
@@ -41,6 +42,7 @@ router.patch('/alterar_pegada', auth, updateUser);
 router.patch('/admin/aprovar-pj', auth, aprovarPj);
 router.delete('/:id', auth, deleteUser);
 router.post('/auth/recuperar-senha', validaRecuperaSenha, sendResetCode)
+router.get('/auth/validar-token/:token', validaRecuperaSenha, validateToken)
 router.post('/auth/redefinir-senha', validaRecuperaSenha, resetPassword)
 router.post('/auth/logout', auth, (req, res) => {
     res.json({ auth: false, token: null });

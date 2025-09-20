@@ -26,8 +26,7 @@ function comparativo(soma) {
     return comparativo;
 }
 
-export async function
-getHistoricoUser(req, res) {
+export async function getHistoricoUser(req, res) {
     /*
         #swagger.tags = ['Users']
         #swagger.description = 'Endpoint para obter o histórico do usuário'
@@ -195,6 +194,24 @@ export async function getUserByCpfOuCnpj(req, res) {
                 param: '/id/:id'
             }]
         })
+    }
+}
+
+export async function validateToken(req, res) {
+    const { token } = req.params;
+    if(!token || token.length !== 6 || !/^\d{6}$/.test(token)) {
+        return res.status(400).json({ error: true, message: 'Token inválido. Deve ser um código numérico de 6 dígitos.' });
+    }
+
+    try {
+        const tokenDoc = await Token.findOne({ token });
+        if(!tokenDoc) {
+            return res.status(404).json({ error: true, message: 'Token não encontrado.', valido: false });
+        }
+        res.status(200).json({ valido: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: true, message: 'Erro ao validar o token.' });
     }
 }
 
@@ -440,7 +457,9 @@ export async function sendResetCode(req, res) {
         return res.status(400).json({ errors: errors.array()})
     }
 
-    let user = await User.findOne({cpf: req.body.cpfOuCnpj.replace(/[^\d]/g, '')});
+    let user = await User.findOne({cpf: req.body.cpfOuCnpj.replace(/[^\d]/g, '')}) ||
+    await Company.findOne({cnpj: req.body.cpfOuCnpj.replace(/[^\d]/g, '')});
+
     if(!user) {
         return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
     }
@@ -450,7 +469,7 @@ export async function sendResetCode(req, res) {
     try {
         sendEmail({
             to: user.email,
-            subject: 'Depósito realizado com sucesso!',
+            subject: 'Seu código chegou para redifinir a senha!',
             text: `Olá, ${user.nome}! Recebemos uma solicitação para redefinir a senha da sua conta Eco Voucher. Use o código de verificação ${token} para continuar com a recuperação. Este código expira em 15 minutos. Se você não solicitou esta recuperação de senha, ignore este e-mail. Sua conta permanecerá segura. Nunca compartilhe este código com outras pessoas. Use-o apenas no aplicativo do Eco Voucher. Crie uma senha forte com letras, números e símbolos e mantenha suas informações de login seguras. Em caso de dúvidas, entre em contato com nosso suporte através do aplicativo. Equipe Eco Voucher.`,
             html: `
                 <!DOCTYPE html>
@@ -535,9 +554,9 @@ export async function sendResetCode(req, res) {
 }
 
 export async function resetPassword(req, res) {
-    const {token, novaSenha } = req.body;
+    const {token, senha } = req.body;
 
-    if( !token || !novaSenha) {
+    if(!token || !senha) {
         return res.status(400).json({ error: true, message: 'CPF/CNPJ, token e nova senha são obrigatórios.' });
     }
 
@@ -545,6 +564,13 @@ export async function resetPassword(req, res) {
         const tokenDoc = await Token.findOne({ token: token });
         if(!tokenDoc) {
             return res.status(400).json({ error: true, message: 'Token inválido.' });
+        }
+
+        const user = await User.findById(tokenDoc.idUser) ||
+        await Company.findById(tokenDoc.idUser);
+
+        if (!user) {
+            return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
         }
 
         // Verifica se o token expirou (15 minutos)
@@ -556,10 +582,9 @@ export async function resetPassword(req, res) {
             return res.status(400).json({ error: true, message: 'Token expirado.' });
         }
 
-        // Atualiza a senha do usuário (hash)
-        const hashedPassword = await bcrypt.hash(novaSenha, 10);
-        User.senha = hashedPassword;
-        await User.updateOne();
+        // Atualiza a senha do usuário
+        user.senha = senha;
+        await user.save();
 
         // Remove o token após o uso
         await Token.deleteOne({ _id: tokenDoc._id });
