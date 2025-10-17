@@ -111,6 +111,7 @@ export async function getUser(req, res) {
                 } else {
                     usuarioResponse.cnpj = user.cnpj;
                     usuarioResponse.tipo = 'pj';
+                    usuarioResponse.aprovado = user.aprovado;
                     usuarioResponse.nome = user.nomeEmpresa || user.nome; // Garante nome para PJ
                 }
                 return usuarioResponse;

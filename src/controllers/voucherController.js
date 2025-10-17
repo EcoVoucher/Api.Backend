@@ -65,19 +65,33 @@ export async function getVoucherByCnpj(req, res) {
     try {
         const vouchers = await Voucher.find({ idCompany: company._id });
         // Mapear para trocar _id por idLote
-        const result = vouchers.map(voucher => ({
-            idLote: voucher._id,
-            tipo: voucher.tipo,
-            produtos: voucher.produtos,
-            quantidade: voucher.quantidade,
-            empresa: company.nome || company.razaoSocial || 'Empresa',
-            empresa: company.nome || company.razaoSocial || 'Empresa',
-            codigosDisponiveis: voucher.disponiveis || [],
-            dataValidade: voucher.dataValidade ? new Date(voucher.dataValidade).toISOString() : '',
-            criadoEm: voucher.createdAt,
-            pontos: voucher.pontos,
-            codigos: voucher.codigos || []
-        }));
+        const result = vouchers.map(voucher => {
+            const end = company.endereco || {};
+            const enderecoFormatado = [
+                end.endereco,
+                end.numero,
+                end.bairro,
+                end.cidade,
+                end.estado,
+                end.cep
+            ].filter(Boolean).join(', ');
+
+            return {
+                idLote: voucher._id,
+                tipo: voucher.tipo,
+                produtos: voucher.produtos,
+                quantidade: voucher.quantidade,
+                empresa: company.nomeEmpresa || '',
+                endereco: enderecoFormatado || '',
+                telefone: company.telefone || '',
+                email: company.email || '',
+                codigosDisponiveis: voucher.disponiveis || [],
+                dataValidade: voucher.dataValidade ? new Date(voucher.dataValidade).toISOString() : '',
+                criadoEm: voucher.createdAt,
+                pontos: voucher.pontos,
+                codigos: voucher.codigos || []
+            };
+        });
 
         return res.status(200).json(result);
     } catch (error) {
