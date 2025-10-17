@@ -44,6 +44,7 @@ router.delete('/:id', auth, deleteUser);
 router.post('/auth/recuperar-senha', validaRecuperaSenha, sendResetCode)
 router.get('/auth/validar-token/:token', validaRecuperaSenha, validateToken)
 router.post('/auth/redefinir-senha', validaRecuperaSenha, resetPassword)
+router.post('/usuarios/alterar-senha', auth, alterarSenha)
 router.post('/auth/logout', auth, (req, res) => {
     res.json({ auth: false, token: null });
 }

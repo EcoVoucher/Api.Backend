@@ -18,20 +18,22 @@ export async function getVoucher(req, res) {
         const result = vouchers.map(voucher => {
 
             const company = voucher.idCompany || {};
-            const endereco = company.endereco || {};
+            const end = company && company.endereco ? company.endereco : {};
+            const endereco = [
+                end.endereco,
+                end.numero,
+                end.bairro,
+                end.cidade,
+                end.estado,
+                end.cep
+            ].filter(Boolean).join(', ');
             return {
                 idLote: voucher._id,
                 tipo: voucher.tipo,
                 produtos: voucher.produtos,
                 pontos: voucher.pontos,
-                // empresa: company.nomeEmpresa || company.razaoSocial || company.nome || 'Empresa',
-                // cep: endereco.cep || '',
-                // endereco: endereco || '',
-                // numero: endereco.numero || '',
-                // bairro: endereco.bairro || '',
-                // cidade: endereco.cidade || '',
-                // estado: endereco.estado || '',
-
+                empresa: company.nomeEmpresa || company.razaoSocial || company.nome || 'Empresa',
+                endereco: endereco || '',
                 validade: voucher.dataValidade ? new Date(voucher.dataValidade).toISOString() : '',
                 quantidade: voucher.quantidade,
                 codigos: voucher.codigos || []
@@ -398,16 +400,16 @@ export async function comprarVoucher(req, res) {
     let idLote = req.body.vouchers;
     const { cpf } = req.usuario;
 
-    if(!idLote || !cpf) {
+    if (!idLote || !cpf) {
         return res.status(400).json({ error: true, message: 'idLote e cpf são obrigatórios' });
     }
 
-    if(!Array.isArray(idLote)) {
+    if (!Array.isArray(idLote)) {
         idLote = [idLote];
     }
 
     const uniqueIds = new Set(idLote);
-    if(uniqueIds.size !== idLote.length) {
+    if (uniqueIds.size !== idLote.length) {
         return res.status(400).json({
             error: true,
             message: 'Não é permitido comprar vouchers do mesmo lote mais de uma vez na mesma requisição.'
@@ -416,23 +418,24 @@ export async function comprarVoucher(req, res) {
 
     try {
         const results = [];
+        const allCodes = []; // <- vai acumular todos os códigos para retorno CSV
 
         const user = await User.findOne({ cpf });
-        if(!user) {
+        if (!user) {
             return res.status(404).json({ error: true, message: 'Usuário não encontrado.' });
         }
 
         let historico = await historicoPontuacao.findOne({ idUser: user._id });
-        if(!historico) {
+        if (!historico) {
             historico = new historicoPontuacao({ idUser: user._id, movimentacoes: [] });
         }
 
         let pontosNecessarios = 0;
         const vouchersParaCompra = [];
 
-        for(const loteId of idLote) {
+        for (const loteId of idLote) {
             const voucher = await Voucher.findOne({ _id: loteId });
-            if(!voucher) {
+            if (!voucher) {
                 results.push({ idLote: loteId, sucesso: false, message: 'Voucher não encontrado.' });
                 continue;
             }
@@ -440,36 +443,37 @@ export async function comprarVoucher(req, res) {
             pontosNecessarios += voucher.pontos || 0;
         }
 
-        if(user.pontos < pontosNecessarios) {
+        if (user.pontos < pontosNecessarios) {
             return res.status(400).json({
                 error: true,
                 message: `Pontos insuficientes. Você possui ${user.pontos} pontos e precisa de ${pontosNecessarios} pontos para esta compra.`
             });
         }
 
-        for(const voucher of vouchersParaCompra) {
+        for (const voucher of vouchersParaCompra) {
             const loteId = voucher._id.toString();
 
-            if(!voucher.disponiveis || voucher.disponiveis.length === 0) {
+            if (!voucher.disponiveis || voucher.disponiveis.length === 0) {
                 results.push({ idLote: loteId, sucesso: false, message: 'Não há códigos disponíveis para este voucher.' });
                 continue;
             }
 
-            const existeValido = voucher.codigos.some(c => c.status === 'valido');
-            if(!existeValido) {
+            const existeValido = voucher.codigos?.some(c => c.status === 'valido');
+            if (!existeValido) {
                 results.push({ idLote: loteId, sucesso: false, message: 'Não há códigos válidos neste lote.' });
                 continue;
             }
 
+            // pega o primeiro disponível (1 por voucher)
             const codigo = voucher.disponiveis[0];
             const codigoObj = voucher.codigos.find(c => c.codigo === codigo);
 
-            if(!codigoObj || codigoObj.status !== 'valido') {
-                results.push({ idLote: loteId, sucesso: false, message: 'Código já utilizado ou inválido' });
+            if (!codigoObj || codigoObj.status !== 'valido') {
+                results.push({ idLote: loteId, sucesso: false, message: 'Código já utilizado ou inválido.' });
                 continue;
             }
 
-            // Atualiza status
+            // Atualiza status e disponibilidade
             codigoObj.status = 'comprado';
             voucher.disponiveis = voucher.disponiveis.filter(c => c !== codigo);
             await voucher.save();
@@ -489,21 +493,31 @@ export async function comprarVoucher(req, res) {
                 timestamp: new Date()
             });
 
+            // Acumula para retorno agregado
+            allCodes.push(codigoObj.codigo);
+
+            // Resultado por lote
             results.push({
                 idLote: loteId,
                 sucesso: true,
                 message: 'Voucher comprado com sucesso',
-                codigo: codigoObj.codigo
+                codigo: codigoObj.codigo // <- um código por voucher
             });
         }
 
         await user.save();
         await historico.save();
 
-        return res.status(200).json({ resultados: results });
+        // Retorno final com lista e CSV
+        return res.status(200).json({
+            resultados: results,
+            codigos: allCodes,                 // ex.: ["ABC123","DEF456"]
+        });
+
     } catch (error) {
         console.error('Erro ao comprar voucher:', error);
         return res.status(500).json({ error: true, message: 'Erro interno do servidor' });
     }
 }
+
 
