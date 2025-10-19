@@ -81,7 +81,14 @@ export class PontuacaoController {
                     }
                 });
                 deposito.codigo = deposito._id;
-                deposito.data = new Date(deposito.createdAt);
+                deposito.data = new Date(deposito.createdAt)
+                .toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+
+                deposito.dataHora = deposito.data;
                 delete deposito._id;
                 delete deposito.__v;
 
