@@ -44,7 +44,7 @@ export async function getHistoricoUser(req, res) {
             nome: user.nome,
             pontos: user.pontos,
             pontuacao: user.pontuacao,
-            depositos: (historico?.movimentacoes).filter(m => m.tipo === 'entrada').length,
+            depositos: (historico?.movimentacoes ?? []).filter(m => m.tipo === 'entrada').length,
             movimentacoes: (historico && historico.movimentacoes ? historico.movimentacoes : []).map(mov => ({
                 ...mov.toObject ? mov.toObject() : mov,
                 data: (() => {
