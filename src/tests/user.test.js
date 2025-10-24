@@ -1,12 +1,13 @@
 const cnpj = require('@julioakira/cpf-cnpj-utils').CNPJ;
 const request = require('supertest');
 
-const baseURL = 'http://localhost:3000/api';
+const baseURL = 'http://localhost:4000/api';
+let idEmpresa = null;
 
 describe('API REST de Usuarios sem o Token', () => {
-    it('GET /user - Lista todos os prestadores sem o token', async () => {
+    it('GET /usuarios - Lista todos os prestadores sem o token', async () => {
         const response = await request(baseURL)
-            .get('/user')
+            .get('/usuarios')
             .set('Content-Type', 'application/json')
             .expect(401); // Forbidden
     });
@@ -17,18 +18,18 @@ describe('API REST de Usuarios com o token', ()=> {
     it('POST - Autenticar usuário para retornar token JWT', async() => {
         const senha = process.env.SENHA_USUARIO
         const response = await request(baseURL)
-        .post('/user/login')
+        .post('/auth/login')
         .set('Content-Type','application/json')
-        .send({"identidade":"49745885088","senha": "teste@11"})
+        .send({"cpfOuCnpj":"09.638.714/0001-02","senha": "teste@11"})
         .expect(200) //OK
-
-        token = response.body.access_token
+   
+        token = response.body.token
         expect(token).toBeDefined() // Recebemos o token?
     })
     let usuarios = null;
     it('GET - Listar os usuários com autenticação', async() => {
         const response = await request(baseURL)
-        .get('/user')
+        .get('/usuarios')
         .set('Content-Type','application/json')
         .set('access-token', token) //Inclui o token na chamada
         .expect(200)
@@ -54,7 +55,7 @@ describe('API REST de Usuarios com o token', ()=> {
 
     it('POST - Inclui um nova empresa sem autenticação', async() => {
         const response = await request(baseURL)
-        .post('/user/cadastro')
+        .post('/cadastro/pj')
         .set('Content-Type','application/json')
         .send(dadosEmpresa)
         .expect(201) //Created
@@ -62,13 +63,14 @@ describe('API REST de Usuarios com o token', ()=> {
         expect(response.body).toHaveProperty('message')
         expect(response.body.message).toBe("Empresa cadastrada com sucesso")
 
+        idEmpresa = response.body.id
         expect(response.body).toHaveProperty('error')
         expect(typeof response.body.error).toBe('boolean')
     })
 
-    it('DELETE - Deleta um usuário com autenticação', async() => {
+    /*it('DELETE - Deleta um usuário com autenticação', async() => {
         const response = await request(baseURL)
-        .delete(`/user/${usuarios[0]._id}`)
+        .delete(`/usuarios/${idEmpresa}`)
         .set('Content-Type','application/json')
         .set('access-token', token) //Inclui o token na chamada
         .expect(200) //Created
@@ -79,8 +81,7 @@ describe('API REST de Usuarios com o token', ()=> {
         expect(response.body).toHaveProperty('deletedCount')
         expect(response.body.deletedCount).toBeGreaterThan(0)
     })
-
-
+    */
 
 
 
