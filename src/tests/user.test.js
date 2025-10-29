@@ -1,8 +1,25 @@
 const cnpj = require('@julioakira/cpf-cnpj-utils').CNPJ;
 const request = require('supertest');
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://localhost:3000/api';
 let idEmpresa = null;
+let idUsuario = null;
+
+dadosUsuario = {
+    "nome": "Silva",
+    "cpf": "80706509072",
+    "dataNascimento": "2003-02-27",
+    "email": "pietro_mendes_test@lavabit.com",
+    "senha": "teste@11",
+    "telefone": 15992373208,
+    "cep": "18085335",
+    "endereco": "Rua Botucatu",
+    "numero": 321,
+    "complemento": "teste",
+    "bairro": "Jardim Leocádia",
+    "cidade": "Sorocaba",
+    "estado": "SP"
+};
 
 describe('API REST de Usuarios sem o Token', () => {
     it('GET /usuarios - Lista todos os prestadores sem o token', async () => {
@@ -11,6 +28,71 @@ describe('API REST de Usuarios sem o Token', () => {
             .set('Content-Type', 'application/json')
             .expect(401); // Forbidden
     });
+
+     dadosEmpresa = {
+        "nomeEmpresa": "Empresa de Teste LTDA",
+        "cnpj": cnpj.Generate(true),
+        "email": "joao@joao.com",
+        "senha": "123456",
+        "telefone": 6438870349,
+        "cep": 75711311,
+        "endereco": "Praça da Liberdade",
+        "numero": 441,
+        "complemento": "teste",
+        "bairro": "Vila Liberdade",
+        "cidade": "sorocaba",
+        "estado": "sp"
+    }
+
+    it('POST - Inclui um nova empresa sem autenticação', async() => {
+        const response = await request(baseURL)
+        .post('/cadastro/pj')
+        .set('Content-Type','application/json')
+        .send(dadosEmpresa)
+        .expect(201) //Created
+
+        expect(response.body).toHaveProperty('message')
+        expect(response.body.message).toBe("Empresa cadastrada com sucesso")
+
+        
+        expect(response.body).toHaveProperty('error')
+        expect(typeof response.body.error).toBe('boolean')
+    })
+        
+
+    it('POST - Inclui um usuario sem autenticação', async() => {
+            const response = await request(baseURL)
+            .post('/cadastro/pf')
+            .set('Content-Type','application/json')
+            .send(dadosUsuario)
+            .expect(201) //OK
+
+            expect(response.body).toHaveProperty('message')
+            expect(response.body.message).toBe("Usuário cadastrado com sucesso")
+
+            expect(response.body).toHaveProperty('error')
+            expect(typeof response.body.error).toBe('boolean')
+    })
+    
+    
+    it('POST - Inclui um usuario sem autenticação já existente', async() => {
+            const response = await request(baseURL)
+            .post('/cadastro/pf')
+            .set('Content-Type','application/json')
+            .send(dadosUsuario)
+            .expect(409) //Conflict
+
+            expect(response.body).toHaveProperty('message')
+            expect(response.body.message).toBe("CPF já cadastrado")
+
+            expect(response.body).toHaveProperty('error')
+            expect(typeof response.body.error).toBe('boolean')
+    })
+
+    
+
+
+    
 });
 
 describe('API REST de Usuarios com o token', ()=> {
@@ -20,7 +102,7 @@ describe('API REST de Usuarios com o token', ()=> {
         const response = await request(baseURL)
         .post('/auth/login')
         .set('Content-Type','application/json')
-        .send({"cpfOuCnpj":"09.638.714/0001-02","senha": "teste@11"})
+        .send({"cpfOuCnpj":dadosUsuario.cpf,"senha": "teste@11"})
         .expect(200) //OK
    
         token = response.body.token
@@ -38,35 +120,117 @@ describe('API REST de Usuarios com o token', ()=> {
         expect(usuarios).toBeInstanceOf(Array)
     })
 
-    dadosEmpresa = {
-        "nomeEmpresa": "João Pedro",
-        "cnpj": cnpj.Generate(true),
-        "email": "joao@joao.com",
-        "senha": "123456",
-        "telefone": 15981212171,
-        "cep": 18050000,
-        "endereco": "Av armando pannunzio",
-        "numero": 1700,
-        "complemento": "apto",
-        "bairro": "jd vera cruz",
-        "cidade": "sorocaba",
-        "estado": "sp"
-    }
-
-    it('POST - Inclui um nova empresa sem autenticação', async() => {
+    
+  it('PATCH - Aprovar PJ autenticação', async() => {
         const response = await request(baseURL)
-        .post('/cadastro/pj')
+        .patch('/admin/aprovar-pj')
         .set('Content-Type','application/json')
-        .send(dadosEmpresa)
-        .expect(201) //Created
+        .set('access-token', token)
+        .send({
+            "cnpj": "64581208000124"
+        }) //Inclui o token na chamada
+        .expect(200)
 
         expect(response.body).toHaveProperty('message')
-        expect(response.body.message).toBe("Empresa cadastrada com sucesso")
+        expect(response.body.message).toBe("Pegada ecológica alterada com sucesso")
 
-        idEmpresa = response.body.id
         expect(response.body).toHaveProperty('error')
         expect(typeof response.body.error).toBe('boolean')
+
     })
+
+     it('GET - Aprovar PJ autenticação - Usuario não encontrado', async() => {
+        const response = await request(baseURL)
+        .patch('/admin/aprovar-pj')
+        .set('Content-Type','application/json')
+        .set('access-token', token)
+        .send({
+            "cnpj": "1111111111111111"
+        }) //Inclui o token na chamada
+        .expect(404)
+
+        expect(response.body).toHaveProperty('message')
+        expect(response.body.message).toBe("Usuário não encontrado!")
+
+        expect(response.body).toHaveProperty('error')
+        expect(typeof response.body.error).toBe('boolean')
+
+    })
+
+   it('GET - Buscar Usuario', async() => {
+            const response = await request(baseURL)
+            .get('/usuarios/' + dadosUsuario.cpf)
+            .set('Content-Type','application/json')
+            .set('access-token', token)
+            .expect(200) //OK
+
+            expect(response.body).toHaveProperty('_id')
+            idUsuario = response.body._id
+
+            expect(response.body).toHaveProperty('nome')
+            expect(response.body.nome).toBe(dadosUsuario.nome)
+    })
+
+    it('POST - Alterar Senha usuario ', async() => {
+            const response = await request(baseURL)
+            .post('/usuarios/alterar-senha')
+            .set('Content-Type','application/json')
+            .set('access-token', token)
+            .send({
+
+                "cpfOuCnpj": "80706509072",
+                "senhaAtual": "teste@11",
+                "novaSenha": "teste@22"
+                
+            })
+            .expect(200) //OK
+
+             expect(response.body).toHaveProperty('message')
+            expect(response.body.message).toBe("Senha alterada com sucesso.")
+
+            expect(response.body).toHaveProperty('error')
+            expect(typeof response.body.error).toBe('boolean')
+    })
+
+    it('POST - Alterar Senha usuario - Erro senha atual incorreta ', async() => {
+            const response = await request(baseURL)
+            .post('/usuarios/alterar-senha')
+            .set('Content-Type','application/json')
+            .set('access-token', token)
+            .send({
+
+                "cpfOuCnpj": "80706509072",
+                "senhaAtual": "teste@11",
+                "novaSenha": "teste@22"
+                
+            })
+            .expect(401) //OK
+
+             expect(response.body).toHaveProperty('message')
+            expect(response.body.message).toBe("Senha atual incorreta.")
+
+            expect(response.body).toHaveProperty('error')
+            expect(typeof response.body.error).toBe('boolean')
+    })
+
+    it('DELETE - Deletar Usuario', async() => {
+            const response = await request(baseURL)
+            .delete('/' + idUsuario)
+            .set('Content-Type','application/json')
+            .set('access-token', token)
+            .expect(200) //OK
+
+            expect(response.body).toHaveProperty('acknowledged')
+            expect(typeof response.body.acknowledged).toBe('boolean')
+            idUsuario = response.body._id
+ 
+            expect(response.body).toHaveProperty('deletedCount')
+            expect(response.body.deletedCount).toBeGreaterThan(0)
+    })
+
+
+    
+    
 
     /*it('DELETE - Deleta um usuário com autenticação', async() => {
         const response = await request(baseURL)
@@ -83,6 +247,7 @@ describe('API REST de Usuarios com o token', ()=> {
     })
     */
 
+    
 
 
 });
