@@ -25,9 +25,14 @@ const historicoPontuacaoSchema = new Schema({
             tipo: { type: String, enum: ['entrada', 'saida', 'transacao'], required: true },
             pontos: { type: Number, required: true },
             descricao: { type: String, required: true },
-            timestamp: { type: Date, default: Date.now },
             tipoVoucher: { type: String }, // Opcional para saídas
             status: { type: String, enum: ['valido', 'invalido', 'comprado', 'utilizado'] },
+            empresa: { type: String },
+            endereco: { type: String },
+            produtos: { type: [String], required: false, default: undefined },
+            validade: { type: Date },
+            timestamp: { type: Date, default: Date.now },
+
         }
     ]
 });

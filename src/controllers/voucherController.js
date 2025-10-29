@@ -2,7 +2,7 @@ import { User, Company } from '../models/userModel.js';
 import { historicoPontuacao } from '../models/pontuacaoModel.js';
 import { Voucher } from '../models/voucherModel.js';
 
-export async function getVoucher(req, res) {
+export async function getVouchers(req, res) {
     /*
         #swagger.tags = ['Voucher']
         #swagger.description = 'Endpoint para listar todos os vouchers'
@@ -41,6 +41,38 @@ export async function getVoucher(req, res) {
         });
 
         return res.status(200).json(result);
+    } catch (error) {
+        console.error('Erro ao listar vouchers:', error);
+        return res.status(500).json({ error: true, message: 'Erro interno do servidor' });
+    }
+}
+
+export async function getVoucher(req, res) {
+    /*
+        #swagger.tags = ['Voucher']
+        #swagger.description = 'Endpoint para listar Voucher pelo código'
+    */
+    try {
+        // Busca todos os vouchers válidos (dataValidade no futuro) e popula informações da empresa
+        const codigo = req.params.codigo;
+        console.log(codigo)
+
+        const voucher = await Voucher.findOne({"codigos.codigo": codigo });
+        console.log(voucher)
+        const company = await Company.findById(voucher.idCompany);
+
+        const response = {
+            codigo: codigo,
+            tipo: voucher.tipo,
+            empresa: company.nomeEmpresa,
+            endereco: `${company.endereco.endereco}, ${company.endereco.numero}, ${company.endereco.bairro}, ${company.endereco.cidade} - ${company.endereco.estado}, ${company.endereco.cep}`,
+            produtos: voucher.produtos,
+            status: voucher.codigos.find(c => c.codigo === codigo).status,
+            validade: voucher.dataValidade ? new Date(voucher.dataValidade).toISOString() : '',
+            status: voucher.codigos.find(c => c.codigo === codigo).status
+        }
+
+        return res.status(200).json(response);
     } catch (error) {
         console.error('Erro ao listar vouchers:', error);
         return res.status(500).json({ error: true, message: 'Erro interno do servidor' });
@@ -346,7 +378,9 @@ export async function utilizarVoucher(req, res) {
     try {
         // Procura o voucher que contém o código informado
         // Procura o voucher que contém o código informado na coleção Voucher
-        const voucher = await Voucher.findOne({ "codigos.codigo": codigo });
+        console.log(codigo)
+        console.log(codigo.length)
+        const voucher = await Voucher.findOne({"codigos.codigo": codigo });
         if(!voucher) {
             return res.status(404).json({ error: true, message: 'Voucher não encontrado para o código informado.' });
         }
@@ -356,9 +390,9 @@ export async function utilizarVoucher(req, res) {
             'movimentacoes.codigoVoucher': codigo
         });
         // Encontra o objeto do código dentro do array de códigos do voucher
-        const codigoObj = voucher.codigos.find(c => c.codigo === codigo);
+        const codigoObj = voucher.codigos.find(c => c.codigo == codigo);
 
-        if(!codigoObj || !historico) {
+        if(!codigoObj && !historico) {
             return res.status(404).json({ error: true, message: 'Código não encontrado no voucher.' });
         }
 
@@ -376,10 +410,10 @@ export async function utilizarVoucher(req, res) {
 
         // Atualiza o status para 'utilizado' também no histórico do usuário
         if(historico && historico.movimentacoes && Array.isArray(historico.movimentacoes)) {
-            const mov = historico.movimentacoes.find(m => m.codigoVoucher === codigo && m.status === 'comprado');
+            const mov = historico.movimentacoes.find(m => m.codigoVoucher === codigo && m.status === 'valido');
             if(mov) {
-            mov.status = 'utilizado';
-            await historico.save();
+                mov.status = 'utilizado';
+                await historico.save();
             }
         }
         await voucher.save();
@@ -480,7 +514,7 @@ export async function comprarVoucher(req, res) {
 
             // Deduz pontos
             user.pontos -= voucher.pontos || 0;
-
+            const company = await Company.findById(voucher.idCompany);
             // Registra movimentação
             historico.movimentacoes.push({
                 idVoucher: voucher._id,
@@ -489,7 +523,11 @@ export async function comprarVoucher(req, res) {
                 pontos: voucher.pontos || 0,
                 descricao: `Compra de voucher do tipo ${voucher.tipo}`,
                 tipoVoucher: voucher.tipo,
-                status: 'comprado',
+                status: 'valido',
+                empresa: company.nomeEmpresa,
+                endereco: `${company.endereco.endereco}, ${company.endereco.numero}, ${company.endereco.bairro}, ${company.endereco.cidade} - ${company.endereco.estado}, ${company.endereco.cep}`,
+                produtos: voucher.produtos,
+                validade: voucher.dataValidade,
                 timestamp: new Date()
             });
 
