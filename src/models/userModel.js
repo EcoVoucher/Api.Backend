@@ -28,7 +28,10 @@ const userSchema = new Schema({
 });
 
 userSchema.pre('save', async function(next){// antes de salvar faça isso**
-    this.senha = await bcrypt.hash(this.senha, 10)// cria uma string alfa numerica - dez rodadas de criptografia é o minimo aceitavel
+    // Only hash password if it's new or has been modified
+    if (this.isNew || this.isModified('senha')) {
+        this.senha = await bcrypt.hash(this.senha, 10)// cria uma string alfa numerica - dez rodadas de criptografia é o minimo aceitavel
+    }
     next();
 });
 
@@ -52,9 +55,11 @@ const companySchema = new Schema({
 });
 
 companySchema.pre('save', async function(next){// antes de salvar faça isso**
-    this.senha = await bcrypt.hash(this.senha, 10)// cria uma string alfa numerica - dez rodadas de criptografia é o minimo aceitavel
+    // Only hash password if it's new or has been modified
+    if (this.isNew || this.isModified('senha')) {
+        this.senha = await bcrypt.hash(this.senha, 10)// cria uma string alfa numerica - dez rodadas de criptografia é o minimo aceitavel
+    }
     next();
-
 });
 
 export const User = mongoose.model('user', userSchema, 'user');
