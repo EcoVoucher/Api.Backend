@@ -5,6 +5,7 @@
     "main": "api/index.js",
     "type": "module",
     "scripts": {
+        "test:ci": "node server.js & sleep 3 && jest",
         "test": "jest",
         "start": "node ./src/server.js",
         "dev": "npx nodemon --env-file=.env server.js ",
