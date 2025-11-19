@@ -45,18 +45,25 @@ export async function getHistoricoUser(req, res) {
             pontos: user.pontos,
             pontuacao: user.pontuacao,
             depositos: (historico?.movimentacoes ?? []).filter(m => m.tipo === 'entrada').length,
-            movimentacoes: (historico && historico.movimentacoes ? historico.movimentacoes : []).map(mov => ({
-                ...mov.toObject ? mov.toObject() : mov,
-                data: (() => {
-                    const d = mov.data || mov.createdAt || mov.updatedAt || new Date();
-                    if(!d) return '';
-                    const dateObj = new Date(d);
-                    const day = String(dateObj.getDate()).padStart(2, '0');
-                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                    const year = dateObj.getFullYear();
-                    return `${day}/${month}/${year}`;
-                })()
-            }))
+            movimentacoes: (historico && historico.movimentacoes ? historico.movimentacoes : []).map(mov => {
+                const movObj = mov.toObject ? mov.toObject() : mov;
+                return {
+                    ...movObj,
+                    // tipo: movObj.tipo,
+                    // quantidade: movObj.quantidade,
+                    // descricao: movObj.descricao,
+                    // pontos: movObj.pontos,
+                    data: (() => {
+                        const d = mov.data || mov.createdAt || mov.updatedAt || new Date();
+                        if(!d) return '';
+                        const dateObj = new Date(d);
+                        const day = String(dateObj.getDate()).padStart(2, '0');
+                        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        const year = dateObj.getFullYear();
+                        return `${day}/${month}/${year}`;
+                    })()
+                };
+            })
         });
     } catch (err) {
         console.error(err);
@@ -628,20 +635,20 @@ export async function aprovarPj(req, res) {
     try {
         let company = await Company.findOne({cnpj: {$eq: cnpj}});
         if(!company) {
-            return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
+            return res.status(404).json({error: true, message: 'Empresa não encontrada!'});
         }
         company = await Company.updateOne({_id: company._id}, {$set: {aprovado: true}});
         if(!company) {
-            return res.status(500).json({error: true, message: 'Erro ao alterar a pegada ecológica'});
+            return res.status(500).json({error: true, message: 'Erro ao aprovar PJ, consulte o suporte!'});
         }
 
-        return res.status(200).json({error: false, message: 'Pegada ecológica alterada com sucesso'});
+        return res.status(200).json({error: false, message: 'Empresa aprovada com sucesso!'});
     } catch (err) {
         console.error(err)
         res.status(500).json({
             errors: [{
                 value: `${err.message}`,
-                msg: 'Erro ao alterar a pegada ecológica'
+                msg: 'Erro ao aprovar PJ, consulte o suporte!'
             }]
         })
     }

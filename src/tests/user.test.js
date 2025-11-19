@@ -6,6 +6,9 @@ const cpfUsuario = cpf.Generate(true).replace(/[.\-]/g, '');
 const baseURL = 'http://localhost:3000/api';
 let idEmpresa = null;
 let idUsuario = null;
+
+
+
 dadosUsuario = {
     "nome": "Silva",
     "cpf": cpfUsuario,
@@ -102,7 +105,7 @@ describe('API REST de Usuarios com o token', ()=> {
         const response = await request(baseURL)
         .post('/auth/login')
         .set('Content-Type','application/json')
-        .send({"cpfOuCnpj":dadosUsuario.cpf,"senha": "teste@11"})
+        .send({"cpfOuCnpj": dadosUsuario.cpf,"senha": "teste@11"})
         .expect(200) //OK
 
         token = response.body.token
@@ -212,7 +215,7 @@ describe('API REST de Usuarios com o token', ()=> {
             expect(typeof response.body.error).toBe('boolean')
     })
 
-   /* it('DELETE - Deletar Usuario', async() => {
+   it('DELETE - Deletar Usuario', async() => {
             const response = await request(baseURL)
             .delete('/' + idUsuario)
             .set('Content-Type','application/json')
@@ -225,11 +228,7 @@ describe('API REST de Usuarios com o token', ()=> {
 
             expect(response.body).toHaveProperty('deletedCount')
             expect(response.body.deletedCount).toBeGreaterThan(0)
-    })*/
-
-
-
-
+    })
 
     /*it('DELETE - Deleta um usuário com autenticação', async() => {
         const response = await request(baseURL)
@@ -243,10 +242,6 @@ describe('API REST de Usuarios com o token', ()=> {
 
         expect(response.body).toHaveProperty('deletedCount')
         expect(response.body.deletedCount).toBeGreaterThan(0)
-    })
-    */
-
-
-
+    })*/
 
 });
