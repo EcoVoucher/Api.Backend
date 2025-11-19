@@ -31,11 +31,8 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      - name: Rodar aplicação
-        run: npm run dev
-
       - name: Rodar testes
-        run: npm test
+        run: node server.js & sleep 3 && jest
         # ou: npm run test
 
       - name: Build (opcional)
