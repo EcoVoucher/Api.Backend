@@ -217,7 +217,18 @@ export async function validateToken(req, res) {
         if(!tokenDoc) {
             return res.status(404).json({ error: true, message: 'Token não encontrado.', valido: false });
         }
-        res.status(200).json({ valido: true });
+
+        // Check if token has expired (15 minutes)
+        const tokenCreatedAt = tokenDoc.created_at || tokenDoc._id.getTimestamp();
+        const now = new Date();
+        const diffMinutes = (now - tokenCreatedAt) / (1000 * 60);
+        if(diffMinutes > 15) {
+            // Clean up expired token
+            await Token.deleteOne({ _id: tokenDoc._id });
+            return res.status(400).json({ error: true, message: 'Token expirado.', valido: false });
+        }
+
+        res.status(200).json({ error: false, message: 'Token válido.', valido: true });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: true, message: 'Erro ao validar o token.' });
@@ -450,6 +461,7 @@ export async function alterarSenha(req, res) {
         }
 
         // const novaSenhaHash = await bcrypt.hash(novaSenha, 10);
+        // Password will be automatically hashed by the pre-save hook
         user.senha = novaSenha;
         await user.save();
 
@@ -472,6 +484,9 @@ export async function sendResetCode(req, res) {
     if(!user) {
         return res.status(404).json({error: true, message: 'Usuário não encontrado!'});
     }
+
+    // Clean up any existing tokens for this user
+    await Token.deleteMany({ idUser: user._id });
 
     let token = '';
     token = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join('');
@@ -566,7 +581,13 @@ export async function resetPassword(req, res) {
     const {token, senha } = req.body;
 
     if(!token || !senha) {
-        return res.status(400).json({ error: true, message: 'CPF/CNPJ, token e nova senha são obrigatórios.' });
+        return res.status(400).json({ error: true, message: 'Token e nova senha são obrigatórios.' });
+    }
+
+    // Validate password strength (minimum 6 characters, letters, numbers and special character)
+    const senhaRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{6,}$/;
+    if(!senhaRegex.test(senha)) {
+        return res.status(400).json({ error: true, message: 'A nova senha deve ter no mínimo 6 caracteres, incluindo letras, números e pelo menos um caractere especial.' });
     }
 
     try {
@@ -592,6 +613,7 @@ export async function resetPassword(req, res) {
         }
 
         // Atualiza a senha do usuário
+        // The password will be automatically hashed by the pre-save hook
         user.senha = senha;
         await user.save();
 
