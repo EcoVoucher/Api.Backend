@@ -37,7 +37,7 @@ describe('API REST de Pontuação com token', () => {
             .set('Content-Type', 'application/json')
             .set('access-token', token)
             .send({
-                cpf: "36070342810",
+                cpf: "49319136017",
                 materiais: [
                     { nome: "Plástico", "quantidade": 3, "pontos": 10 },
                     { nome: "Vidro", "quantidade": 2, "pontos": 5 }

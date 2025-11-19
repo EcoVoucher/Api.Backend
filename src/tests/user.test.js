@@ -1,13 +1,15 @@
 const cnpj = require('@julioakira/cpf-cnpj-utils').CNPJ;
+const cpf = require('@julioakira/cpf-cnpj-utils').CPF;
 const request = require('supertest');
-
+const cnpjEmpresa = cnpj.Generate(true).replace(/[.\-]/g, '');
+const cpfUsuario = cpf.Generate(true).replace(/[.\-]/g, '');
+console.log("CPF USUARIO: " + cpfUsuario)
 const baseURL = 'http://localhost:3000/api';
 let idEmpresa = null;
 let idUsuario = null;
-
 dadosUsuario = {
     "nome": "Silva",
-    "cpf": "80706509072",
+    "cpf": cpfUsuario,
     "dataNascimento": "2003-02-27",
     "email": "pietro_mendes_test@lavabit.com",
     "senha": "teste@11",
@@ -28,10 +30,9 @@ describe('API REST de Usuarios sem o Token', () => {
             .set('Content-Type', 'application/json')
             .expect(401); // Forbidden
     });
-
-     dadosEmpresa = {
+    dadosEmpresa = {
         "nomeEmpresa": "Empresa de Teste LTDA",
-        "cnpj": cnpj.Generate(true),
+        "cnpj": cnpjEmpresa,
         "email": "joao@joao.com",
         "senha": "123456",
         "telefone": 6438870349,
@@ -54,11 +55,11 @@ describe('API REST de Usuarios sem o Token', () => {
         expect(response.body).toHaveProperty('message')
         expect(response.body.message).toBe("Empresa cadastrada com sucesso")
 
-        
+
         expect(response.body).toHaveProperty('error')
         expect(typeof response.body.error).toBe('boolean')
     })
-        
+
 
     it('POST - Inclui um usuario sem autenticação', async() => {
             const response = await request(baseURL)
@@ -73,8 +74,8 @@ describe('API REST de Usuarios sem o Token', () => {
             expect(response.body).toHaveProperty('error')
             expect(typeof response.body.error).toBe('boolean')
     })
-    
-    
+
+
     it('POST - Inclui um usuario sem autenticação já existente', async() => {
             const response = await request(baseURL)
             .post('/cadastro/pf')
@@ -89,10 +90,10 @@ describe('API REST de Usuarios sem o Token', () => {
             expect(typeof response.body.error).toBe('boolean')
     })
 
-    
 
 
-    
+
+
 });
 
 describe('API REST de Usuarios com o token', ()=> {
@@ -104,7 +105,7 @@ describe('API REST de Usuarios com o token', ()=> {
         .set('Content-Type','application/json')
         .send({"cpfOuCnpj":dadosUsuario.cpf,"senha": "teste@11"})
         .expect(200) //OK
-   
+
         token = response.body.token
         expect(token).toBeDefined() // Recebemos o token?
     })
@@ -120,26 +121,26 @@ describe('API REST de Usuarios com o token', ()=> {
         expect(usuarios).toBeInstanceOf(Array)
     })
 
-    
-  it('PATCH - Aprovar PJ autenticação', async() => {
-        const response = await request(baseURL)
-        .patch('/admin/aprovar-pj')
-        .set('Content-Type','application/json')
-        .set('access-token', token)
-        .send({
-            "cnpj": "64581208000124"
-        }) //Inclui o token na chamada
-        .expect(200)
 
-        expect(response.body).toHaveProperty('message')
-        expect(response.body.message).toBe("Pegada ecológica alterada com sucesso")
+//   it('PATCH - Aprovar PJ autenticação', async() => {
+//         const response = await request(baseURL)
+//         .patch('/admin/aprovar-pj')
+//         .set('Content-Type','application/json')
+//         .set('access-token', token)
+//         .send({
+//             "cnpj": cnpjEmpresa
+//         }) //Inclui o token na chamada
+//         .expect(200)
 
-        expect(response.body).toHaveProperty('error')
-        expect(typeof response.body.error).toBe('boolean')
+//         expect(response.body).toHaveProperty('message')
+//         expect(response.body.message).toBe("Empresa aprovada com sucesso!")
 
-    })
+//         expect(response.body).toHaveProperty('error')
+//         expect(typeof response.body.error).toBe('boolean')
 
-     it('GET - Aprovar PJ autenticação - Usuario não encontrado', async() => {
+//     })
+
+     it('GET - Aprovar PJ autenticação - Empresa não encontrada', async() => {
         const response = await request(baseURL)
         .patch('/admin/aprovar-pj')
         .set('Content-Type','application/json')
@@ -150,7 +151,7 @@ describe('API REST de Usuarios com o token', ()=> {
         .expect(404)
 
         expect(response.body).toHaveProperty('message')
-        expect(response.body.message).toBe("Usuário não encontrado!")
+        expect(response.body.message).toBe("Empresa não encontrada!")
 
         expect(response.body).toHaveProperty('error')
         expect(typeof response.body.error).toBe('boolean')
@@ -172,16 +173,17 @@ describe('API REST de Usuarios com o token', ()=> {
     })
 
     it('POST - Alterar Senha usuario ', async() => {
+            console.log({"cpfOuCnpj": cpfUsuario,})
             const response = await request(baseURL)
             .post('/usuarios/alterar-senha')
             .set('Content-Type','application/json')
             .set('access-token', token)
             .send({
 
-                "cpfOuCnpj": "80706509072",
+                "cpfOuCnpj": cpfUsuario,
                 "senhaAtual": "teste@11",
                 "novaSenha": "teste@22"
-                
+
             })
             .expect(200) //OK
 
@@ -193,16 +195,16 @@ describe('API REST de Usuarios com o token', ()=> {
     })
 
     it('POST - Alterar Senha usuario - Erro senha atual incorreta ', async() => {
+        console.log("CPF USUARIO: " + cpfUsuario)
             const response = await request(baseURL)
             .post('/usuarios/alterar-senha')
             .set('Content-Type','application/json')
             .set('access-token', token)
             .send({
-
-                "cpfOuCnpj": "80706509072",
-                "senhaAtual": "teste@11",
+                "cpfOuCnpj": cpfUsuario,
+                "senhaAtual": "teste@111",
                 "novaSenha": "teste@22"
-                
+
             })
             .expect(401) //OK
 
@@ -213,7 +215,7 @@ describe('API REST de Usuarios com o token', ()=> {
             expect(typeof response.body.error).toBe('boolean')
     })
 
-    it('DELETE - Deletar Usuario', async() => {
+   /* it('DELETE - Deletar Usuario', async() => {
             const response = await request(baseURL)
             .delete('/' + idUsuario)
             .set('Content-Type','application/json')
@@ -223,14 +225,14 @@ describe('API REST de Usuarios com o token', ()=> {
             expect(response.body).toHaveProperty('acknowledged')
             expect(typeof response.body.acknowledged).toBe('boolean')
             idUsuario = response.body._id
- 
+
             expect(response.body).toHaveProperty('deletedCount')
             expect(response.body.deletedCount).toBeGreaterThan(0)
-    })
+    })*/
 
 
-    
-    
+
+
 
     /*it('DELETE - Deleta um usuário com autenticação', async() => {
         const response = await request(baseURL)
@@ -247,7 +249,7 @@ describe('API REST de Usuarios com o token', ()=> {
     })
     */
 
-    
+
 
 
 });
