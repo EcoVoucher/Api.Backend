@@ -32,8 +32,7 @@ jobs:
         run: npm ci
 
       - name: Rodar testes
-        run: node server.js & sleep 3 && jest
-        # ou: npm run test
+        run: npm run test:ci
 
       - name: Build (opcional)
         run: npm run build --if-present
