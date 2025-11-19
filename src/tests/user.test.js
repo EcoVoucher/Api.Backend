@@ -3,7 +3,6 @@ const cpf = require('@julioakira/cpf-cnpj-utils').CPF;
 const request = require('supertest');
 const cnpjEmpresa = cnpj.Generate(true).replace(/[.\-]/g, '');
 const cpfUsuario = cpf.Generate(true).replace(/[.\-]/g, '');
-console.log("CPF USUARIO: " + cpfUsuario)
 const baseURL = 'http://localhost:3000/api';
 let idEmpresa = null;
 let idUsuario = null;
@@ -173,7 +172,6 @@ describe('API REST de Usuarios com o token', ()=> {
     })
 
     it('POST - Alterar Senha usuario ', async() => {
-            console.log({"cpfOuCnpj": cpfUsuario,})
             const response = await request(baseURL)
             .post('/usuarios/alterar-senha')
             .set('Content-Type','application/json')
@@ -195,7 +193,6 @@ describe('API REST de Usuarios com o token', ()=> {
     })
 
     it('POST - Alterar Senha usuario - Erro senha atual incorreta ', async() => {
-        console.log("CPF USUARIO: " + cpfUsuario)
             const response = await request(baseURL)
             .post('/usuarios/alterar-senha')
             .set('Content-Type','application/json')
