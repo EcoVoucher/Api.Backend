@@ -7,22 +7,40 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Ambiente base do GitHub Actions (Debian é derivado do Ubuntu)
+    runs-on: ubuntu-latest
+
+    env:
+      PORT: ${{ secrets.PORT }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_DB: ${{ secrets.MONGODB_DB }}
+      SECRETKEY: ${{ secrets.SECRETKEY }}
+      EXPIRES_IN: ${{ secrets.EXPIRES_IN }}
+      EMAIL_USER: ${{ secrets.EMAIL_USER }}
+      EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.18.0'  # Versão do Node.js que você deseja usar
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Instalar dependências
+        run: npm ci
 
-    - name: Versioning (simulação)
-      run: echo "Versionamento realizado"
-      
-    - name: Deploy (simulação)
-      run: echo "Deploy do backend realizado"
+      - name: Rodar testes
+        run: node server.js & sleep 3 && jest
+        # ou: npm run test
+
+      - name: Build (opcional)
+        run: npm run build --if-present
+
+      - name: Versioning (simulação)
+        run: echo "Versionamento realizado"
+
+      - name: Deploy (simulação)
+        if: success()
+        run: echo "Deploy do backend realizado"
