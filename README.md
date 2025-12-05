@@ -22,6 +22,13 @@ Para auxiliar a polpulação, foi desenvolvido um app gratuito, onde o cidadão 
         </div>
 </details>
 <details>
+   <summary>Banner</summary>
+    <summary>O banner foi utilizado para apresentação de projeto em feira realizada na Fatec de Votorantim, para conclusão do curso de Desenvolvimento de Software Multiplataforma.</summary>
+        <div align="center">
+        <img src="https://github.com/EcoVoucher/Api.Backend/blob/main/Banner%20-%20EcoVoucher%202025.png">
+        </div>
+</details>
+<details>
    <summary>Requisitos Funcionais</summary>
     <details>
       <summary>RF001 - O APP deve permitir cadastro de usuário de dados mínimos (nome completo, cpf, email...) </summary>
