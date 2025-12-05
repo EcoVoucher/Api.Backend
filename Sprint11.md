@@ -1,6 +1,6 @@
 <span id="topo">
 
-<h1 align="center">Sprint 10: 10/09/2025 a 23/09/2025</h1>
+<h1 align="center">Sprint 11: 10/09/2025 a 23/09/2025</h1>
 
 A Sprint 10 marcou o início da etapa final de desenvolvimento do projeto **Ecovoucher**, com foco na conclusão técnica do aplicativo mobile e na implantação completa do ecossistema (frontend, backend e banco de dados) .
 
