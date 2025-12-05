@@ -214,12 +214,12 @@ Cada entrega foi realizada a partir da criação de uma **tag** em cada reposit�
 | 07 | 30/04/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint7.md) |
 | 08 | 30/05/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint8.md) |
 | 09 | 26/06/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint9.md) |
-| 10 | 26/06/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint9.md) |
-| 11 | 26/06/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint9.md) |
-| 12 | 26/06/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint9.md) |
-| 13 | 26/06/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint9.md) |
-| 14 | 26/06/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint9.md) |
-| 15 | 26/06/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint9.md) |
+| 10 | 09/09/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint10.md) |
+| 11 | 23/09/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint11.md) |
+| 12 | 07/10/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint12.md) |
+| 13 | 21/10/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint13.md) |
+| 14 | 04/11/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint14.md) |
+| 15 | 18/11/2025 |  ✔️ Concluída   | [ver relatório](https://github.com/EcoVoucher/Api.Backend/blob/main/Sprint15.md) |
 
   
 → [Voltar ao topo](#topo)
