@@ -279,7 +279,7 @@ Principais riscos associados ao desenvolvimento, operação e infraestrutura do 
 
 <div align="center">
     
-![Timeline](https://github.com/EcoVoucher/Api.Backend/blob/main/timeline.png)
+![Timeline](https://github.com/EcoVoucher/Api.Backend/blob/main/TimeLine%202025.png)
 </div>
 
 
@@ -289,7 +289,7 @@ Principais riscos associados ao desenvolvimento, operação e infraestrutura do 
 |    Função     | Nome                                  |                                                                                                                                                      LinkedIn & GitHub                                                                                                                                                      |
 | :-----------: | :------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |   Analista de Requisitos    | Felipe Afonso da Silva Vieira                 |   [![Linkedin Badge](https://img.shields.io/badge/Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/felipe-afonso-da-silva-vieira-b32860105/) [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Eng-FelipeA)   |
-|   Analista de Testes  | Henrique Vidotto |      [![Linkedin Badge](https://img.shields.io/badge/Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/publio-gomes-488b2a27/) [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/publiogomes)     |
+|   Analista de Testes  | Henrique Vidotto |      [![Linkedin Badge](https://img.shields.io/badge/Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://github.com/HenriqueVidotto) [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://www.linkedin.com/in/henrique-vidotto-vinico-neto/)     |
 |   Desenvolvedor    | João Pedro               |         [![Linkedin Badge](https://img.shields.io/badge/Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/joao-pedro01) [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/joao-pedro01)        |
 |   Desenvolvedora    | Letícia Pinheiro                   |         [![Linkedin Badge](https://img.shields.io/badge/Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/leticia-pinheiro-946733308) [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Leticiapinheiro1   )        |
 |   Analista de Requisitos    | Marcus Vinicyus Souza Barros                 |   [![Linkedin Badge](https://img.shields.io/badge/Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/marcus-barros-055a9a8b/) [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/marcusvsbarros)   |
